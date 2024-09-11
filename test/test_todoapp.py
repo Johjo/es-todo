@@ -1,6 +1,6 @@
 import pytest
 
-from domain.todoapp import TodoApp
+from domain.todoapp import TodoApp, Item
 
 
 def test_register_todolist():
@@ -17,9 +17,8 @@ def test_add_first_item(item):
     todolist_id = app.start_todolist("my todolist")
     app.add_item(todolist_id, item)
 
-    assert app.get_items(todolist_id) == [item]
-    notifications = ap
-    p.notification_log.select(start=1, limit=10)
+    assert app.get_open_items(todolist_id) == [Item(item)]
+    notifications = app.notification_log.select(start=1, limit=10)
     assert "TodoList.ItemAdded" in notifications[1].topic
 
 
@@ -30,7 +29,7 @@ def test_add_second_item(item):
     app.add_item(todolist_id, "buy water")
     app.add_item(todolist_id, item)
 
-    assert app.get_items(todolist_id) == ["buy water", item]
+    assert app.get_open_items(todolist_id) == [Item("buy water"), Item(item)]
     notifications = app.notification_log.select(start=1, limit=10)
     assert "TodoList.ItemAdded" in notifications[2].topic
 
@@ -42,7 +41,7 @@ def test_open_todolist():
 
     todolist_id = app.open_todolist("my todolist")
 
-    assert app.get_items(todolist_id) == ["buy water"]
+    assert app.get_open_items(todolist_id) == [Item("buy water")]
 
 
 def test_open_todolist_when_two():
@@ -54,7 +53,7 @@ def test_open_todolist_when_two():
     app.add_item(todolist_id, "buy milk")
 
     todolist_id = app.open_todolist("first todolist")
-    assert app.get_items(todolist_id) == ["buy water"]
+    assert app.get_open_items(todolist_id) == [Item("buy water")]
 
     todolist_id = app.open_todolist("second todolist")
-    assert app.get_items(todolist_id) == ["buy milk"]
+    assert app.get_open_items(todolist_id) == [Item("buy milk")]
