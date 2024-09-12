@@ -6,6 +6,7 @@ from eventsourcing.domain import Aggregate, event
 
 @dataclass
 class Item:
+    index: int
     name: str
 
 class TodoList(Aggregate):
@@ -15,7 +16,8 @@ class TodoList(Aggregate):
 
     @event("ItemAdded")
     def add_item(self, item):
-        self.items.append(Item(item))
+        next_id = len(self.items) + 1
+        self.items.append(Item(index=next_id, name=item))
 
     def all_items(self):
         return self.items
