@@ -1,6 +1,7 @@
 import pytest
 
-from domain.todoapp import TodoApp, Item, ItemStatus
+from domain.todoapp import TodoApp, ItemStatus
+from domain.presentation import ItemPresentation
 
 
 def test_register_todolist():
@@ -17,7 +18,7 @@ def test_add_first_item(item):
     todolist_id = app.start_todolist("my todolist")
     app.add_item(todolist_id, item)
 
-    assert app.get_open_items(todolist_id) == [Item(index=1, status=ItemStatus.OPEN, name=item)]
+    assert app.get_open_items(todolist_id) == [ItemPresentation(index=1, name=item)]
     notifications = app.notification_log.select(start=1, limit=10)
     assert "TodoList.ItemAdded" in notifications[1].topic
 
@@ -29,8 +30,8 @@ def test_add_second_item(item):
     app.add_item(todolist_id, "buy water")
     app.add_item(todolist_id, item)
 
-    assert app.get_open_items(todolist_id) == [Item(index=1, status=ItemStatus.OPEN, name="buy water"),
-                                               Item(index=2, status=ItemStatus.OPEN, name=item)]
+    assert app.get_open_items(todolist_id) == [ItemPresentation(index=1, name="buy water"),
+                                               ItemPresentation(index=2, name=item)]
     notifications = app.notification_log.select(start=1, limit=10)
     assert "TodoList.ItemAdded" in notifications[2].topic
 
@@ -42,7 +43,7 @@ def test_open_todolist():
 
     todolist_id = app.open_todolist("my todolist")
 
-    assert app.get_open_items(todolist_id) == [Item(index=1, name="buy water", status=ItemStatus.OPEN)]
+    assert app.get_open_items(todolist_id) == [ItemPresentation(index=1, name="buy water")]
 
 
 def test_open_todolist_when_two():
@@ -54,10 +55,10 @@ def test_open_todolist_when_two():
     app.add_item(todolist_id, "buy milk")
 
     todolist_id = app.open_todolist("first todolist")
-    assert app.get_open_items(todolist_id) == [Item(index=1, name="buy water", status=ItemStatus.OPEN)]
+    assert app.get_open_items(todolist_id) == [ItemPresentation(index=1, name="buy water")]
 
     todolist_id = app.open_todolist("second todolist")
-    assert app.get_open_items(todolist_id) == [Item(index=1, name="buy milk", status=ItemStatus.OPEN)]
+    assert app.get_open_items(todolist_id) == [ItemPresentation(index=1, name="buy milk")]
 
 
 def test_close_item():
@@ -73,5 +74,5 @@ def test_close_item():
     assert "TodoList.ItemClosed" in notifications[4].topic
 
     assert app.get_open_items(todolist_id) == [
-        Item(index=1, status=ItemStatus.OPEN, name="buy water"),
-        Item(index=3, status=ItemStatus.OPEN, name="buy eggs")]
+        ItemPresentation(index=1, name="buy water"),
+        ItemPresentation(index=3, name="buy eggs")]

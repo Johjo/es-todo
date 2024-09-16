@@ -1,0 +1,8 @@
+- [.] Renommer ItemPresentation en Item
+- [x] Mettre en place l'algo fvp
+- [x] Remplacer la list items par un dictionnaire
+- [x] chose_task doit être un event
+- [ ] Factoriser les fixtures des tests 
+- [ ] Faire un start sans tâche et ajouter après coup
+- [ ] Quand on ajoute une tâche, si c'est l'unique ouverte, elle doit être en NEXT
+- [ ] Quand on ferme une tâche, s'il n'y en a aucune en NEXT, alors la première doit devenir NEXT
