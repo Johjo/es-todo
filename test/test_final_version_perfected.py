@@ -12,7 +12,7 @@ def test_propose_nothing_when_empty():
     assert actual == NothingToDo()
 
 
-def test_propose_the_only_task_open_when_one():
+def test_when_one_task_propose_the_only_task_open_when_one():
     app = TodoApp()
     todolist_id = app.start_todolist("my todolist")
 
@@ -22,7 +22,7 @@ def test_propose_the_only_task_open_when_one():
     assert actual == DoTheTask(index=1, name="buy milk")
 
 
-def test_propose_nothing_when_all_tasks_are_closed():
+def test_when_one_task_propose_nothing_when_task_is_closed():
     app = TodoApp()
     todolist_id = app.start_todolist("my todolist")
 
@@ -33,7 +33,7 @@ def test_propose_nothing_when_all_tasks_are_closed():
     assert actual == NothingToDo()
 
 
-def test_propose_to_choose_when_two_open_tasks():
+def test_when_two_tasks_propose_to_choose_both():
     app = TodoApp()
     todolist_id = app.start_todolist("my todolist")
 
@@ -43,8 +43,42 @@ def test_propose_to_choose_when_two_open_tasks():
     actual = app.which_task(todolist_id)
     assert actual == ChooseTheTask(index_1=1, name_1="buy milk", index_2=2, name_2="buy water")
 
+@pytest.mark.parametrize("chosen_task,ignored_task,expected", [
+    (1, 2, DoTheTask(index=1, name="buy milk")),
+    (2, 1, DoTheTask(index=2, name="buy water")),
 
-def test_reopen_deffered_task_when_previous_task_is_done():
+])
+def test_when_two_tasks_propose_to_do_chosen_task(chosen_task,ignored_task,expected):
+    app = TodoApp()
+    todolist_id = app.start_todolist("my todolist")
+
+    app.add_item(todolist_id, "buy milk")
+    app.add_item(todolist_id, "buy water")
+    app.choose_and_ignore_task(todolist_id, chosen_task, ignored_task)
+
+    actual = app.which_task(todolist_id)
+    assert actual == expected
+
+
+def test_when_two_propose_to_do():
+    app = TodoApp()
+    todolist_id = app.start_todolist("my todolist")
+
+    app.add_item(todolist_id, "buy milk")
+    app.add_item(todolist_id, "buy water")
+
+    actual = app.which_task(todolist_id)
+    assert actual == ChooseTheTask(index_1=1, name_1="buy milk", index_2=2, name_2="buy water")
+
+    app.choose_and_ignore_task(todolist_id, 2, 1)
+
+    actual = app.which_task(todolist_id)
+    assert actual == DoTheTask(index=2, name="buy water")
+
+
+
+
+def test_when_two_tasks_reopen_deffered_task_when_previous_task_is_done():
     app = TodoApp()
     todolist_id = app.start_todolist("my todolist")
 
@@ -57,7 +91,28 @@ def test_reopen_deffered_task_when_previous_task_is_done():
     assert actual == DoTheTask(index=2, name="buy water")
 
 
-def test_evaluate_task_after_closed_one():
+def test_when_two_xxx():
+    app = TodoApp()
+    todolist_id = app.start_todolist("my todolist")
+
+    app.add_item(todolist_id, "buy milk")
+    app.add_item(todolist_id, "buy water")
+
+    actual = app.which_task(todolist_id)
+    assert actual == ChooseTheTask(index_1=1, name_1="buy milk", index_2=2, name_2="buy water")
+
+    app.choose_and_ignore_task(todolist_id, 2, 1)
+
+    actual = app.which_task(todolist_id)
+    assert actual == DoTheTask(index=2, name="buy water")
+
+    app.close_item(todolist_id, 2)
+
+    actual = app.which_task(todolist_id)
+    assert actual == DoTheTask(index=1, name="buy milk")
+
+
+def test_when_three_evaluate_task_after_closed_one():
     app = TodoApp()
     todolist_id = app.start_todolist("my todolist")
 
@@ -72,7 +127,7 @@ def test_evaluate_task_after_closed_one():
     assert actual == ChooseTheTask(index_1=2, name_1="buy water", index_2=3, name_2="buy eggs")
 
 
-def test_evaluate_from_previous_chosen_task_when_close_one():
+def test_when_three_evaluate_from_previous_chosen_task_when_close_one():
     app = TodoApp()
     todolist_id = app.start_todolist("my todolist")
 
@@ -87,7 +142,7 @@ def test_evaluate_from_previous_chosen_task_when_close_one():
     actual = app.which_task(todolist_id)
     assert actual == DoTheTask(index=1, name="buy milk")
 
-def test_xxx():
+def test_when_four_xxx():
     app = TodoApp()
     todolist_id = app.start_todolist("my todolist")
 

@@ -16,14 +16,15 @@ class ItemStatus(Enum):
 class FvpStatus(Enum):
     NEXT = "Next"
     LATER = "Later"
+    TO_PRIORIZE = "To prioritize"
 
 
 @dataclass
 class Item:
     index: int
     name: str
-    status: ItemStatus
-    fvp_status: FvpStatus = FvpStatus.NEXT
+    status: ItemStatus = ItemStatus.OPEN
+    fvp: FvpStatus = FvpStatus.TO_PRIORIZE
 
     def to_do_the_task(self):
         return DoTheTask(index=self.index, name=self.name)
@@ -35,16 +36,22 @@ class Item:
 class TodoList(Aggregate):
     @event("Started")
     def __init__(self, name):
+        self.next_index = 0
         self.items = OrderedDict()
-        self.fvp_index = []
 
     @event("ItemAdded")
     def add_item(self, item):
-        next_id = len(self.items) + 1
-        self.items[next_id] = Item(index=next_id, status=ItemStatus.OPEN, name=item)
+        self.next_index += 1
+        self.items[self.next_index] = Item(index=self.next_index, name=item)
+        self._mark_first_open_item_to_next()
+
+    def _mark_first_open_item_to_next(self):
+        open_items = [item for item in self.items.values() if item.status == ItemStatus.OPEN]
+        if open_items:
+            open_items[0].fvp = FvpStatus.NEXT
 
     def all_items(self):
-        return self.items.values()
+        return [item for item in self.items.values()]
 
     @staticmethod
     def create_id(name: str) -> UUID:
@@ -53,39 +60,46 @@ class TodoList(Aggregate):
     @event("ItemClosed")
     def close(self, index):
         self.items[index].status = ItemStatus.CLOSED
-
-        if index in self.fvp_index:
-            self.fvp_index.remove(index)
-
-        for item in self.items.values():
+        open_items = [item for item in self.items.values() if item.status == ItemStatus.OPEN]
+        for item in open_items:
             if item.index > index:
-                item.fvp_status = FvpStatus.NEXT
+                item.fvp = FvpStatus.TO_PRIORIZE
+        self._mark_first_open_item_to_next()
 
     def which_task(self):
-        last_index = self.fvp_index =self.fvp_index[-1] if self.fvp_index else 0
-        items = [item for item in self.items.values() if item.status == ItemStatus.OPEN and item.index >= last_index]
-
-        if items:
-            items[0].fvp_status = FvpStatus.NEXT
-
-        items = [item for item in items if item.fvp_status != FvpStatus.LATER]
-
-        if not items:
+        print(self.items)
+        current_item = self.search_last_next_item()
+        if not current_item:
             return NothingToDo()
 
-        if len(items) == 1:
-            return items[0].to_do_the_task()
+        item_to_priorize = self.search_first_item_to_priorize()
+        if not item_to_priorize:
+            return current_item.to_do_the_task()
 
-        return ChooseTheTask(index_1=items[0].index, name_1=items[0].name, index_2=items[1].index, name_2=items[1].name)
+        if item_to_priorize:
+            return current_item.to_choose_the_task(item_to_priorize)
 
+
+    def search_last_next_item(self):
+        open_items = [item for item in self.items.values() if item.status == ItemStatus.OPEN and item.fvp == FvpStatus.NEXT]
+        if not open_items:
+            return None
+        return open_items[-1]
+
+    def search_first_item_to_priorize(self):
+        open_items = [item for item in self.items.values() if item.status == ItemStatus.OPEN and item.fvp == FvpStatus.TO_PRIORIZE]
+
+        if not open_items:
+            return None
+
+        return open_items[0]
 
 
     @event("TaskChosen")
     def choose_and_ignore_task(self, chosen_index, ignored_index):
-        if chosen_index not in self.fvp_index:
-            self.fvp_index.append(chosen_index)
-        self.items[ignored_index].fvp_status = FvpStatus.LATER
-
+        self.items[chosen_index].fvp = FvpStatus.NEXT
+        if self.items[ignored_index].fvp != FvpStatus.NEXT:
+            self.items[ignored_index].fvp = FvpStatus.LATER
 
 class TodoApp(Application):
     def start_todolist(self, name):
