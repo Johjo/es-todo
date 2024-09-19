@@ -67,7 +67,6 @@ class TodoList(Aggregate):
         self._mark_first_open_item_to_next()
 
     def which_task(self):
-        print(self.items)
         current_item = self.search_last_next_item()
         if not current_item:
             return NothingToDo()
