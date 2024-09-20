@@ -4,6 +4,7 @@
 - [x] chose_task doit être un event
 - [ ] Factoriser les fixtures des tests 
 - [ ] Faire un start sans tâche et ajouter après coup
-- [ ] Quand on ajoute une tâche, si c'est l'unique ouverte, elle doit être en NEXT
-- [ ] Quand on ferme une tâche, s'il n'y en a aucune en NEXT, alors la première doit devenir NEXT
-- [.] Les events sont sauvegardés dans une base sqlite
+- [x] Quand on ajoute une tâche, si c'est l'unique ouverte, elle doit être en NEXT
+- [x] Quand on ferme une tâche, s'il n'y en a aucune en NEXT, alors la première doit devenir NEXT
+- [x] Les events sont sauvegardés dans une base sqlite
+- [ ] Pouvoir reset l'algo

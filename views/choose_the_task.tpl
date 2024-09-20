@@ -1,9 +1,4 @@
-<html>
-<head>
-    <title>Todo</title>
-</head>
-<body>
-
+% rebase('base.tpl')
 <p>
 <h2> {{name_1}}</h2>
 <form action="/todo/{{todolist_name}}/item/choose/{{index_1}}/ignore/{{index_2}}" method="post">
@@ -27,10 +22,3 @@
 </p>
 
 
-<h2> Ajouter une tâche </h2>
-<form action="/todo/{{todolist_name}}/item" method="post">
-    <input type="text" name="item">
-    <input type="submit" value="Add item">
-</form>
-</body>
-</html>

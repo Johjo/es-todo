@@ -142,7 +142,7 @@ def test_when_three_evaluate_from_previous_chosen_task_when_close_one():
     actual = app.which_task(todolist_id)
     assert actual == DoTheTask(index=1, name="buy milk")
 
-def test_when_four_xxx():
+def test_when_four_propose_tasks_in_good_order_after_close_one():
     app = TodoApp()
     todolist_id = app.start_todolist("my todolist")
 
@@ -408,5 +408,7 @@ def test_acceptance_with_four_tasks_01():
 
     actual = app.which_task(todolist_id)
     assert actual == NothingToDo()
+
+
 
 ### -----

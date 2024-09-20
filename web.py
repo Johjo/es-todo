@@ -27,6 +27,13 @@ def close_item(name, item_index):
     app.close_item(todolist_id, int(item_index))
     return redirect(f'/todo/{name}')
 
+@post('/todo/<name>/reset')
+def reset_fvp_algorithm(name):
+    app = TodoApp()
+    todolist_id = app.open_todolist(name)
+    app.reset_fvp_algorithm(todolist_id)
+    return redirect(f'/todo/{name}')
+
 @route('/todo/<name>')
 def todolist(name):
     app = TodoApp()

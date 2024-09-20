@@ -100,6 +100,14 @@ class TodoList(Aggregate):
         if self.items[ignored_index].fvp != FvpStatus.NEXT:
             self.items[ignored_index].fvp = FvpStatus.LATER
 
+    @event("FvpReset")
+    def reset_fvp_algorithm(self):
+        open_items = [item for item in self.items.values() if item.status == ItemStatus.OPEN]
+        for item in open_items:
+            item.fvp = FvpStatus.TO_PRIORIZE
+        self._mark_first_open_item_to_next()
+
+
 class TodoApp(Application):
     def start_todolist(self, name):
         todolist = TodoList(name)
@@ -131,5 +139,10 @@ class TodoApp(Application):
     def choose_and_ignore_task(self, todolist_id, chosen_index, ignored_index):
         todolist: TodoList = self.repository.get(todolist_id)
         todolist.choose_and_ignore_task(chosen_index, ignored_index)
+        self.save(todolist)
+
+    def reset_fvp_algorithm(self, todolist_id):
+        todolist: TodoList = self.repository.get(todolist_id)
+        todolist.reset_fvp_algorithm()
         self.save(todolist)
 
