@@ -38,15 +38,16 @@ def reset_fvp_algorithm(name):
 def todolist(name):
     app = TodoApp()
     todolist_id = app.open_todolist(name)
-    response = app.which_task(todolist_id)
+    number_of_items = len(app.get_open_items(todolist_id))
 
+    response = app.which_task(todolist_id)
     match response:
         case NothingToDo():
-            return template('nothing', todolist_name=name, response=response)
+            return template('nothing', todolist_name=name, response=response, number_of_items=number_of_items)
         case DoTheTask(index=task_id, name=task_name):
-            return template('do_the_task', todolist_name=name, task_name=task_name, task_id=task_id)
+            return template('do_the_task', todolist_name=name, task_name=task_name, task_id=task_id, number_of_items=number_of_items)
         case ChooseTheTask(index_1=index_1, name_1=name_1, index_2=index_2, name_2=name_2):
-            return template('choose_the_task', todolist_name=name, index_1=index_1, name_1=name_1, index_2=index_2, name_2=name_2)
+            return template('choose_the_task', todolist_name=name, index_1=index_1, name_1=name_1, index_2=index_2, name_2=name_2, number_of_items=number_of_items)
 
     return template('todolist', todolist_name=name, response=response)
 

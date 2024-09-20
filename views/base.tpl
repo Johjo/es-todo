@@ -19,6 +19,7 @@ Redémarrer l'algo
     <input type="submit" value="Reset">
 </form>
 
+Il y a {{number_of_items}} tâches en attente.
 
 </body>
 </html>
