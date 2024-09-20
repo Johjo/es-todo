@@ -64,7 +64,13 @@ def choose_and_ignore_task(name, chosen_task, ignored_task):
 
 
 if __name__ == '__main__':
+    from dotenv import load_dotenv
+
+    load_dotenv()
+
     os.environ["PERSISTENCE_MODULE"] = 'eventsourcing.sqlite'
     os.environ["SQLITE_DBNAME"] = 'todo.db'
 
-    run(reloader=True)
+    host = os.environ["HOST"]
+    port = os.environ["PORT"]
+    run(reloader=True, host=host, port=port)
