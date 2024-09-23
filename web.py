@@ -9,7 +9,7 @@ from primary import controller
 
 @post('/todo')
 def create_todolist():
-    name = request.forms.get('name')
+    name = get_string_from_request('name')
     app = TodoApp()
     app.start_todolist(name)
     return redirect('/todo/' + name)
@@ -17,7 +17,7 @@ def create_todolist():
 
 @post('/todo/<name>/item')
 def add_item(name):
-    item = request.forms.get('item')
+    item = get_string_from_request('item')
     app = TodoApp()
     todolist_id = app.open_todolist(name)
     app.add_item(todolist_id, item)
@@ -87,9 +87,13 @@ def import_todolist_from_markdown(name):
 
 @post('/todo/<name>/import')
 def import_todolist_from_markdown(name):
-    markdown = request.forms.get('markdown_import')
+    markdown = get_string_from_request('markdown_import')
     controller.import_todolist_from_markdown(name, markdown)
     return redirect(f'/todo/{name}')
+
+
+def get_string_from_request(field_name):
+    return request.forms.getunicode(field_name)
 
 
 if __name__ == '__main__':
