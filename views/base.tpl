@@ -20,6 +20,8 @@ Redémarrer l'algo
 </form>
 
 Il y a {{number_of_items}} tâches en attente.
+<a href="/todo/{{todolist_name}}/export">Exporter les tâches</a>
+
 
 </body>
 </html>

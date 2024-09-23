@@ -1,7 +1,7 @@
 import pytest
 
-from domain.todoapp import TodoApp, ItemStatus
 from domain.presentation import ItemPresentation
+from domain.todo.todoapp import TodoApp
 
 
 def test_register_todolist():
@@ -76,3 +76,17 @@ def test_close_item():
     assert app.get_open_items(todolist_id) == [
         ItemPresentation(index=1, name="buy water"),
         ItemPresentation(index=3, name="buy eggs")]
+
+def test_all_items():
+    app = TodoApp()
+    todolist_id = app.start_todolist("my todolist")
+    app.add_item(todolist_id, "buy water")
+    app.add_item(todolist_id, "buy milk")
+    app.add_item(todolist_id, "buy eggs")
+    app.close_item(todolist_id, 2)
+
+    assert app.all_tasks(todolist_id) == [
+        ItemPresentation(index=1, name="buy water", done=False),
+        ItemPresentation(index=2, name="buy milk", done=True),
+        ItemPresentation(index=3, name="buy eggs", done=False)]
+

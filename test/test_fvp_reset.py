@@ -1,5 +1,5 @@
 from domain.presentation import ChooseTheTask, DoTheTask
-from domain.todoapp import TodoApp
+from domain.todo.todoapp import TodoApp
 
 
 def test_can_do_again_choosing_after_reset():

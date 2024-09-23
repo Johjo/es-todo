@@ -6,12 +6,13 @@ from eventsourcing.application import Application
 from eventsourcing.domain import Aggregate, event
 from enum import Enum
 
+from eventsourcing.utils import register_topic
+
 from domain.presentation import NothingToDo, DoTheTask, ChooseTheTask, ItemPresentation
+from domain.todo.item_status import ItemStatus
 
 
-class ItemStatus(Enum):
-    OPEN = "Open"
-    CLOSED = "Closed"
+
 
 class FvpStatus(Enum):
     NEXT = "Next"
@@ -107,6 +108,9 @@ class TodoList(Aggregate):
             item.fvp = FvpStatus.TO_PRIORIZE
         self._mark_first_open_item_to_next()
 
+    def all_tasks(self):
+        return [ItemPresentation.build_from(item) for item in self.all_items()]
+
 
 class TodoApp(Application):
     def start_todolist(self, name):
@@ -146,3 +150,9 @@ class TodoApp(Application):
         todolist.reset_fvp_algorithm()
         self.save(todolist)
 
+    def all_tasks(self, todolist_id):
+        todolist: TodoList = self.repository.get(todolist_id)
+        return todolist.all_tasks()
+
+
+register_topic("domain.todoapp:TodoList", TodoList)

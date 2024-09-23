@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from domain.todo.item_status import ItemStatus
+
 
 @dataclass
 class NothingToDo:
@@ -24,7 +26,8 @@ class ChooseTheTask:
 class ItemPresentation:
     index: int
     name: str
+    done: bool = False
 
     @staticmethod
     def build_from(item):
-        return ItemPresentation(index=item.index, name=item.name)
+        return ItemPresentation(index=item.index, name=item.name, done=item.status == ItemStatus.CLOSED)

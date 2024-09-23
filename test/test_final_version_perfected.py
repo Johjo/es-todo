@@ -1,7 +1,7 @@
 import pytest
 
-from domain.todoapp import TodoApp
 from domain.presentation import NothingToDo, DoTheTask, ChooseTheTask
+from domain.todo.todoapp import TodoApp
 
 
 def test_propose_nothing_when_empty():
