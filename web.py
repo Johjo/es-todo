@@ -80,6 +80,18 @@ def export_todolist_to_markdown(name):
                     markdown_export=view.markdown_export)
 
 
+@route('/todo/<name>/import')
+def import_todolist_from_markdown(name):
+    return template("import", todolist_name=name, number_of_items=0)
+
+
+@post('/todo/<name>/import')
+def import_todolist_from_markdown(name):
+    markdown = request.forms.get('markdown_import')
+    controller.import_todolist_from_markdown(name, markdown)
+    return redirect(f'/todo/{name}')
+
+
 if __name__ == '__main__':
     from dotenv import load_dotenv
 

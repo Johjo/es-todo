@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from domain.todo.todoapp import TodoApp
 from domain.todo_markdown_exporter import TodoMarkdownExporter, TodoReader, Task as ExportedTask
+from primary.controller.shared.count_open_items import count_open_items
 
 
 def export_todo_list_to_markdown(name):
@@ -27,10 +28,3 @@ class TodoReaderApp(TodoReader):
         self.app.open_todolist(self.name)
         todolist_id = self.app.open_todolist(self.name)
         return [ExportedTask(task.name, task.done) for task in self.app.all_tasks(todolist_id)]
-
-
-def count_open_items(name):
-    app = TodoApp()
-    todolist_id = app.open_todolist(name)
-    number_of_items = len(app.get_open_items(todolist_id))
-    return number_of_items
