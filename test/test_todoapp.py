@@ -90,3 +90,16 @@ def test_all_items():
         ItemPresentation(index=2, name="buy milk", done=True),
         ItemPresentation(index=3, name="buy eggs", done=False)]
 
+@pytest.mark.parametrize("task_id, expected", [
+        (2, ItemPresentation(index=2, name="buy milk", done=True)),
+        (3, ItemPresentation(index=3, name="buy eggs", done=False))
+])
+def test_read_item(task_id, expected):
+    app = TodoApp()
+    todolist_id = app.start_todolist("my todolist")
+    app.add_item(todolist_id, "buy water")
+    app.add_item(todolist_id, "buy milk")
+    app.add_item(todolist_id, "buy eggs")
+    app.close_item(todolist_id, 2)
+
+    assert app.get_task(todolist_id, task_id) == expected

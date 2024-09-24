@@ -111,6 +111,9 @@ class TodoList(Aggregate):
     def all_tasks(self):
         return [ItemPresentation.build_from(item) for item in self.all_items()]
 
+    def get_task(self, task_id):
+        return ItemPresentation.build_from(self.items[task_id])
+
 
 class TodoApp(Application):
     def start_todolist(self, name):
@@ -153,6 +156,10 @@ class TodoApp(Application):
     def all_tasks(self, todolist_id):
         todolist: TodoList = self.repository.get(todolist_id)
         return todolist.all_tasks()
+
+    def get_task(self, todolist_id, task_id):
+        todolist: TodoList = self.repository.get(todolist_id)
+        return todolist.get_task(task_id)
 
 
 register_topic("domain.todoapp:TodoList", TodoList)
