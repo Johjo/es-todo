@@ -111,6 +111,10 @@ class TodoList(Aggregate):
     def all_tasks(self):
         return [ItemPresentation.build_from(item) for item in self.all_items()]
 
+    @event("ItemReworded")
+    def reword_item(self, item_id, new_name):
+        self.items[item_id].name = new_name
+
     def get_task(self, task_id):
         return ItemPresentation.build_from(self.items[task_id])
 
@@ -156,6 +160,11 @@ class TodoApp(Application):
     def all_tasks(self, todolist_id):
         todolist: TodoList = self.repository.get(todolist_id)
         return todolist.all_tasks()
+
+    def reword_item(self, todolist_id, item_id, new_name):
+        todolist: TodoList = self.repository.get(todolist_id)
+        todolist.reword_item(item_id, new_name)
+        self.save(todolist)
 
     def get_task(self, todolist_id, task_id):
         todolist: TodoList = self.repository.get(todolist_id)

@@ -46,6 +46,15 @@ def test_open_todolist():
     assert app.get_open_items(todolist_id) == [ItemPresentation(index=1, name="buy water")]
 
 
+def test_reword_task():
+    app = TodoApp()
+    todolist_id = app.start_todolist("my todolist")
+    app.add_item(todolist_id, "buy water")
+    app.reword_item(todolist_id, 1, "buy egg")
+
+    assert app.get_open_items(todolist_id) == [ItemPresentation(index=1, name="buy egg")]
+
+
 def test_open_todolist_when_two():
     app = TodoApp()
     todolist_id = app.start_todolist("first todolist")

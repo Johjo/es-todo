@@ -32,6 +32,25 @@ def close_item(name, item_index):
     return redirect(f'/todo/{name}')
 
 
+@route('/todo/<name>/item/<task_id>/reword')
+def reword_task(name, task_id):
+    app = TodoApp()
+    todolist_id = app.open_todolist(name)
+    task = app.get_task(todolist_id, int(task_id))
+    
+    return template('reword', todolist_name=name, task_id=task_id, task_name=task.name)
+
+
+@post('/todo/<name>/item/<task_id>/reword')
+def reword_task(name, task_id):
+    app = TodoApp()
+    todolist_id = app.open_todolist(name)
+    task = app.reword_item(todolist_id, int(task_id), get_string_from_request('new_name'))
+    redirect(f'/todo/{name}')
+
+    return template('reword', todolist_name=name, task_id=task_id, task_name=task.name)
+
+
 @post('/todo/<name>/reset')
 def reset_fvp_algorithm(name):
     app = TodoApp()
