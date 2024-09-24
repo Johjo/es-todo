@@ -26,7 +26,7 @@ class ChooseTheTask:
 class ItemPresentation:
     index: int
     name: str
-    done: bool = False
+    done: bool
 
     @staticmethod
     def build_from(item):

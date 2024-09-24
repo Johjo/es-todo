@@ -45,10 +45,8 @@ def reword_task(name, task_id):
 def reword_task(name, task_id):
     app = TodoApp()
     todolist_id = app.open_todolist(name)
-    task = app.reword_item(todolist_id, int(task_id), get_string_from_request('new_name'))
-    redirect(f'/todo/{name}')
-
-    return template('reword', todolist_name=name, task_id=task_id, task_name=task.name)
+    app.reword_item(todolist_id, int(task_id), get_string_from_request('new_name'))
+    return redirect(f'/todo/{name}')
 
 
 @post('/todo/<name>/reset')
