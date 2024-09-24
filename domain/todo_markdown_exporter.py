@@ -12,7 +12,7 @@ class TodoMarkdownExporter:
     def __init__(self, reader: TodoReader):
         self.reader = reader
 
-    def export_to_markdown(self, ):
+    def export_to_markdown(self) -> str:
         lines = [task.to_markdown() for task in self.reader.all_tasks()]
         return "\n".join(lines)
 

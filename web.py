@@ -33,7 +33,7 @@ def reword_task(name, task_id):
 
 
 @post('/todo/<name>/item/<task_id>/reword')
-def reword_task(name, task_id):
+def post_reword_task(name, task_id):
     write.reword_task(name=name, task_id=task_id, new_name=get_string_from_request('new_name'))
     return redirect(f'/todo/{name}')
 
@@ -85,7 +85,7 @@ def import_todolist_from_markdown(name):
 
 
 @post('/todo/<name>/import')
-def import_todolist_from_markdown(name):
+def post_import_todolist_from_markdown(name):
     markdown = get_string_from_request('markdown_import')
     write.import_todolist_from_markdown(name, markdown)
     return redirect(f'/todo/{name}')

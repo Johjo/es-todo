@@ -17,7 +17,7 @@ class TodoMarkdownImporter:
     def __init__(self, writer: TodoWriter):
         self.writer = writer
 
-    def import_from_markdown(self, markdown):
+    def import_from_markdown(self, markdown : str) -> None:
         pattern = r"- \[ \] (.+)"
         names = re.findall(pattern, markdown)
         for name in names:

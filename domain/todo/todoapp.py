@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from dataclasses import dataclass
+from typing import List
 from uuid import UUID, uuid5, NAMESPACE_URL
 
 from eventsourcing.application import Application
@@ -67,17 +68,17 @@ class TodoList(Aggregate):
                 item.fvp = FvpStatus.TO_PRIORIZE
         self._mark_first_open_item_to_next()
 
-    def which_task(self):
+    def which_task(self) -> NothingToDo:
         current_item = self.search_last_next_item()
         if not current_item:
             return NothingToDo()
 
         item_to_priorize = self.search_first_item_to_priorize()
-        if not item_to_priorize:
-            return current_item.to_do_the_task()
 
         if item_to_priorize:
             return current_item.to_choose_the_task(item_to_priorize)
+
+        return current_item.to_do_the_task()
 
 
     def search_last_next_item(self):
@@ -125,12 +126,12 @@ class TodoApp(Application):
         self.save(todolist)
         return todolist.id
 
-    def add_item(self, todolist_id, item):
+    def add_item(self, todolist_id, item) -> None:
         todolist: TodoList = self.repository.get(todolist_id)
         todolist.add_item(item)
         self.save(todolist)
 
-    def get_open_items(self, todolist_id):
+    def get_open_items(self, todolist_id) -> List[ItemPresentation]:
         todolist: TodoList = self.repository.get(todolist_id)
         return [ItemPresentation.build_from(item) for item in todolist.all_items() if item.status == ItemStatus.OPEN]
 
@@ -138,35 +139,35 @@ class TodoApp(Application):
     def open_todolist(name):
         return TodoList.create_id(name)
 
-    def close_item(self, todolist_id, item_index):
+    def close_item(self, todolist_id, item_index) -> None:
         todolist: TodoList = self.repository.get(todolist_id)
         todolist.close(index=item_index)
         self.save(todolist)
 
-    def which_task(self, todolist_id):
+    def which_task(self, todolist_id) -> NothingToDo:
         todolist: TodoList = self.repository.get(todolist_id)
         return todolist.which_task()
 
-    def choose_and_ignore_task(self, todolist_id, chosen_index, ignored_index):
+    def choose_and_ignore_task(self, todolist_id, chosen_index, ignored_index) -> None:
         todolist: TodoList = self.repository.get(todolist_id)
         todolist.choose_and_ignore_task(chosen_index, ignored_index)
         self.save(todolist)
 
-    def reset_fvp_algorithm(self, todolist_id):
+    def reset_fvp_algorithm(self, todolist_id) -> None:
         todolist: TodoList = self.repository.get(todolist_id)
         todolist.reset_fvp_algorithm()
         self.save(todolist)
 
-    def all_tasks(self, todolist_id):
+    def all_tasks(self, todolist_id) -> List[ItemPresentation]:
         todolist: TodoList = self.repository.get(todolist_id)
         return todolist.all_tasks()
 
-    def reword_item(self, todolist_id, item_id, new_name):
+    def reword_item(self, todolist_id, item_id, new_name) -> None:
         todolist: TodoList = self.repository.get(todolist_id)
         todolist.reword_item(item_id, new_name)
         self.save(todolist)
 
-    def get_task(self, todolist_id, task_id):
+    def get_task(self, todolist_id, task_id) -> ItemPresentation:
         todolist: TodoList = self.repository.get(todolist_id)
         return todolist.get_task(task_id)
 
