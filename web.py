@@ -2,8 +2,11 @@ import os
 
 from bottle import route, run, template, post, request, redirect
 
-from domain.presentation import NothingToDo, DoTheTask, ChooseTheTask
+from hexagon.fvp.domain_model import NothingToDo, ChooseTheTask, DoTheTask
 from primary.controller import write, read
+from toto import init
+
+init()
 
 
 @post('/todo')
@@ -40,7 +43,7 @@ def post_reword_task(name, task_id):
 
 @post('/todo/<name>/reset')
 def reset_fvp_algorithm(name):
-    write.reset_fvp_algorithm(name)
+    write.reset_fvp_algorithm()
     return redirect(f'/todo/{name}')
 
 
@@ -52,10 +55,10 @@ def todolist(name):
     match response:
         case NothingToDo():
             return template('nothing', todolist_name=name, response=response, number_of_items=number_of_items)
-        case DoTheTask(index=task_id, name=task_name):
+        case DoTheTask(id=task_id, name=task_name):
             return template('do_the_task', todolist_name=name, task_name=task_name, task_id=task_id,
                             number_of_items=number_of_items)
-        case ChooseTheTask(index_1=index_1, name_1=name_1, index_2=index_2, name_2=name_2):
+        case ChooseTheTask(id_1=index_1, name_1=name_1, id_2=index_2, name_2=name_2):
             return template('choose_the_task', todolist_name=name, index_1=index_1, name_1=name_1, index_2=index_2,
                             name_2=name_2, number_of_items=number_of_items)
 
@@ -69,7 +72,7 @@ def index():
 
 @post('/todo/<name>/item/choose/<chosen_task>/ignore/<ignored_task>')
 def choose_and_ignore_task(name, chosen_task, ignored_task):
-    write.choose_and_ignore_task(chosen_task, ignored_task, name)
+    write.choose_and_ignore_task(chosen_task, ignored_task)
     return redirect(f'/todo/{name}')
 
 

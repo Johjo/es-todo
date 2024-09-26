@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
-from hexagon.fvp.domain_model import Task, FinalVersionPerfected
+from hexagon.fvp.domain_model import Task, FinalVersionPerfectedSession
+from hexagon.fvp.port import FvpSessionRepository
 
 
 class TaskReader(ABC):
@@ -10,9 +11,18 @@ class TaskReader(ABC):
 
 
 class WhichTaskQuery:
-    def __init__(self, set_of_open_tasks: TaskReader):
+    def __init__(self, set_of_open_tasks: TaskReader, set_of_fvp_sessions: FvpSessionRepository):
+        self.set_of_fvp_sessions = set_of_fvp_sessions
         self.set_of_open_tasks = set_of_open_tasks
 
     def which_task(self):
-        fvp = FinalVersionPerfected()
-        return fvp.which_task(self.set_of_open_tasks.all())
+        session = self._get_or_create_session()
+        return session.which_task(self.set_of_open_tasks.all())
+
+    def _get_or_create_session(self):
+        snapshot = self.set_of_fvp_sessions.by()
+        if snapshot:
+            session = FinalVersionPerfectedSession.from_snapshot(snapshot)
+        else:
+            session = FinalVersionPerfectedSession.create()
+        return session

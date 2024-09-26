@@ -1,8 +1,10 @@
+from collections import OrderedDict
 from uuid import uuid4, UUID
 
 import pytest
 
-from hexagon.fvp.domain_model import Task, NothingToDo, DoTheTask, ChooseTheTask, FinalVersionPerfected
+from hexagon.fvp.domain_model import Task, NothingToDo, DoTheTask, ChooseTheTask, FinalVersionPerfectedSession, \
+    FvpSnapshot
 
 
 def a_task_id(index: int = None):
@@ -13,7 +15,7 @@ def a_task_id(index: int = None):
 
 @pytest.fixture
 def sut():
-    return FinalVersionPerfected()
+    return FinalVersionPerfectedSession.create()
 
 
 def test_propose_nothing_when_empty(sut):
@@ -320,4 +322,23 @@ def test_acceptance_with_four_tasks_01(sut):
     actual = sut.which_task(open_tasks)
     assert actual == NothingToDo()
 
-### -----
+
+def test_empty_snapshot(sut):
+    snapshot = sut.to_snapshot()
+    d = OrderedDict()
+    assert snapshot == FvpSnapshot(OrderedDict())
+
+def test_write_priorities_to_snapshot(sut):
+    sut.choose_and_ignore_task(a_task_id(1), a_task_id(2))
+    snapshot = sut.to_snapshot()
+    assert snapshot == FvpSnapshot(OrderedDict({a_task_id(1): 1, a_task_id(2): 0}))
+
+def test_read_priorities_from_snapshot(sut):
+    snapshot = FvpSnapshot(OrderedDict({a_task_id(1): 1, a_task_id(2): 0}))
+    sut = FinalVersionPerfectedSession.from_snapshot(snapshot)
+    assert sut.to_snapshot() == FvpSnapshot(OrderedDict({a_task_id(1): 1, a_task_id(2): 0}))
+
+def test_reset_session(sut):
+    sut.choose_and_ignore_task(a_task_id(1), a_task_id(2))
+    sut.reset()
+    assert sut.to_snapshot() == FvpSnapshot(OrderedDict())

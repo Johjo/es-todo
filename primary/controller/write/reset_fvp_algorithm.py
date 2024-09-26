@@ -1,7 +1,5 @@
-from domain.todo.todoapp import TodoApp
+from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 
 
-def reset_fvp_algorithm(name):
-    app = TodoApp()
-    todolist_id = app.open_todolist(name)
-    app.reset_fvp_algorithm(todolist_id)
+def reset_fvp_algorithm():
+    ResetFvpSession(set_of_fvp_session_repository).execute()

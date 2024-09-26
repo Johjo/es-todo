@@ -1,7 +1,6 @@
-from domain.todo.todoapp import TodoApp
+from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
+from toto import set_of_fvp_session_repository
 
 
-def choose_and_ignore_task(chosen_task, ignored_task, name):
-    app = TodoApp()
-    todolist_id = app.open_todolist(name)
-    app.choose_and_ignore_task(todolist_id=todolist_id, chosen_index=int(chosen_task), ignored_index=int(ignored_task))
+def choose_and_ignore_task(chosen_task, ignored_task):
+    ChooseAndIgnoreTaskFvp(set_of_fvp_session_repository).execute(int(chosen_task), int(ignored_task))
