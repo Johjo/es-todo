@@ -34,7 +34,7 @@ class ChooseTheTask:
     name_2: str
 
 
-class TodoList:
+class FinalVersionPerfected:
     def __init__(self):
         self.priority_of_task = OrderedDict()
 

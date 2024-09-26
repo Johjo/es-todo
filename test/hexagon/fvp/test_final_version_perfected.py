@@ -2,7 +2,7 @@ from uuid import uuid4, UUID
 
 import pytest
 
-from hexagon.fvp.domain_model import Task, NothingToDo, DoTheTask, ChooseTheTask, TodoList
+from hexagon.fvp.domain_model import Task, NothingToDo, DoTheTask, ChooseTheTask, FinalVersionPerfected
 
 
 def a_task_id(index: int = None):
@@ -13,7 +13,7 @@ def a_task_id(index: int = None):
 
 @pytest.fixture
 def sut():
-    return TodoList()
+    return FinalVersionPerfected()
 
 
 def test_propose_nothing_when_empty(sut):
