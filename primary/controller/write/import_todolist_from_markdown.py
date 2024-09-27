@@ -1,16 +1,8 @@
-from domain.todo.todoapp import TodoApp
-from domain.todo_markdown_importer import TodoMarkdownImporter, TodoWriter
+from domain.todo_markdown_importer import TodoMarkdownImporter
+from primary.controller.dependency_list import DependencyList
 
 
-def import_todolist_from_markdown(name, markdown):
-    TodoMarkdownImporter(TodoWriterApp(name)).import_from_markdown(markdown)
-
-class TodoWriterApp(TodoWriter):
-    def __init__(self, name):
-        self.name = name
-
-    def write(self, task):
-        app = TodoApp()
-        todolist_id = app.open_todolist(self.name)
-        app.add_item(todolist_id, task.name)
+def import_todolist_from_markdown(todolist_name, markdown, dependencies: DependencyList):
+    todo_writer = dependencies.todo_writer_from_import_todolist_from_markdown(todolist_name)
+    TodoMarkdownImporter(todo_writer).import_from_markdown(markdown)
 

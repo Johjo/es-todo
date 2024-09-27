@@ -4,9 +4,9 @@ from uuid import uuid4
 import pytest
 
 from fixture import an_id
-from test.hexagon.fvp.test_double import SimpleFvpSessionRepository
 from hexagon.fvp.domain_model import NothingToDo, DoTheTask, Task, ChooseTheTask, FvpSnapshot
 from hexagon.fvp.read.which_task import TaskReader, WhichTaskQuery
+from secondary.fvp.simple_session_repository import SimpleSessionRepository
 
 
 class SimpleTaskReader(TaskReader):
@@ -21,7 +21,7 @@ class SimpleTaskReader(TaskReader):
 
 
 @pytest.fixture
-def sut(set_of_fvp_sessions: SimpleFvpSessionRepository, set_of_open_tasks: SimpleTaskReader):
+def sut(set_of_fvp_sessions: SimpleSessionRepository, set_of_open_tasks: SimpleTaskReader):
     return WhichTaskQuery(set_of_open_tasks, set_of_fvp_sessions)
 
 
@@ -32,7 +32,7 @@ def set_of_open_tasks():
 
 @pytest.fixture
 def set_of_fvp_sessions():
-    return SimpleFvpSessionRepository()
+    return SimpleSessionRepository()
 
 
 def test_which_task_without_tasks(sut):

@@ -2,11 +2,9 @@ import os
 
 from bottle import route, run, template, post, request, redirect
 
+from web_dependency_list import DependencyListWeb
 from hexagon.fvp.domain_model import NothingToDo, ChooseTheTask, DoTheTask
 from primary.controller import write, read
-from toto import init
-
-init()
 
 
 @post('/todo')
@@ -43,13 +41,13 @@ def post_reword_task(name, task_id):
 
 @post('/todo/<name>/reset')
 def reset_fvp_algorithm(name):
-    write.reset_fvp_algorithm()
+    write.reset_fvp_algorithm(dependencies=DependencyListWeb.get_shared_instance())
     return redirect(f'/todo/{name}')
 
 
 @route('/todo/<name>')
 def todolist(name):
-    response = read.which_task(name)
+    response = read.which_task(name, dependencies=DependencyListWeb.get_shared_instance())
     number_of_items = read.count_open_items(name)
 
     match response:
@@ -72,14 +70,15 @@ def index():
 
 @post('/todo/<name>/item/choose/<chosen_task>/ignore/<ignored_task>')
 def choose_and_ignore_task(name, chosen_task, ignored_task):
-    write.choose_and_ignore_task(chosen_task, ignored_task)
+    write.choose_and_ignore_task(chosen_task, ignored_task, dependencies=DependencyListWeb.get_shared_instance())
     return redirect(f'/todo/{name}')
 
 
 @route('/todo/<name>/export')
 def export_todolist_to_markdown(name):
-    return template("export", todolist_name=name, number_of_items=read.count_open_items(name),
-                    markdown_export=read.export_todo_list_to_markdown(name))
+    markdown = read.export_todo_list_to_markdown(name, dependencies=DependencyListWeb.get_shared_instance())
+    number_of_items = read.count_open_items(name)
+    return template("export", todolist_name=name, number_of_items=number_of_items, markdown_export=markdown)
 
 
 @route('/todo/<name>/import')
@@ -90,7 +89,7 @@ def import_todolist_from_markdown(name):
 @post('/todo/<name>/import')
 def post_import_todolist_from_markdown(name):
     markdown = get_string_from_request('markdown_import')
-    write.import_todolist_from_markdown(name, markdown)
+    write.import_todolist_from_markdown(name, markdown, dependencies=DependencyListWeb.get_shared_instance())
     return redirect(f'/todo/{name}')
 
 

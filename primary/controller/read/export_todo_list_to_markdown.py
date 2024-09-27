@@ -1,19 +1,9 @@
-from dataclasses import dataclass
-
-from domain.todo.todoapp import TodoApp
-from domain.todo_markdown_exporter import TodoMarkdownExporter, TodoReader, Task as ExportedTask
+from domain.todo_markdown_exporter import TodoMarkdownExporter
+from primary.controller.dependency_list import DependencyList
 
 
-def export_todo_list_to_markdown(name):
-    return TodoMarkdownExporter(TodoReaderApp(name)).export_to_markdown()
+def export_todo_list_to_markdown(name, dependencies: DependencyList):
+    todo_reader = dependencies.todo_reader_for_todo_markdown_exporter(name)
+    return TodoMarkdownExporter(todo_reader).export_to_markdown()
 
 
-class TodoReaderApp(TodoReader):
-    def __init__(self, name):
-        self.app = TodoApp()
-        self.name = name
-
-    def all_tasks(self):
-        self.app.open_todolist(self.name)
-        todolist_id = self.app.open_todolist(self.name)
-        return [ExportedTask(task.name, task.done) for task in self.app.all_tasks(todolist_id)]

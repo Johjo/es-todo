@@ -3,15 +3,15 @@ from uuid import uuid4
 
 import pytest
 
-from fixture import an_id
-from test.hexagon.fvp.test_double import SimpleFvpSessionRepository
+from test.fixture import an_id
 from hexagon.fvp.domain_model import FvpSnapshot
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
+from secondary.fvp.simple_session_repository import SimpleSessionRepository
 
 
 @pytest.fixture
 def set_of_fvp_sessions():
-    return SimpleFvpSessionRepository()
+    return SimpleSessionRepository()
 
 
 @pytest.fixture

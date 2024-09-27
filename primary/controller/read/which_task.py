@@ -1,21 +1,10 @@
-from domain.todo.todoapp import TodoApp
-from hexagon.fvp.domain_model import Task
-from hexagon.fvp.read.which_task import WhichTaskQuery, TaskReader
-from toto import set_of_fvp_session_repository
+from hexagon.fvp.read.which_task import WhichTaskQuery
+from primary.controller.dependency_list import DependencyList
 
 
-class TaskReaderTodolist(TaskReader):
-    def __init__(self, name):
-        self.name = name
+def which_task(name: str, dependencies: DependencyList):
+    set_of_open_tasks = dependencies.task_reader_for_fvp_which_task(name)
+    set_of_fvp_sessions = dependencies.fvp_session_repository_for_fvp()
 
-    def all(self) -> list[Task]:
-        app = TodoApp()
-        todolist_id = app.open_todolist(self.name)
-        tasks = [Task(id=task.index, name=task.name) for task in app.get_open_items(todolist_id)]
-        return tasks
-
-
-def which_task(name):
-    set_of_open_tasks = TaskReaderTodolist(name=name)
-    response = WhichTaskQuery(set_of_open_tasks=set_of_open_tasks, set_of_fvp_sessions=set_of_fvp_session_repository).which_task()
+    response = WhichTaskQuery(set_of_open_tasks=set_of_open_tasks, set_of_fvp_sessions=set_of_fvp_sessions).which_task()
     return response
