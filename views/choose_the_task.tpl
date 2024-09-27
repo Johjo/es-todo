@@ -1,6 +1,6 @@
 % rebase('base.tpl')
 <p>
-<h2> {{name_1}}</h2>
+% include('task_title', task_name=name_1, task_id=index_1)
 <form action="/todo/{{todolist_name}}/item/choose/{{index_1}}/ignore/{{index_2}}" method="post">
     <input type="submit" value="Choisir cette tâche">
 </form>
@@ -11,7 +11,7 @@
 </p>
 
 <p>
-<h2> {{name_2}}</h2>
+% include('task_title', task_name=name_2, task_id=index_2)
 <form action="/todo/{{todolist_name}}/item/choose/{{index_2}}/ignore/{{index_1}}" method="post">
     <input type="submit" value="Choisir cette tâche">
 </form>
