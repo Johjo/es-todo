@@ -21,6 +21,14 @@ Redémarrer l'algo
 </form>
 
 Il y a {{number_of_items}} tâches en attente.
+
+<h2> Contexte </h2>
+% for (context, count) in counts_by_context.items():
+<li> {{context}} : {{count}} </li>
+% end
+<ul>
+
+
 <ul>
 <li><a href="/todo/{{todolist_name}}/export">Exporter les tâches</a></li>
 <li><a href="/todo/{{todolist_name}}/import">Importer des tâches</a></li>

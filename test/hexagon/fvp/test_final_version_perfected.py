@@ -19,7 +19,7 @@ def test_propose_nothing_when_empty(sut):
 
 
 def test_when_one_task_propose_the_only_task_open_when_one(sut):
-    task = Task(id=uuid4(), name="buy milk")
+    task = Task(id=1, name="buy milk")
 
     actual = sut.which_task([task])
     assert actual == DoTheTask(id=task.id, name=task.name)

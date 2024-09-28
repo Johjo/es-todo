@@ -49,16 +49,25 @@ def reset_fvp_algorithm(name):
 def todolist(name):
     response = read.which_task(name, dependencies=DependencyListWeb.get_shared_instance())
     number_of_items = read.count_open_items(name)
-
+    # todo: read step 1: introduce fake reading
+    counts_by_context = read.current_contexts(name)
     match response:
         case NothingToDo():
-            return template('nothing', todolist_name=name, response=response, number_of_items=number_of_items)
+            return template('nothing',
+                            todolist_name=name, response=response,
+                            number_of_items=number_of_items, counts_by_context=counts_by_context)
         case DoTheTask(id=task_id, name=task_name):
-            return template('do_the_task', todolist_name=name, task_name=task_name, task_id=task_id,
-                            number_of_items=number_of_items)
+            return template('do_the_task',
+                            todolist_name=name,
+                            task_name=task_name, task_id=task_id,
+                            number_of_items=number_of_items, counts_by_context=counts_by_context)
         case ChooseTheTask(id_1=index_1, name_1=name_1, id_2=index_2, name_2=name_2):
-            return template('choose_the_task', todolist_name=name, index_1=index_1, name_1=name_1, index_2=index_2,
-                            name_2=name_2, number_of_items=number_of_items)
+            return template('choose_the_task',
+                            todolist_name=name,
+                            index_1=index_1, name_1=name_1,
+                            index_2=index_2,
+                            name_2=name_2,
+                            number_of_items=number_of_items, counts_by_context=counts_by_context)
 
     return template('todolist', todolist_name=name, response=response)
 
