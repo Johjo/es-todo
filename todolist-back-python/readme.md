@@ -1,12 +1,11 @@
 # README
 
 ## install package with pip and pipenv
-`python -m pipenv shell`
+- create virtual environment `python -m pipenv shell`
+- install package`python -m pip install -r requirements.txt`
+- update .env file
+- start backend `python web.py`
 
-`pip install -r requirements.txt`
 
-`python web.py`
-
-
-# Update requirements file
+## Update requirements file
 `python -m pip freeze > requirements.txt`
