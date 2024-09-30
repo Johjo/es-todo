@@ -27,7 +27,7 @@ Il y a {{number_of_items}} tâches en attente.
 <ul>
 <li> <a href="/todo/{{todolist_name}}?only_inbox=1">Inbox</a></li>
 % for (context, count) in counts_by_context.items():
-<li> {{context}} : {{count}} </li>
+<li> <a href="/todo/{{todolist_name}}?context={{urlencode(context)}}">{{context}}</a> : {{count}} </li>
 % end
 </ul>
 

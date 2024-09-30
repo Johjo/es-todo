@@ -1,7 +1,7 @@
 import os
 
 from bottle import route, run, template, post, request, redirect
-
+import urllib.parse
 from web_dependency_list import DependencyListWeb
 from hexagon.fvp.domain_model import NothingToDo, ChooseTheTask, DoTheTask
 from primary.controller import write, read
@@ -9,14 +9,14 @@ from primary.controller import write, read
 
 @post('/todo')
 def create_todolist():
-    name = get_string_from_request('name')
+    name = get_string_from_request_post('name')
     write.create_todolist(name)
     return redirect('/todo/' + name)
 
 
 @post('/todo/<name>/item')
 def add_item(name):
-    item = get_string_from_request('item')
+    item = get_string_from_request_post('item')
     write.add_task(item, name)
     return redirect(f'/todo/{name}')
 
@@ -35,7 +35,7 @@ def reword_task(name, task_id):
 
 @post('/todo/<name>/item/<task_id>/reword')
 def post_reword_task(name, task_id):
-    write.reword_task(name=name, task_id=task_id, new_name=get_string_from_request('new_name'))
+    write.reword_task(name=name, task_id=task_id, new_name=get_string_from_request_post('new_name'))
     return redirect(f'/todo/{name}')
 
 
@@ -47,8 +47,9 @@ def reset_fvp_algorithm(name):
 
 @route('/todo/<todolist_name>')
 def todolist(todolist_name) -> str:
-    only_inbox : bool = request.query.getunicode('only_inbox') == '1'
-    response = read.which_task(todolist_name=todolist_name, only_inbox=only_inbox, dependencies=DependencyListWeb.get_shared_instance())
+    only_inbox: bool = get_string_from_request_get('only_inbox') == '1'
+    context: str = get_string_from_request_get('context')
+    response = read.which_task(todolist_name=todolist_name, only_inbox=only_inbox, context=context, dependencies=DependencyListWeb.get_shared_instance())
     number_of_items = read.count_open_items(todolist_name)
     # todo: read step 1: introduce fake reading
     counts_by_context = read.current_contexts(todolist_name)
@@ -56,21 +57,25 @@ def todolist(todolist_name) -> str:
         case NothingToDo():
             return template('nothing',
                             todolist_name=todolist_name, response=response,
-                            number_of_items=number_of_items, counts_by_context=counts_by_context)
+                            number_of_items=number_of_items, counts_by_context=counts_by_context, urlencode=urllib.parse.quote)
         case DoTheTask(id=task_id, name=task_name):
             return template('do_the_task',
                             todolist_name=todolist_name,
                             task_name=task_name, task_id=task_id,
-                            number_of_items=number_of_items, counts_by_context=counts_by_context)
+                            number_of_items=number_of_items, counts_by_context=counts_by_context, urlencode=urllib.parse.quote)
         case ChooseTheTask(id_1=index_1, name_1=name_1, id_2=index_2, name_2=name_2):
             return template('choose_the_task',
                             todolist_name=todolist_name,
                             index_1=index_1, name_1=name_1,
                             index_2=index_2,
                             name_2=name_2,
-                            number_of_items=number_of_items, counts_by_context=counts_by_context)
+                            number_of_items=number_of_items, counts_by_context=counts_by_context, urlencode=urllib.parse.quote)
 
     return template('todolist', todolist_name=todolist_name, response=response)
+
+
+def get_string_from_request_get(field_name):
+    return request.query.getunicode(field_name)
 
 
 @route('/')
@@ -98,12 +103,12 @@ def import_todolist_from_markdown(name):
 
 @post('/todo/<name>/import')
 def post_import_todolist_from_markdown(name):
-    markdown = get_string_from_request('markdown_import')
+    markdown = get_string_from_request_post('markdown_import')
     write.import_todolist_from_markdown(name, markdown, dependencies=DependencyListWeb.get_shared_instance())
     return redirect(f'/todo/{name}')
 
 
-def get_string_from_request(field_name):
+def get_string_from_request_post(field_name):
     return request.forms.getunicode(field_name)
 
 
