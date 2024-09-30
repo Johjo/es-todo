@@ -22,11 +22,14 @@ Redémarrer l'algo
 
 Il y a {{number_of_items}} tâches en attente.
 
+
 <h2> Contexte </h2>
+<ul>
+<li> <a href="/todo/{{todolist_name}}?only_inbox=1">Inbox</a></li>
 % for (context, count) in counts_by_context.items():
 <li> {{context}} : {{count}} </li>
 % end
-<ul>
+</ul>
 
 
 <ul>

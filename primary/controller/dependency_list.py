@@ -11,7 +11,7 @@ class DependencyList(ABC):
         pass
 
     @abstractmethod
-    def task_reader_for_fvp_which_task(self, todolist_name):
+    def task_reader_for_fvp_which_task(self, todolist_name: str, only_inbox: bool):
         pass
 
     @abstractmethod
