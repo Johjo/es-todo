@@ -27,7 +27,7 @@ class SimpleTodolistReader implements TodolistReader {
 describe("Todolist", () => {
     it("should refresh data when load page", async () => {
         const allTodolist = new SimpleTodolistReader();
-        const externalTodolist : Todolist = {numberOfTasks: 2};
+        const externalTodolist : Todolist = {numberOfTasks: 2, contexts: []};
         allTodolist.feed(externalTodolist);
 
         const dependencies : DependenciesList = {
@@ -38,16 +38,6 @@ describe("Todolist", () => {
 
 
         const expectedText = 'Il y a 2 tâches en cours';
-
-        const {store} = renderWithProvider(<TodolistPage/>, dependencies);
-        console.log(store);
-        await act(async () => {
-            // const controller = new Controller(store, dependencies);
-            // controller.refreshTodolist();
-            // store.dispatch(todoListFetched({numberOfTasks: 20}));
-        });
-
-
         expect(screen.getByText(expectedText)).toBeInTheDocument();
     });
 });

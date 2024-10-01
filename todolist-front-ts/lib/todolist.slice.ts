@@ -2,15 +2,17 @@ import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {counterSlice} from "@/lib/features/counter/counterSlice";
 
 export type Todolist = {
+    contexts: string[],
     numberOfTasks: number
 }
 
 type FetchedTodolist = {
+    contexts: string[],
     numberOfTasks: number
 }
 
 
-let initialState: Todolist = {numberOfTasks: 0};
+let initialState: Todolist = {numberOfTasks: 0, contexts: []};
 
 export const todolistSlice = createSlice({
     name: "todolist",
@@ -18,6 +20,7 @@ export const todolistSlice = createSlice({
     reducers: {
         todoListFetched(state, action: PayloadAction<FetchedTodolist>) {
             state.numberOfTasks = action.payload.numberOfTasks;
+            state.contexts = action.payload.contexts;
         }
     },
     selectors: {

@@ -3,8 +3,10 @@ import React, {useEffect} from "react";
 import {TaskCounter} from "@/app/components/TaskCounter";
 import {Controller, useDependencies} from "@/app/controller";
 import {useAppStore} from "@/lib/hooks";
+import {Context} from "@/app/components/Context";
 
-function Todolist() {
+function
+Todolist() {
     return <>
         <h1>Todolist (construction en cours)</h1>
         <p>
@@ -24,12 +26,7 @@ function Todolist() {
 
 
         <h2>Contexte</h2>
-        <ul>
-            <li><a href="/todo?inbox=1"> Inbox</a></li>
-            <li>#contexte 1</li>
-            <li>#contexte 2</li>
-            <li>#contexte 3</li>
-        </ul>
+        <Context/>
 
         <p>
             <button>Exporter les tâches</button>

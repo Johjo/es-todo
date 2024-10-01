@@ -1,8 +1,8 @@
 "use client";
 import Image from "next/image";
-import type { ReactNode } from "react";
-import { StoreProvider } from "./StoreProvider";
-import { Nav } from "./components/Nav";
+import type {ReactNode} from "react";
+import {StoreProvider} from "./StoreProvider";
+import {Nav} from "./components/Nav";
 
 import "./styles/globals.css";
 import styles from "./styles/layout.module.css";
@@ -14,14 +14,14 @@ interface Props {
 
 class TodolistReaderFromBack implements TodolistReader {
   async onlyOne(): Promise<Todolist> {
-    const response = await fetch("http://127.0.0.1:8090/rest/todo/Jonathan/count_tasks");
+    const response: Response = await fetch("http://127.0.0.1:8090/rest/todo/Jonathan");
 
     if (!response.ok) {
       throw new Error(`Erreur lors de la récupération des tâches : ${response.statusText}`);
     }
 
     const data = await response.json();
-    return { numberOfTasks: data.count };
+    return {numberOfTasks: data.numberOfTasks, contexts: data.contexts};
   }
 }
 

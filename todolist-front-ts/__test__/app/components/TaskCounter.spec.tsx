@@ -4,14 +4,8 @@ import {TaskCounter} from "@/app/components/TaskCounter";
 import React from "react";
 import {todoListFetched} from "@/lib/todolist.slice";
 import {renderWithProvider} from "@/__test__/app/utils/renderWithProvider";
-import {DependenciesList, TodolistReader} from "@/app/controller";
+import {aTodolist, EmptyDependencies} from "@/__test__/app/components/fixture";
 
-
-class EmptyDependencies implements DependenciesList {
-    todolistReaderForRefreshTodolist(): TodolistReader {
-        throw new Error("Method not implemented.");
-    }
-}
 
 describe("TaskCounter", () => {
     it("should display 0 when load", () => {
@@ -26,7 +20,7 @@ describe("TaskCounter", () => {
     ])("should display the number of tasks when %s task(s)", (numberOfTasks, expected) => {
         const {store} = renderWithProvider(<TaskCounter/>, new EmptyDependencies());
         act(() => {
-            store.dispatch(todoListFetched({numberOfTasks: numberOfTasks}));
+            store.dispatch(todoListFetched({...aTodolist(), numberOfTasks: numberOfTasks}));
         });
 
         expect(screen.getByText(expected)).toBeInTheDocument();

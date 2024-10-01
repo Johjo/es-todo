@@ -3,7 +3,7 @@ import {todoListFetched} from "@/lib/todolist.slice";
 import {createContext, useContext} from "react";
 import React from "react";
 
-export type Todolist = { numberOfTasks: number };
+export type Todolist = { numberOfTasks: number, contexts: string[] };
 
 export interface TodolistReader {
     onlyOne(): Promise<Todolist>;
@@ -38,7 +38,8 @@ export class Controller {
         const allTodolist = this.dependencies.todolistReaderForRefreshTodolist();
 
         allTodolist.onlyOne().then(todolist => {
-            this.store.dispatch(todoListFetched({numberOfTasks: todolist.numberOfTasks}));
+            console.log(todolist);
+            this.store.dispatch(todoListFetched({contexts: todolist.contexts, numberOfTasks: todolist.numberOfTasks}));
         });
 
     }
