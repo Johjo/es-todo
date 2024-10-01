@@ -14,6 +14,7 @@ def enable_cors():
     response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     response.headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept'
 
+
 @post('/todo')
 def create_todolist():
     name = get_string_from_request_post('name')
@@ -56,7 +57,8 @@ def reset_fvp_algorithm(name):
 def todolist(todolist_name) -> str:
     only_inbox: bool = get_string_from_request_get('only_inbox') == '1'
     context: str = get_string_from_request_get('context')
-    response = read.which_task(todolist_name=todolist_name, only_inbox=only_inbox, context=context, dependencies=DependencyListWeb.get_shared_instance())
+    response = read.which_task(todolist_name=todolist_name, only_inbox=only_inbox, context=context,
+                               dependencies=DependencyListWeb.get_shared_instance())
     number_of_items = read.count_open_items(todolist_name)
     # todo: read step 1: introduce fake reading
     counts_by_context = read.current_contexts(todolist_name)
@@ -64,19 +66,22 @@ def todolist(todolist_name) -> str:
         case NothingToDo():
             return template('nothing',
                             todolist_name=todolist_name, response=response,
-                            number_of_items=number_of_items, counts_by_context=counts_by_context, urlencode=urllib.parse.quote)
+                            number_of_items=number_of_items, counts_by_context=counts_by_context,
+                            urlencode=urllib.parse.quote)
         case DoTheTask(id=task_id, name=task_name):
             return template('do_the_task',
                             todolist_name=todolist_name,
                             task_name=task_name, task_id=task_id,
-                            number_of_items=number_of_items, counts_by_context=counts_by_context, urlencode=urllib.parse.quote)
+                            number_of_items=number_of_items, counts_by_context=counts_by_context,
+                            urlencode=urllib.parse.quote)
         case ChooseTheTask(id_1=index_1, name_1=name_1, id_2=index_2, name_2=name_2):
             return template('choose_the_task',
                             todolist_name=todolist_name,
                             index_1=index_1, name_1=name_1,
                             index_2=index_2,
                             name_2=name_2,
-                            number_of_items=number_of_items, counts_by_context=counts_by_context, urlencode=urllib.parse.quote)
+                            number_of_items=number_of_items, counts_by_context=counts_by_context,
+                            urlencode=urllib.parse.quote)
 
     return template('todolist', todolist_name=todolist_name, response=response)
 
@@ -119,6 +124,23 @@ def get_string_from_request_post(field_name):
     return request.forms.getunicode(field_name)
 
 
+@route('/rest/todo/<name>/count_tasks')
+def count_tasks(name):
+    count = read.count_open_items(name)
+    return json.dumps({"count": count})
+
+
+@route('/rest/todo/<name>')
+def rest_todolist(name):
+    # todo: read step 1: introduce fake reading
+    # todo read step 2: introduce controller with fake reading
+    # todo read step 3 : introduce query with fake reading
+    # todo read step 4: introduce test around query
+    todolist = read.todolist(name)
+    return json.dumps(todolist.to_dict())
+
+
+
 if __name__ == '__main__':
     from dotenv import load_dotenv
 
@@ -132,7 +154,3 @@ if __name__ == '__main__':
     run(reloader=True, host=host, port=port, debug=True)
 
 
-@route('/rest/todo/<name>/count_tasks')
-def count_tasks(name):
-    count = read.count_open_items(name)
-    return json.dumps({"count": count})
