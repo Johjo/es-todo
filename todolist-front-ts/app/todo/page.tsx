@@ -5,16 +5,13 @@ import {Controller, useDependencies} from "@/app/controller";
 import {useAppStore} from "@/lib/hooks";
 import {Context} from "@/app/components/Context";
 import {Task} from "@/app/components/Task";
+import {FvpSession} from "@/app/components/FvpSession";
 
 function
 Todolist() {
     return <>
         <h1>Todolist (construction en cours)</h1>
-        <Task name="Tâche courante"/>
-        <button>Choisir cette tâche</button>
-        <Task name="Tâche secondaire"/>
-        <button>Choisir cette tâche</button>
-
+        <FvpSession/>
         <TaskCounter/>
         <Context/>
 

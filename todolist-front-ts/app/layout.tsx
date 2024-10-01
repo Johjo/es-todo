@@ -21,7 +21,7 @@ class TodolistReaderFromBack implements TodolistReader {
     }
 
     const data = await response.json();
-    return {numberOfTasks: data.numberOfTasks, contexts: data.contexts};
+    return {numberOfTasks: data.numberOfTasks, contexts: data.contexts, tasks: data.tasks};
   }
 }
 

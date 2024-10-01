@@ -1,9 +1,10 @@
 import {renderWithProvider} from "@/__test__/app/utils/renderWithProvider";
-import {aTodolist, EmptyDependencies} from "@/__test__/app/components/fixture";
+
 import React from "react";
 import {act, screen} from "@testing-library/react";
 import {todoListFetched} from "@/lib/todolist.slice";
 import {Context} from "@/app/components/Context";
+import {aTodolist, EmptyDependencies} from "@/__test__/fixture";
 
 describe("Context", () => {
     it("should display context", () => {

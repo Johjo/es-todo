@@ -19,6 +19,7 @@ export const todolistSlice = createSlice({
         todoListFetched(state, action: PayloadAction<Todolist>) {
             state.numberOfTasks = action.payload.numberOfTasks;
             state.contexts = action.payload.contexts;
+            state.tasks = action.payload.tasks;
         }
     },
     selectors: {

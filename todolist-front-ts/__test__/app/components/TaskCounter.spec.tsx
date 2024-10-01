@@ -4,7 +4,7 @@ import {TaskCounter} from "@/app/components/TaskCounter";
 import React from "react";
 import {todoListFetched} from "@/lib/todolist.slice";
 import {renderWithProvider} from "@/__test__/app/utils/renderWithProvider";
-import {aTodolist, EmptyDependencies} from "@/__test__/app/components/fixture";
+import {aTodolist, EmptyDependencies} from "@/__test__/fixture";
 
 
 describe("TaskCounter", () => {
