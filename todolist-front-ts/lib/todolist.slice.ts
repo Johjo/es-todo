@@ -1,24 +1,22 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {counterSlice} from "@/lib/features/counter/counterSlice";
+
+export type Task = {
+    id: string,
+    name: string,
+}
 
 export type Todolist = {
+    tasks: Task[],
     contexts: string[],
     numberOfTasks: number
 }
-
-type FetchedTodolist = {
-    contexts: string[],
-    numberOfTasks: number
-}
-
-
-let initialState: Todolist = {numberOfTasks: 0, contexts: []};
+let initialState: Todolist = {numberOfTasks: 0, contexts: [], tasks: []};
 
 export const todolistSlice = createSlice({
     name: "todolist",
     initialState,
     reducers: {
-        todoListFetched(state, action: PayloadAction<FetchedTodolist>) {
+        todoListFetched(state, action: PayloadAction<Todolist>) {
             state.numberOfTasks = action.payload.numberOfTasks;
             state.contexts = action.payload.contexts;
         }

@@ -38,7 +38,6 @@ export class Controller {
         const allTodolist = this.dependencies.todolistReaderForRefreshTodolist();
 
         allTodolist.onlyOne().then(todolist => {
-            console.log(todolist);
             this.store.dispatch(todoListFetched({contexts: todolist.contexts, numberOfTasks: todolist.numberOfTasks}));
         });
 

@@ -4,28 +4,18 @@ import {TaskCounter} from "@/app/components/TaskCounter";
 import {Controller, useDependencies} from "@/app/controller";
 import {useAppStore} from "@/lib/hooks";
 import {Context} from "@/app/components/Context";
+import {Task} from "@/app/components/Task";
 
 function
 Todolist() {
     return <>
         <h1>Todolist (construction en cours)</h1>
-        <p>
-            <strong>Tâche courante</strong>
-            <button>Renommer</button>
-            <button>C'est fait</button>
-        </p>
+        <Task name="Tâche courante"/>
         <button>Choisir cette tâche</button>
-        <p>
-            <strong>Tâche secondaire</strong>
-            <button>Renommer</button>
-            <button>C'est fait</button>
-        </p>
+        <Task name="Tâche secondaire"/>
         <button>Choisir cette tâche</button>
 
-        <div><TaskCounter/></div>
-
-
-        <h2>Contexte</h2>
+        <TaskCounter/>
         <Context/>
 
         <p>
