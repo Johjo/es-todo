@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from uuid import uuid4
 
-from fixture import an_id
+from test.fixture import an_id
 from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 
 

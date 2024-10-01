@@ -1,11 +1,18 @@
+import json
 import os
 
-from bottle import route, run, template, post, request, redirect
+from bottle import route, run, template, post, request, redirect, hook, response
 import urllib.parse
 from web_dependency_list import DependencyListWeb
 from hexagon.fvp.domain_model import NothingToDo, ChooseTheTask, DoTheTask
 from primary.controller import write, read
 
+
+@hook('after_request')
+def enable_cors():
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept'
 
 @post('/todo')
 def create_todolist():
@@ -123,3 +130,9 @@ if __name__ == '__main__':
     host = os.environ["HOST"]
     port = os.environ["PORT"]
     run(reloader=True, host=host, port=port, debug=True)
+
+
+@route('/rest/todo/<name>/count_tasks')
+def count_tasks(name):
+    count = read.count_open_items(name)
+    return json.dumps({"count": count})

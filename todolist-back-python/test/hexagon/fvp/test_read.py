@@ -3,7 +3,7 @@ from uuid import uuid4
 
 import pytest
 
-from fixture import an_id
+from test.fixture import an_id
 from hexagon.fvp.domain_model import NothingToDo, DoTheTask, Task, ChooseTheTask, FvpSnapshot
 from hexagon.fvp.read.which_task import TaskReader, WhichTaskQuery
 from secondary.fvp.simple_session_repository import SimpleSessionRepository
