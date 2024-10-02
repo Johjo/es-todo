@@ -50,7 +50,7 @@ class FinalVersionPerfectedSession:
     def __init__(self, task_priorities : OrderedDict[int, int]):
         self.task_priorities : OrderedDict[int, int] = task_priorities
 
-    def which_task(self, open_tasks: list[Task]):
+    def which_task(self, open_tasks: list[Task]) -> NothingToDo | DoTheTask | ChooseTheTask :
         if not open_tasks:
             return NothingToDo()
 

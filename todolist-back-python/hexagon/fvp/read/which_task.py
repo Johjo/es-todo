@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from hexagon.fvp.domain_model import Task, FinalVersionPerfectedSession
+from hexagon.fvp.domain_model import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.port import FvpSessionRepository
 
 
@@ -10,7 +10,13 @@ class TaskReader(ABC):
         pass
 
 
-class WhichTaskQuery:
+class WhichTaskQueryContract(ABC):
+    @abstractmethod
+    def which_task(self) -> NothingToDo | DoTheTask | ChooseTheTask:
+        pass
+
+
+class WhichTaskQuery(WhichTaskQueryContract):
     def __init__(self, set_of_open_tasks: TaskReader, set_of_fvp_sessions: FvpSessionRepository):
         self.set_of_fvp_sessions = set_of_fvp_sessions
         self.set_of_open_tasks = set_of_open_tasks

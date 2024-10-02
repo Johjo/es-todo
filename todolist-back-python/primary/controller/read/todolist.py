@@ -1,6 +1,13 @@
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 
+from domain.todo.todoapp import TodoApp
+from hexagon.fvp.domain_model import NothingToDo, DoTheTask, ChooseTheTask
+from hexagon.fvp.read.which_task import WhichTaskQuery
+from hexagon.query.context_query import TodoContextQuery
+from primary.controller.dependency_list import DependencyList
+from primary.controller.read.current_contexts import OpenTaskReaderApp
+
 
 @dataclass
 class Task:
@@ -25,14 +32,40 @@ class TodoList:
     def to_dict(self):
         return {
             "tasks": [task.to_dict() for task in self.tasks],
-            "number_of_tasks": self.number_of_tasks,
+            "numberOfTasks": self.number_of_tasks,
             "contexts": self.contexts
         }
 
 
-def todolist(name) -> TodoList:
-    return TodoList(tasks=[
-        Task(id=uuid4(), name="todo 1 #context1"),
-        Task(id=uuid4(), name="todo 2 #context2")],
-        number_of_tasks=2,
-        contexts=["#context1", "#context2"])
+def todolist(todolist_name, dependencies: DependencyList) -> TodoList:
+    return TodoList(tasks=get_tasks(dependencies, todolist_name),
+                    number_of_tasks=get_number_of_tasks(todolist_name),
+                    contexts=get_all_contexts(todolist_name))
+
+
+def get_number_of_tasks(todolist_name):
+    app = TodoApp()
+    todolist_id = app.open_todolist(todolist_name)
+    number_of_items = len(app.get_open_items(todolist_id))
+    return number_of_items
+
+
+def get_tasks(dependencies, todolist_name):
+    set_of_open_tasks = dependencies.task_reader_for_fvp_which_task(todolist_name=todolist_name, only_inbox=False,
+                                                                    context="")
+    set_of_fvp_sessions = dependencies.fvp_session_repository_for_fvp()
+    response = WhichTaskQuery(set_of_open_tasks=set_of_open_tasks, set_of_fvp_sessions=set_of_fvp_sessions).which_task()
+    tasks = []
+    match response:
+        case DoTheTask(id=task_id, name=task_name):
+            tasks.append(Task(id=task_id, name=task_name))
+        case ChooseTheTask(id_1=index_1, name_1=name_1, id_2=index_2, name_2=name_2):
+            tasks.append(Task(id=index_1, name=name_1))
+            tasks.append(Task(id=index_2, name=name_2))
+    return tasks
+
+
+def get_all_contexts(todolist_name):
+    task_reader = OpenTaskReaderApp(todolist_name)
+    all_contexts = [context for context in TodoContextQuery(task_reader).all_contexts().keys()]
+    return all_contexts
