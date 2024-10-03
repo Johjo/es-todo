@@ -1,24 +1,24 @@
+export namespace ChooseAndIgnoreTask {
+    export class UseCase implements Contract {
+        constructor(private readonly todolist: Port.Todolist) {
 
-export class ChooseTaskUseCase implements ChooseAndIgnoreTaskContract {
-    constructor(private readonly todolist: TodolistPort, private screen: ScreenPort) {
+        }
+
+        execute(chosenTaskId: number, ignoredTaskId: number) {
+            this.todolist.chooseAndIgnoreTask(chosenTaskId, ignoredTaskId)
+        }
+    }
+
+    export interface Contract {
+        execute(chosenTaskId: number, ignoredTaskId: number): void;
+    }
+
+    export namespace Port {
+        export interface Todolist {
+            chooseAndIgnoreTask(chosenTaskId: number, ignoredTaskId: number): void;
+        }
 
     }
 
-    execute(chosenTaskId: number, ignoredTaskId: number) {
-        this.todolist.chooseAndIgnoreTask(chosenTaskId, ignoredTaskId)
-        this.screen.refreshTasks();
-    }
-}
 
-export interface ChooseAndIgnoreTaskContract {
-    execute(chosenTaskId: number, ignoredTaskId: number) : void;
-}
-
-
-export interface TodolistPort {
-    chooseAndIgnoreTask(chosenTaskId: number, ignoredTaskId: number): void;
-}
-
-export interface ScreenPort {
-    refreshTasks(): void;
 }

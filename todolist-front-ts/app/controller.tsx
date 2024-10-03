@@ -44,7 +44,6 @@ export class Controller {
 
         allTodolist.whichTask().then(whichTaskResponse => {
             this.store.dispatch(WhichTaskUpdated({tasks: whichTaskResponse.tasks}));
-            console.log("whichTaskResponse", whichTaskResponse);
         });
 
     }
