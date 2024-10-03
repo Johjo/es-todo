@@ -1,7 +1,7 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 export type Task = {
-    id: string,
+    id: number,
     name: string,
 }
 
@@ -10,6 +10,11 @@ export type Todolist = {
     contexts: string[],
     numberOfTasks: number
 }
+
+export type WhichTask ={
+    tasks: Task[];
+}
+
 let initialState: Todolist = {numberOfTasks: 0, contexts: [], tasks: []};
 
 export const todolistSlice = createSlice({
@@ -20,6 +25,9 @@ export const todolistSlice = createSlice({
             state.numberOfTasks = action.payload.numberOfTasks;
             state.contexts = action.payload.contexts;
             state.tasks = action.payload.tasks;
+        },
+        WhichTaskUpdated(state, action: PayloadAction<WhichTask>) {
+            state.tasks = action.payload.tasks;
         }
     },
     selectors: {
@@ -28,5 +36,5 @@ export const todolistSlice = createSlice({
 })
 
 export let reducer = todolistSlice.reducer;
-export const { todoListFetched } = todolistSlice.actions;
+export const { todoListFetched, WhichTaskUpdated } = todolistSlice.actions;
 export const { selectNumberOfTasks } = todolistSlice.selectors;

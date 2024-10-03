@@ -3,32 +3,32 @@ import TodolistPage from "@/app/todo/page";
 import {describe} from "vitest";
 import React from "react";
 import {act, screen} from "@testing-library/react";
-import {DependenciesList, Todolist, TodolistReader} from "@/app/controller";
-import {aTodolist} from "@/__test__/fixture";
+import {DependenciesList, WhichTaskQuery, WhichTaskResponse} from "@/app/controller";
+import {WhichTask} from "@/lib/todolist.slice";
 
 
-class SimpleTodolistReader implements TodolistReader {
-    private todolist: Todolist | undefined;
-
-    feed(todolist: Todolist) {
-        this.todolist = todolist;
+class SimpleWhichTaskQuery implements WhichTaskQuery {
+    private whichTaskResponse: WhichTask | undefined;
+    feed(whichTaskResponse: WhichTask) {
+        this.whichTaskResponse = whichTaskResponse;
     }
 
-    async onlyOne() {
-        if (!this.todolist) {
-            throw new Error("Todolist has not been fed yet.");
+    whichTask(): Promise<WhichTaskResponse> {
+        if (!this.whichTaskResponse) {
+            throw new Error("WhichTask has not been fed yet.");
         }
 
-        return this.todolist;
+        return Promise.resolve(this.whichTaskResponse);
     }
+
 }
 
 
-describe("Todolist", () => {
-    it("should refresh data when load page", async () => {
-        const allTodolist = new SimpleTodolistReader();
-        const externalTodolist : Todolist = {...aTodolist(), numberOfTasks: 2};
-        allTodolist.feed(externalTodolist);
+describe("WhichTask", () => {
+    it("should refresh which task when load page", async () => {
+        const allTodolist = new SimpleWhichTaskQuery();
+        const whichTaskResponse : WhichTask = {tasks: [{id: 1, name: 'Buy the milk'}]};
+        allTodolist.feed(whichTaskResponse);
 
         const dependencies : DependenciesList = {
             todolistReaderForRefreshTodolist() {
@@ -36,7 +36,7 @@ describe("Todolist", () => {
             }
         };
 
-        const expectedText = 'Il y a 2 tâches en cours';
+        const expectedText = 'Buy the milk';
 
         renderWithProvider(<TodolistPage/>, dependencies);
         await act(async () => {

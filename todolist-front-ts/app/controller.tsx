@@ -1,21 +1,21 @@
-import {AppStore} from "@/lib/store";
-import {todoListFetched} from "@/lib/todolist.slice";
+import {WhichTaskUpdated} from "@/lib/todolist.slice";
 import {createContext, useContext} from "react";
 import React from "react";
 
 export type Task = {
-    id: string;
+    id: number
+    ;
     name: string;
 }
 
-export type Todolist = { tasks: Task[], numberOfTasks: number, contexts: string[] };
+export type WhichTaskResponse = { tasks: Task[] };
 
-export interface TodolistReader {
-    onlyOne(): Promise<Todolist>;
+export interface WhichTaskQuery {
+    whichTask(): Promise<WhichTaskResponse>;
 }
 
 export interface DependenciesList {
-    todolistReaderForRefreshTodolist(): TodolistReader;
+    todolistReaderForRefreshTodolist(): WhichTaskQuery;
 }
 
 const DependenciesContext = createContext<DependenciesList | undefined>(undefined)
@@ -39,11 +39,12 @@ export class Controller {
     constructor(private readonly store: any, private readonly dependencies: DependenciesList) {
     }
 
-    refreshTodolist() {
+    askForWhichTask() {
         const allTodolist = this.dependencies.todolistReaderForRefreshTodolist();
 
-        allTodolist.onlyOne().then(todolist => {
-            this.store.dispatch(todoListFetched({tasks: todolist.tasks, contexts: todolist.contexts, numberOfTasks: todolist.numberOfTasks}));
+        allTodolist.whichTask().then(whichTaskResponse => {
+            this.store.dispatch(WhichTaskUpdated({tasks: whichTaskResponse.tasks}));
+            console.log("whichTaskResponse", whichTaskResponse);
         });
 
     }

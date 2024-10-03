@@ -6,27 +6,27 @@ import {Nav} from "./components/Nav";
 
 import "./styles/globals.css";
 import styles from "./styles/layout.module.css";
-import {DependenciesList, DependenciesProvider, Todolist, TodolistReader} from "@/app/controller";
+import {DependenciesList, DependenciesProvider, WhichTaskQuery, WhichTaskResponse} from "@/app/controller";
 
 interface Props {
   readonly children: ReactNode;
 }
 
-class TodolistReaderFromBack implements TodolistReader {
-  async onlyOne(): Promise<Todolist> {
-    const response: Response = await fetch("http://127.0.0.1:8090/rest/todo/Jonathan");
+class TodolistReaderFromBack implements WhichTaskQuery {
+  async whichTask(): Promise<WhichTaskResponse> {
+    const response: Response = await fetch("http://127.0.0.1:8090/rest/todo/Jonathan/which_task");
 
     if (!response.ok) {
       throw new Error(`Erreur lors de la récupération des tâches : ${response.statusText}`);
     }
 
     const data = await response.json();
-    return {numberOfTasks: data.numberOfTasks, contexts: data.contexts, tasks: data.tasks};
+    return {tasks: data.fvpTasks};
   }
 }
 
 const dependencies : DependenciesList = {
-  todolistReaderForRefreshTodolist(): TodolistReader {
+  todolistReaderForRefreshTodolist(): WhichTaskQuery {
     return new TodolistReaderFromBack();
   }
 

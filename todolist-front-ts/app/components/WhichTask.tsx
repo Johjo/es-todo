@@ -3,7 +3,7 @@ import {RootState} from "@/lib/store";
 import {Task} from "@/app/components/Task";
 import React from "react";
 
-export function FvpSession() {
+export function WhichTask() {
     const tasks = useSelector((root: RootState) => root.todolist.tasks);
     if (tasks.length === 0) {
         return <>Rien à faire</>;
