@@ -1,4 +1,4 @@
-import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask.usecase";
+import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 
 describe('chooseTask', () => {
     it.each([

@@ -1,7 +1,7 @@
-import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask.usecase";
 import {WhichTaskUpdated} from "@/lib/todolist.slice";
 import {WhichTask, Task} from "@/hexagon/whichTask.query";
 import {DependencyList, DependencyListOnlyUseCase, StoreContract, Toto} from "@/primary/controller/chooseAndIgnoreTask";
+import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 
 class ChooseTaskSpy implements ChooseAndIgnoreTask.Contract {
     private _history: undefined | [number, number] = undefined;

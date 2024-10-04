@@ -1,7 +1,7 @@
 
 import {WhichTaskUpdated} from "@/lib/todolist.slice";
 import {WhichTask} from "@/hexagon/whichTask.query";
-import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask.usecase";
+import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 
 export namespace Toto {
     export class Controller {
