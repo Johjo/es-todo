@@ -6,36 +6,20 @@ import {Nav} from "./components/Nav";
 
 import "./styles/globals.css";
 import styles from "./styles/layout.module.css";
-import {DependenciesList, DependenciesProvider, WhichTaskQuery, WhichTaskResponse} from "@/app/controller";
+import {DependenciesProvider} from "@/app/dependenciesProvider";
+import {Dependencies} from "@/primary/controller/dependencies";
 
 interface Props {
   readonly children: ReactNode;
 }
-
-class TodolistReaderFromBack implements WhichTaskQuery {
-  async whichTask(): Promise<WhichTaskResponse> {
-    const response: Response = await fetch("http://127.0.0.1:8090/rest/todo/Jonathan/which_task");
-
-    if (!response.ok) {
-      throw new Error(`Erreur lors de la récupération des tâches : ${response.statusText}`);
-    }
-
-    const data = await response.json();
-    return {tasks: data.fvpTasks};
-  }
+function injectDependencies() : Dependencies {
+  return {};
 }
-
-const dependencies : DependenciesList = {
-  todolistReaderForRefreshTodolist(): WhichTaskQuery {
-    return new TodolistReaderFromBack();
-  }
-
-};
 
 export default function RootLayout({ children }: Props) {
   return (
     <StoreProvider>
-      <DependenciesProvider dependencies={dependencies}>
+      <DependenciesProvider dependencies={injectDependencies()}>
       <html lang="en">
         <body>
           <section className={styles.container}>

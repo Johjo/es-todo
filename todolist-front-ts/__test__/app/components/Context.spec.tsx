@@ -4,11 +4,12 @@ import React from "react";
 import {act, screen} from "@testing-library/react";
 import {todoListFetched} from "@/lib/todolist.slice";
 import {Context} from "@/app/components/Context";
-import {aTodolist, EmptyDependencies} from "@/__test__/fixture";
+import {aTodolist} from "@/__test__/fixture";
 
 describe("Context", () => {
     it("should display context", () => {
-        const {store} = renderWithProvider(<Context/>, new EmptyDependencies());
+
+        const {store} = renderWithProvider(<Context/>, undefined);
 
         act(() => {
             store.dispatch(todoListFetched({...aTodolist(), contexts: ['#Contexte A', '#Contexte B']}));

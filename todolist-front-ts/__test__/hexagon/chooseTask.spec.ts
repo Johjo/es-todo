@@ -8,7 +8,7 @@ describe('chooseTask', () => {
     ])('should choose the task %s and ignore the task %s', (chosenTaskId, ignoredTaskId, expected) => {
         let todolist = new TodolistForTest();
 
-        const sut = new ChooseAndIgnoreTask.UseCase(todolist);
+        const sut = new ChooseAndIgnoreTask.UseCase({todolist});
         sut.execute(chosenTaskId, ignoredTaskId)
 
         let actual = todolist.lastUpdate()

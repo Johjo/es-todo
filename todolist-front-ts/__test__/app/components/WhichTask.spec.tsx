@@ -3,18 +3,18 @@ import {act, screen} from "@testing-library/react";
 import React from "react";
 import {todoListFetched, WhichTaskUpdated} from "@/lib/todolist.slice";
 import {renderWithProvider} from "@/__test__/app/utils/renderWithProvider";
-import {aTodolist, EmptyDependencies} from "@/__test__/fixture";
+import {aTodolist} from "@/__test__/fixture";
 import {WhichTask} from "@/app/components/WhichTask";
 
 
 describe("WhichTask", () => {
     it("should display Nothing when no task", () => {
-        renderWithProvider(<WhichTask/>, new EmptyDependencies());
+        renderWithProvider(<WhichTask/>, undefined);
         expect(screen.getByText('Rien à faire')).toBeInTheDocument();
     });
 
     it("should display the task when one task", () => {
-        const {store} = renderWithProvider(<WhichTask/>, new EmptyDependencies());
+        const {store} = renderWithProvider(<WhichTask/>, undefined);
         act(() => {
             store.dispatch(WhichTaskUpdated({tasks: [{id: 1, name: 'Faire la tâche'}]}));
         });
@@ -22,7 +22,7 @@ describe("WhichTask", () => {
     });
 
     it("should display the task when one task", () => {
-        const {store} = renderWithProvider(<WhichTask/>, new EmptyDependencies());
+        const {store} = renderWithProvider(<WhichTask/>, undefined);
         act(() => {
             store.dispatch(todoListFetched({...aTodolist(), tasks: [{id: 1, name: 'Faire la tâche'}]}));
         });
@@ -30,7 +30,7 @@ describe("WhichTask", () => {
     });
 
     it("should propose to choose the task when two tasks", () => {
-        const {store} = renderWithProvider(<WhichTask/>, new EmptyDependencies());
+        const {store} = renderWithProvider(<WhichTask/>, undefined);
         act(() => {
             store.dispatch(todoListFetched({
                 ...aTodolist(),

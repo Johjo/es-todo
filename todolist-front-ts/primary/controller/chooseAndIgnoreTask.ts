@@ -1,70 +1,33 @@
-
 import {WhichTaskUpdated} from "@/lib/todolist.slice";
-import {WhichTask} from "@/hexagon/whichTask.query";
+import {Dependencies} from "@/primary/controller/dependencies";
+import {WhichTask} from "@/hexagon/whichTaskQuery/whichTask.query";
 import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 
-export namespace Toto {
-    export class Controller {
-        constructor(private readonly dependencies: DependencyList) {
+export class Controller {
+    private _store: StoreContract;
+    private _whichTaskQuery: WhichTask.Contract;
+    private _chooseAndIgnoreTask: ChooseAndIgnoreTask.Contract;
 
-        }
+    constructor(private readonly dependencies: Dependencies) {
+        assert(this.dependencies?.chooseAndIgnoreTask?.useCase !== undefined, 'chooseAndIgnoreTask called before injecting use case');
+        assert(this.dependencies?.store !== undefined, 'store called before injecting use case');
+        assert(this.dependencies?.whichTask?.useCase !== undefined, 'whichTask called before injecting use case');
 
-        chooseAndIgnoreTask(chosenTaskId: number, ignoredTaskId: number) {
-            const chooseAndIgnoreTask = this.dependencies.chooseAndIgnoreTaskUseCase();
-            chooseAndIgnoreTask.execute(chosenTaskId, ignoredTaskId);
-
-            const store = this.dependencies.store()
-            const whichTaskQuery = this.dependencies.whichTaskQuery();
-
-            store.dispatch(WhichTaskUpdated({tasks: whichTaskQuery.query()}));
-        }
-
-        refreshWhichTask() {
-
-        }
+        this._chooseAndIgnoreTask = this.dependencies.chooseAndIgnoreTask.useCase;
+        this._store = this.dependencies.store;
+        this._whichTaskQuery = this.dependencies.whichTask?.useCase;
     }
 
-}
+    chooseAndIgnoreTask(chosenTaskId: number, ignoredTaskId: number) {
+        this._chooseAndIgnoreTask.execute(chosenTaskId, ignoredTaskId);
+        this._store.dispatch(WhichTaskUpdated({tasks: this._whichTaskQuery.query()}));
+    }
 
+    refreshWhichTask() {
 
-export interface DependencyList {
-    chooseAndIgnoreTaskUseCase(): ChooseAndIgnoreTask.Contract;
-
-    whichTaskQuery(): WhichTask.Contract;
-
-    store(): StoreContract;
+    }
 }
 
 export interface StoreContract {
     dispatch(whichTaskUpdated: any): void;
-}
-//
-// export interface DependencyList {
-//     useCase(): Contract;
-//     port(): Port.DependencyList;
-// }
-//
-// export interface DependencyList {
-//     todolist(): Todolist;
-// }
-//
-
-
-export abstract class DependencyListOnlyUseCase implements DependencyList {
-    whichTaskQuery(): WhichTask.Contract {
-        const todolist = this.todolistForWhichTaskQuery();
-        return new WhichTask.Query(todolist);
-    }
-
-    chooseAndIgnoreTaskUseCase(): ChooseAndIgnoreTask.Contract {
-        const todolist = this.todolistForChooseAndIgnoreTaskUseCase();
-        return new ChooseAndIgnoreTask.UseCase(todolist);
-    }
-
-
-    abstract store(): StoreContract;
-
-    protected abstract todolistForChooseAndIgnoreTaskUseCase(): ChooseAndIgnoreTask.Port.Todolist;
-
-    protected abstract todolistForWhichTaskQuery(): WhichTask.Port.Todolist;
 }

@@ -11,7 +11,8 @@ export type Todolist = {
     numberOfTasks: number
 }
 
-export type WhichTask ={
+// todo : rename this ?
+export type WhichTaskPayLoad ={
     tasks: Task[];
 }
 
@@ -26,7 +27,7 @@ export const todolistSlice = createSlice({
             state.contexts = action.payload.contexts;
             state.tasks = action.payload.tasks;
         },
-        WhichTaskUpdated(state, action: PayloadAction<WhichTask>) {
+        WhichTaskUpdated(state, action: PayloadAction<WhichTaskPayLoad>) {
             state.tasks = action.payload.tasks;
         }
     },

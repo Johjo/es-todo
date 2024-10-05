@@ -1,10 +1,11 @@
 "use client";
 import React, {useEffect} from "react";
 import {TaskCounter} from "@/app/components/TaskCounter";
-import {Controller, useDependencies} from "@/app/controller";
+import {useDependencies} from "@/app/dependenciesProvider";
 import {useAppStore} from "@/lib/hooks";
 import {Context} from "@/app/components/Context";
 import {WhichTask} from "@/app/components/WhichTask";
+import {Controller} from "@/primary/controller/whichTask";
 
 function
 Todolist() {
@@ -28,10 +29,8 @@ function onPageLoad() {
     const dependencies = useDependencies();
 
     useEffect(() => {
-        const controller = new Controller(store, dependencies);
-        controller.askForWhichTask();
-
-        // controller.refreshTodolist();
+        const controller = new Controller({...dependencies, store});
+        controller.execute();
     }, [store, dependencies]);
 }
 

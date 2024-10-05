@@ -1,5 +1,9 @@
 export class ChooseAndIgnoreTaskUseCase implements ChooseAndIgnoreTaskContract {
-    constructor(private readonly todolist: TodolistPort) {
+    private todolist: TodolistPort;
+
+    constructor(adapters: { todolist: TodolistPort } | undefined) {
+        assert(adapters?.todolist !== undefined, 'todolist called before injecting port');
+        this.todolist = adapters.todolist;
     }
 
     execute(chosenTaskId: number, ignoredTaskId: number) {
@@ -24,4 +28,3 @@ export namespace ChooseAndIgnoreTask {
         export type Todolist = TodolistPort;
     }
 }
-
