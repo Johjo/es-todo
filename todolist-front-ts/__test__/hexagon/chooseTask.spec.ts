@@ -5,11 +5,11 @@ describe('chooseTask', () => {
         [1, 3, {chosenTaskId: 1, ignoredTaskId: 3}],
         [2, 3, {chosenTaskId: 2, ignoredTaskId: 3}],
         [3, 1, {chosenTaskId: 3, ignoredTaskId: 1}],
-    ])('should choose the task %s and ignore the task %s', (chosenTaskId, ignoredTaskId, expected) => {
+    ])('should choose the task %s and ignore the task %s', async (chosenTaskId, ignoredTaskId, expected) => {
         let todolist = new TodolistForTest();
 
         const sut = new ChooseAndIgnoreTask.UseCase({todolist});
-        sut.execute(chosenTaskId, ignoredTaskId)
+        await sut.execute(chosenTaskId, ignoredTaskId)
 
         let actual = todolist.lastUpdate()
         expect(actual).toStrictEqual(expected);

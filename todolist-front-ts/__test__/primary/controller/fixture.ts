@@ -4,8 +4,9 @@ import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 export class ChooseTaskForTest implements ChooseAndIgnoreTask.Contract {
     private _history: undefined | [number, number] = undefined;
 
-    execute(chosenTaskId: number, ignoredTaskId: number): void {
+    execute(chosenTaskId: number, ignoredTaskId: number) : Promise<void> {
         this._history = [chosenTaskId, ignoredTaskId];
+        return Promise.resolve();
     }
 
     history() {
@@ -17,8 +18,8 @@ export class ChooseTaskForTest implements ChooseAndIgnoreTask.Contract {
 export class WhichTaskQueryForTest implements WhichTask.Contract {
     private _tasks: Task[] = [];
 
-    query(): Task[] {
-        return this._tasks;
+    query(): Promise<Task[]> {
+        return Promise.resolve(this._tasks);
     }
 
     feed(tasks: Task[]) {

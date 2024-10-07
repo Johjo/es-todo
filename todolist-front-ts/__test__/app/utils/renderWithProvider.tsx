@@ -3,9 +3,9 @@ import {makeStore} from "@/lib/store";
 import {render} from "@testing-library/react";
 import {Provider} from "react-redux";
 import {DependenciesProvider} from "@/app/dependenciesProvider";
-import {DependenciesUseCase} from "@/primary/controller/dependencies";
+import {Dependencies, emptyDependencies} from "@/primary/controller/dependencies";
 
-export function renderWithProvider(ui: React.JSX.Element, dependencies: DependenciesUseCase) {
+export function renderWithProvider(ui: React.JSX.Element, dependencies: Dependencies = emptyDependencies) {
 
     const store = makeStore();
     return {

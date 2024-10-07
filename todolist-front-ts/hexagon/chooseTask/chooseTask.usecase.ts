@@ -1,5 +1,3 @@
-import {Contract, Port} from "@/hexagon/whichTaskQuery/whichTask.query";
-
 export class ChooseAndIgnoreTaskUseCase implements ChooseAndIgnoreTaskContract {
     private todolist: TodolistPort;
 
@@ -8,13 +6,13 @@ export class ChooseAndIgnoreTaskUseCase implements ChooseAndIgnoreTaskContract {
         this.todolist = adapters.todolist;
     }
 
-    execute(chosenTaskId: number, ignoredTaskId: number) {
+    async execute(chosenTaskId: number, ignoredTaskId: number) {
         this.todolist.chooseAndIgnoreTask(chosenTaskId, ignoredTaskId)
     }
 }
 
 export interface ChooseAndIgnoreTaskContract {
-    execute(chosenTaskId: number, ignoredTaskId: number): void;
+    execute(chosenTaskId: number, ignoredTaskId: number): Promise<void>;
 }
 
 export interface TodolistPort {

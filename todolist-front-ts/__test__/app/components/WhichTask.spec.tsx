@@ -9,12 +9,12 @@ import {WhichTask} from "@/app/components/WhichTask";
 
 describe("WhichTask", () => {
     it("should display Nothing when no task", () => {
-        renderWithProvider(<WhichTask/>, {});
+        renderWithProvider(<WhichTask/>);
         expect(screen.getByText('Rien à faire')).toBeInTheDocument();
     });
 
     it("should display the task when one task", () => {
-        const {store} = renderWithProvider(<WhichTask/>, {});
+        const {store} = renderWithProvider(<WhichTask/>);
         act(() => {
             store.dispatch(WhichTaskUpdated({tasks: [{id: 1, name: 'Faire la tâche'}]}));
         });
@@ -22,7 +22,7 @@ describe("WhichTask", () => {
     });
 
     it("should display the task when one task", () => {
-        const {store} = renderWithProvider(<WhichTask/>, {});
+        const {store} = renderWithProvider(<WhichTask/>);
         act(() => {
             store.dispatch(todoListFetched({...aTodolist(), tasks: [{id: 1, name: 'Faire la tâche'}]}));
         });
@@ -30,7 +30,7 @@ describe("WhichTask", () => {
     });
 
     it("should propose to choose the task when two tasks", () => {
-        const {store} = renderWithProvider(<WhichTask/>, {});
+        const {store} = renderWithProvider(<WhichTask/>);
         act(() => {
             store.dispatch(todoListFetched({
                 ...aTodolist(),

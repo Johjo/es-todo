@@ -41,8 +41,13 @@ function onPageLoad() {
     const dependencies = useDependencies();
 
     useEffect(() => {
-        const controller = new Controller({...dependencies}, new StoreForController(store));
-        controller.execute();
+
+        const refresh = async() => {
+            const controller = new Controller({...dependencies}, new StoreForController(store));
+            await controller.execute();
+        }
+        refresh();
+
     }, [store, dependencies]);
 }
 

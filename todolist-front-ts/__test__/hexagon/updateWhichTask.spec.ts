@@ -7,37 +7,38 @@ class TodolistForTest implements WhichTask.Port.Todolist {
         this.tasks.push(task);
     }
 
-    whichTask(): Task[] {
-        return this.tasks;
+    whichTask(): Promise<Task[]> {
+        return Promise.resolve(this.tasks);
     }
 }
+
 describe('updateWhichTask', () => {
-    it('Should return nothing when no task', () => {
+    it('Should return nothing when no task', async () => {
         const expected: Task[] = [];
-        const sut = new WhichTask.Query({todolist:new TodolistForTest()});
-        const actual: Task[] = sut.query();
+        const sut = new WhichTask.Query(new TodolistForTest());
+        const actual: Task[] = await sut.query();
         expect(actual).toStrictEqual(expected);
 
     });
 
-    it('Should return one task when only one task', () => {
+    it('Should return one task when only one task', async () => {
         const expected: Task[] = [{id: 1, name: "buy the milk"}];
         const todolist = new TodolistForTest();
         todolist.feed(expected[0]);
-        const sut = new WhichTask.Query({todolist});
-        let actual: Task[] = sut.query();
+        const sut = new WhichTask.Query(todolist);
+        let actual: Task[] = await sut.query();
 
         expect(actual).toStrictEqual(expected);
     });
 
-    it('Can return two tasks', () => {
+    it('Can return two tasks', async () => {
         const expected: Task[] = [{id: 1, name: "buy the milk"}, {id: 2, name: "buy the eggs"}];
         const todolist = new TodolistForTest();
         todolist.feed(expected[0]);
         todolist.feed(expected[1]);
 
-        const sut = new WhichTask.Query({todolist});
-        let actual: Task[] = sut.query();
+        const sut = new WhichTask.Query(todolist);
+        let actual: Task[] = await sut.query();
 
         expect(actual).toStrictEqual(expected);
     })

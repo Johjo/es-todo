@@ -1,5 +1,5 @@
 import {WhichTaskUpdated} from "@/lib/todolist.slice";
-import {Dependencies, DependenciesUseCase} from "@/primary/controller/dependencies";
+import {Dependencies} from "@/primary/controller/dependencies";
 import {WhichTask} from "@/hexagon/whichTaskQuery/whichTask.query";
 import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 
@@ -14,13 +14,10 @@ export class Controller {
         this._chooseAndIgnoreTask = dependencies.chooseAndIgnoreTask.useCase(dependencies);
     }
 
-    chooseAndIgnoreTask(chosenTaskId: number, ignoredTaskId: number) {
-        this._chooseAndIgnoreTask.execute(chosenTaskId, ignoredTaskId);
-        this._store.dispatch(WhichTaskUpdated({tasks: this._whichTaskQuery.query()}));
-    }
-
-    refreshWhichTask() {
-
+    async chooseAndIgnoreTask(chosenTaskId: number, ignoredTaskId: number) {
+        await this._chooseAndIgnoreTask.execute(chosenTaskId, ignoredTaskId);
+        const tasks = await this._whichTaskQuery.query();
+        this._store.dispatch(WhichTaskUpdated({tasks: tasks}));
     }
 }
 

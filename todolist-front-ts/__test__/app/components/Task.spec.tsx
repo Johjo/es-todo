@@ -5,7 +5,7 @@ import {Task} from "@/app/components/Task";
 
 describe("Context", () => {
     it("should display context", () => {
-        renderWithProvider(<Task key="1" name="The task"/>, {});
+        renderWithProvider(<Task key="1" name="The task"/>);
 
 
         expect(screen.getByText('The task')).toBeInTheDocument();

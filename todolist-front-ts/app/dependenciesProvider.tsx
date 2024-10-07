@@ -1,7 +1,7 @@
 import {createContext, useContext} from "react";
 import React from "react";
-import {DependenciesUseCase} from "@/primary/controller/dependencies";
-const DependenciesContext = createContext<DependenciesUseCase |  undefined>(undefined)
+import {Dependencies} from "@/primary/controller/dependencies";
+const DependenciesContext = createContext<Dependencies |  undefined>(undefined)
 
 export const useDependencies = () => {
     const context = useContext(DependenciesContext);
@@ -11,7 +11,7 @@ export const useDependencies = () => {
     return context;
 };
 
-export const DependenciesProvider: React.FC<{ dependencies: DependenciesUseCase | undefined; children: React.ReactNode }> = (
+export const DependenciesProvider: React.FC<{ dependencies: Dependencies | undefined; children: React.ReactNode }> = (
     {
         dependencies,
         children,

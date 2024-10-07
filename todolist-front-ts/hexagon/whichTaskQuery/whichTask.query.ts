@@ -1,7 +1,7 @@
 // Todo : stop to export
 
 export interface WhichTaskContract {
-    query(): Task[];
+    query(): Promise<Task[]>;
 }
 
 export interface TodolistPort {
@@ -16,13 +16,12 @@ export type Task = {
 export class WhichTaskQuery implements WhichTaskContract {
     private todolist: TodolistPort;
 
-    constructor(adapters: { todolist: TodolistPort } | undefined) {
-        assert(adapters?.todolist !== undefined, 'todolist called before injecting adapters');
-        this.todolist = adapters.todolist;
+    constructor(todolist: TodolistPort) {
+        this.todolist = todolist;
     }
 
-    query(): Task[] {
-        return this.todolist.whichTask();
+    async query(): Promise<Task[]> {
+        return await this.todolist.whichTask();
     }
 }
 
@@ -43,7 +42,7 @@ export namespace WhichTask {
 
     export function build(dependencies: Dependencies): Contract {
         let todolist = dependencies.whichTask.adapter.todolist(dependencies)
-        return new Query({todolist: todolist})
+        return new Query(todolist)
     }
 
 

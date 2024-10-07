@@ -7,7 +7,7 @@ import {Nav} from "./components/Nav";
 import "./styles/globals.css";
 import styles from "./styles/layout.module.css";
 import {DependenciesProvider} from "@/app/dependenciesProvider";
-import {injectDependencies} from "@/primary/controller/dependencies";
+import {allAdaptersDependencies} from "@/primary/controller/dependencies";
 
 interface Props {
   readonly children: ReactNode;
@@ -18,7 +18,7 @@ interface Props {
 export default function RootLayout({ children }: Props) {
   return (
     <StoreProvider>
-      <DependenciesProvider dependencies={injectDependencies()}>
+      <DependenciesProvider dependencies={allAdaptersDependencies}>
       <html lang="en">
         <body>
           <section className={styles.container}>

@@ -1,11 +1,11 @@
 import {WhichTaskUpdated} from "@/lib/todolist.slice";
 import {StoreForTest, WhichTaskQueryForTest} from "@/__test__/primary/controller/fixture";
 import {Controller} from "@/primary/controller/whichTask";
-import {Dependencies, DependenciesUseCase, emptyDependencies} from "@/primary/controller/dependencies";
+import {Dependencies, emptyDependencies} from "@/primary/controller/dependencies";
 
 
 describe('controller', () => {
-    it('should dispatch whichTaskUpdated', () => {
+    it('should dispatch whichTaskUpdated', async () => {
         // arrange
         const expected = WhichTaskUpdated({
             tasks: [{
@@ -24,7 +24,8 @@ describe('controller', () => {
             whichTask: {...emptyDependencies.whichTask, useCase: () => whichTaskQuery}
         }
 
-        new Controller(dependencies, store).execute();
+        const controller = new Controller(dependencies, store);
+        await controller.execute();
 
         // assert
         expect(store.history()).toEqual([expected]);

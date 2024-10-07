@@ -13,8 +13,8 @@ export class Controller {
     }
 
 
-    execute() {
-        const tasksToExamine = this._whichTaskQuery.query();
+    async execute() {
+        const tasksToExamine = await this._whichTaskQuery.query();
 
         this._store.dispatch(WhichTaskUpdated({
             tasks: tasksToExamine
