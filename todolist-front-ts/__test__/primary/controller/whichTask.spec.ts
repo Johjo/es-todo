@@ -20,9 +20,8 @@ describe('controller', () => {
         whichTaskQuery.feed(tasksToExamine);
         // act
         const dependencies : Dependencies = {
-            store: store,
             whichTask : {query : () => whichTaskQuery}};
-        new Controller(dependencies).execute();
+        new Controller(dependencies, store).execute();
 
         // assert
         expect(store.history()).toEqual([expected]);

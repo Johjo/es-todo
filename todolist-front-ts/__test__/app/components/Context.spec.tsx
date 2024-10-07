@@ -9,7 +9,7 @@ import {aTodolist} from "@/__test__/fixture";
 describe("Context", () => {
     it("should display context", () => {
 
-        const {store} = renderWithProvider(<Context/>, undefined);
+        const {store} = renderWithProvider(<Context/>, {});
 
         act(() => {
             store.dispatch(todoListFetched({...aTodolist(), contexts: ['#Contexte A', '#Contexte B']}));

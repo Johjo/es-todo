@@ -20,10 +20,9 @@ describe('controller', () => {
         ('should call chooseAndIgnoreTask with %p', (chosenTaskId, ignoredTaskId, expected) => {
             const chooseTask = new ChooseTaskForTest();
             const controller = new Controller({
-                store: new StoreForTest(),
                 chooseAndIgnoreTask: {useCase: () => chooseTask},
                 whichTask: {query: () => new WhichTaskQueryForTest()},
-            });
+            }, new StoreForTest());
 
             controller.chooseAndIgnoreTask(chosenTaskId, ignoredTaskId);
 
@@ -46,10 +45,9 @@ describe('controller', () => {
             whichTaskQuery.feed(tasks);
 
             const controller = new Controller({
-                store: store,
                 chooseAndIgnoreTask: {useCase: () => new ChooseTaskForTest()},
                 whichTask: {query: () => whichTaskQuery},
-            });
+            }, store);
             controller.chooseAndIgnoreTask(3, 4);
 
             expect(store.history()).toEqual(expected);
@@ -89,12 +87,11 @@ describe('controller', () => {
             todolist.feed([expectedTask]);
 
             const dependencies: Dependencies = injectAllUseCase({
-                store: store,
                 chooseAndIgnoreTask: {adapter : {todolist: () => todolist}},
                 whichTask: {adapter: {todolist: () => todolist}},
             });
 
-            const controller = new Controller(dependencies);
+            const controller = new Controller(dependencies, store);
             controller.chooseAndIgnoreTask(1, 2);
 
             expect(todolist.history()).toEqual(["update todolist"]);

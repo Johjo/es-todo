@@ -7,11 +7,10 @@ export class Controller {
     private _whichTaskQuery: WhichTask.Contract;
     private _store: StoreContract;
 
-    constructor(dependencies: Dependencies) {
+    constructor(dependencies: Dependencies, store: StoreContract) {
         assert(dependencies.whichTask?.query !== undefined, 'whichTask query called before injecting use case');
-        assert(dependencies.store !== undefined, 'store called before injecting use case');
 
-        this._store = dependencies.store;
+        this._store = store;
         this._whichTaskQuery = dependencies.whichTask.query();
     }
 

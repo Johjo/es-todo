@@ -18,7 +18,6 @@ class WhichTaskQueryForTest implements WhichTask.Contract {
         this._tasks = tasks;
     }
 }
-
 describe("WhichTask", () => {
     it("should refresh which task when load page", async () => {
         const whichTask = new WhichTaskQueryForTest();
@@ -26,7 +25,7 @@ describe("WhichTask", () => {
         whichTask.feed([expectedTask]);
 
         const dependencies: Dependencies = {
-            whichTask: {query: () => whichTask}
+            whichTask: {query: () => whichTask},
         };
         renderWithProvider(<TodolistPage/>, dependencies);
 

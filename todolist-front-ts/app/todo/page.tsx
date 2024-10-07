@@ -6,6 +6,8 @@ import {useAppStore} from "@/lib/hooks";
 import {Context} from "@/app/components/Context";
 import {WhichTask} from "@/app/components/WhichTask";
 import {Controller} from "@/primary/controller/whichTask";
+import {AppStore} from "@/lib/store";
+import {StoreContract} from "@/primary/controller/chooseAndIgnoreTask";
 
 function
 Todolist() {
@@ -24,12 +26,22 @@ Todolist() {
     </>;
 }
 
+class StoreForController implements StoreContract {
+    constructor(private readonly store: AppStore) {
+
+    }
+
+    dispatch(event: any): void {
+        this.store.dispatch(event);
+    }
+}
+
 function onPageLoad() {
-    const store = useAppStore();
+    const store: AppStore = useAppStore();
     const dependencies = useDependencies();
 
     useEffect(() => {
-        const controller = new Controller({...dependencies, store});
+        const controller = new Controller({...dependencies}, new StoreForController(store));
         controller.execute();
     }, [store, dependencies]);
 }
