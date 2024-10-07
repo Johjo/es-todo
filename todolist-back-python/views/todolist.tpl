@@ -7,7 +7,7 @@
 {{response}}
 
 Ajouter une tâche
-<form action="/todo/{{todolist_name}}/item" method="post">
+<form action="/todo/{{todolist_name}}/item?{{query_string}}" method="post">
     <input type="text" name="item">
     <input type="submit" value="Add item">
 </form>

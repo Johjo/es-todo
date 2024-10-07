@@ -9,14 +9,14 @@
 
 <div>
 Ajouter une tâche
-<form action="/todo/{{todolist_name}}/item" method="post">
+<form action="/todo/{{todolist_name}}/item?{{query_string}}" method="post">
     <input type="text" name="item">
     <input type="submit" value="Add item">
 </form>
 </div>
 
 Redémarrer l'algo
-<form action="/todo/{{todolist_name}}/reset" method="post">
+<form action="/todo/{{todolist_name}}/reset?{{query_string}}" method="post">
     <input type="submit" value="Reset">
 </form>
 
