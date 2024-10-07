@@ -52,7 +52,7 @@ def test_which_task_with_two_tasks(sut, set_of_open_tasks):
 
 
 def test_load_existing_session(sut, set_of_open_tasks, set_of_fvp_sessions):
-    set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[uuid4, int]({an_id(1): 1, an_id(2): 0})))
+    set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[uuid4, int]({an_id(2): an_id(1)})))
     set_of_open_tasks.feed(Task(id=an_id(1), name="buy milk"))
     set_of_open_tasks.feed(Task(id=an_id(2), name="buy water"))
 

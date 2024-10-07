@@ -64,11 +64,6 @@ def reset_fvp_algorithm(name):
 
 @app.route('/todo/<todolist_name>')
 def todolist(todolist_name) -> str:
-    print(f"request.urlparts : {request.urlparts}")
-    print(f"request.urlparts[2] : {request.urlparts[2]}")
-    print(f"request.urlparts[3] : {request.urlparts[3]}")
-    print(f"request.query_string : {request.query_string}")
-
     only_inbox: bool = get_string_from_request_get('only_inbox') == '1'
     context: str = get_string_from_request_get('context')
     which_task_response = read.which_task_old(todolist_name=todolist_name, only_inbox=only_inbox, context=context,

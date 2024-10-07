@@ -20,15 +20,15 @@ def sut(set_of_fvp_sessions):
 
 def test_should_save_snapshot(sut, set_of_fvp_sessions):
     sut.execute(chosen_task_id=1, ignored_task_id=2)
-    assert set_of_fvp_sessions.by() == FvpSnapshot(OrderedDict[int, int]({1: 1, 2: 0}))
+    assert set_of_fvp_sessions.by() == FvpSnapshot(OrderedDict[int, int]({an_id(2): an_id(1)}))
 
 
 def test_should_load_snapshot(sut, set_of_fvp_sessions):
-    set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[int, int]({1: 1, 2: 0})))
+    set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[int, int]({an_id(2): an_id(1)})))
 
     sut.execute(chosen_task_id=1, ignored_task_id=3)
 
     assert set_of_fvp_sessions.by() == FvpSnapshot(
-        OrderedDict[int, int]({1: 1, 2: 0, 3: 0}))
+        OrderedDict[int, int]({an_id(2): an_id(1), an_id(3): an_id(1)}))
 
 

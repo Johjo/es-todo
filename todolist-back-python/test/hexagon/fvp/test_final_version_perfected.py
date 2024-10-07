@@ -385,11 +385,7 @@ def test_acceptance_full(sut):
     actual = sut.which_task(open_tasks)
     assert actual == DoTheTask(id=an_id(5), name="Tidy Desk")
 
-    print(sut.task_priorities)
-
     open_tasks.remove(Task(id=an_id(5), name="Tidy Desk"))
-
-    print(sut.task_priorities)
 
     actual = sut.which_task(open_tasks)
     assert actual == ChooseTheTask(id_1=an_id(3), name_1="voicemail", id_2=an_id(6), name_2="Call Dissatisfied Customer")
@@ -400,8 +396,6 @@ def test_acceptance_full(sut):
     assert actual == ChooseTheTask(id_1=an_id(3), name_1="voicemail", id_2=an_id(7), name_2="Make Dental Appointment")
 
     sut.choose_and_ignore_task(an_id(7), an_id(3))
-
-    print("---", sut.task_priorities)
 
     actual = sut.which_task(open_tasks)
     assert actual == ChooseTheTask(id_1=an_id(7), name_1="Make Dental Appointment", id_2=an_id(8), name_2="File Invoices")
