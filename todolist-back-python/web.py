@@ -97,7 +97,8 @@ def todolist(todolist_name) -> str:
                             index_2=index_2,
                             name_2=name_2,
                             number_of_items=number_of_items, counts_by_context=counts_by_context,
-                            urlencode=urllib.parse.quote)
+                            urlencode=urllib.parse.quote,
+                            query_string=request.query_string)
 
     return template('todolist', todolist_name=todolist_name, response=which_task_response)
 
