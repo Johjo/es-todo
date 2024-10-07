@@ -20,9 +20,9 @@ describe('controller', () => {
         ('should call chooseAndIgnoreTask with %p', (chosenTaskId, ignoredTaskId, expected) => {
             const chooseTask = new ChooseTaskForTest();
             const controller = new Controller({
-                chooseAndIgnoreTask: {useCase: chooseTask},
                 store: new StoreForTest(),
-                whichTask: {useCase: new WhichTaskQueryForTest()},
+                chooseAndIgnoreTask: {useCase: () => chooseTask},
+                whichTask: {query: () => new WhichTaskQueryForTest()},
             });
 
             controller.chooseAndIgnoreTask(chosenTaskId, ignoredTaskId);
@@ -46,9 +46,9 @@ describe('controller', () => {
             whichTaskQuery.feed(tasks);
 
             const controller = new Controller({
-                chooseAndIgnoreTask: {useCase: new ChooseTaskForTest()},
                 store: store,
-                whichTask: { useCase: whichTaskQuery },
+                chooseAndIgnoreTask: {useCase: () => new ChooseTaskForTest()},
+                whichTask: {query: () => whichTaskQuery},
             });
             controller.chooseAndIgnoreTask(3, 4);
 
@@ -89,9 +89,9 @@ describe('controller', () => {
             todolist.feed([expectedTask]);
 
             const dependencies: Dependencies = injectAllUseCase({
-                chooseAndIgnoreTask: {adapters: {todolist: todolist}},
                 store: store,
-                whichTask: {adapters: {todolist: todolist}},
+                chooseAndIgnoreTask: {adapter : {todolist: () => todolist}},
+                whichTask: {adapter: {todolist: () => todolist}},
             });
 
             const controller = new Controller(dependencies);

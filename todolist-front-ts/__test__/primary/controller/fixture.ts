@@ -1,4 +1,4 @@
-import {Task, WhichTask} from "@/hexagon/whichTaskQuery/whichTask.query";
+import {Task, WhichTask, WhichTaskQuery} from "@/hexagon/whichTaskQuery/whichTask.query";
 import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 import {Dependencies} from "@/primary/controller/dependencies";
 
@@ -42,7 +42,7 @@ export class StoreForTest {
 export function injectAllUseCase(dependencies: Dependencies): Dependencies {
     return {
         ...dependencies,
-        chooseAndIgnoreTask: {useCase: new ChooseAndIgnoreTask.UseCase(dependencies.chooseAndIgnoreTask?.adapters)},
-        whichTask: {useCase: new WhichTask.Query(dependencies.whichTask?.adapters)},
+        chooseAndIgnoreTask: {...dependencies.chooseAndIgnoreTask, useCase: ChooseAndIgnoreTask.build},
+        whichTask: {...dependencies.whichTask, query: WhichTask.build},
     }
 }

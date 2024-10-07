@@ -9,13 +9,13 @@ export class Controller {
     private _chooseAndIgnoreTask: ChooseAndIgnoreTask.Contract;
 
     constructor(private readonly dependencies: Dependencies) {
-        assert(this.dependencies?.chooseAndIgnoreTask?.useCase !== undefined, 'chooseAndIgnoreTask called before injecting use case');
         assert(this.dependencies?.store !== undefined, 'store called before injecting use case');
-        assert(this.dependencies?.whichTask?.useCase !== undefined, 'whichTask called before injecting use case');
+        assert(this.dependencies?.whichTask?.query !== undefined, 'whichTask use case called before injecting use case');
+        assert(this.dependencies?.chooseAndIgnoreTask?.useCase !== undefined, 'chooseAndIgnoreTask use case called before injecting adapter');
 
-        this._chooseAndIgnoreTask = this.dependencies.chooseAndIgnoreTask.useCase;
+        this._chooseAndIgnoreTask = this.dependencies?.chooseAndIgnoreTask?.useCase(this.dependencies?.chooseAndIgnoreTask?.adapter);
         this._store = this.dependencies.store;
-        this._whichTaskQuery = this.dependencies.whichTask?.useCase;
+        this._whichTaskQuery = this.dependencies.whichTask?.query(this.dependencies.whichTask.adapter);
     }
 
     chooseAndIgnoreTask(chosenTaskId: number, ignoredTaskId: number) {

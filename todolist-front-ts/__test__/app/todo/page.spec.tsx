@@ -5,6 +5,7 @@ import React from "react";
 import {screen} from "@testing-library/react";
 import {Dependencies} from "@/primary/controller/dependencies";
 import {Task, WhichTask} from "@/hexagon/whichTaskQuery/whichTask.query";
+
 class WhichTaskQueryForTest implements WhichTask.Contract {
     private _tasks: Task[] | undefined;
 
@@ -24,7 +25,9 @@ describe("WhichTask", () => {
         const expectedTask = {id: 1, name: 'Buy the milk'};
         whichTask.feed([expectedTask]);
 
-        const dependencies : Dependencies = {whichTask: {useCase: whichTask}};
+        const dependencies: Dependencies = {
+            whichTask: {query: () => whichTask}
+        };
         renderWithProvider(<TodolistPage/>, dependencies);
 
         expect(screen.getByText(expectedTask.name)).toBeInTheDocument();

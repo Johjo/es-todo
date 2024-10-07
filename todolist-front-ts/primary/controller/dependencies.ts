@@ -2,8 +2,16 @@ import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 import {StoreContract} from "@/primary/controller/chooseAndIgnoreTask";
 import {WhichTask} from "@/hexagon/whichTaskQuery/whichTask.query";
 
+type Builder<T> = (...args: any[]) => T;
+
 export type Dependencies = Partial<{
     store: StoreContract;
-    chooseAndIgnoreTask: Partial<{ useCase: ChooseAndIgnoreTask.Contract, adapters: {todolist: ChooseAndIgnoreTask.Port.Todolist}}>
-    whichTask: Partial<{ useCase: WhichTask.Contract, adapters: {todolist: WhichTask.Port.Todolist}}>;
+    whichTask : Partial<{
+        query: Builder<WhichTask.Contract>,
+        adapter: {todolist: Builder<WhichTask.Port.Todolist>},
+    }>;
+    chooseAndIgnoreTask: Partial<{
+        useCase: Builder<ChooseAndIgnoreTask.Contract>,
+        adapter: { todolist: Builder<ChooseAndIgnoreTask.Port.Todolist>; },
+    }>;
 }>

@@ -33,5 +33,16 @@ export namespace WhichTask {
     export const Query = WhichTaskQuery;
     export namespace Port {
         export type Todolist = TodolistPort;
+        export type Builder = {
+            todolist: (...args: any[]) => Port.Todolist;
+        }
     }
+
+    export function build(adapter: Port.Builder): Contract {
+        assert(adapter?.todolist !== undefined, 'todolist called before injecting adapter');
+        let todolist = adapter.todolist();
+        return new Query({todolist : todolist})
+    }
+
+
 }

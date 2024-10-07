@@ -26,5 +26,15 @@ export namespace ChooseAndIgnoreTask {
 
     export namespace Port {
         export type Todolist = TodolistPort;
+        export type Builder = {
+            todolist: (...args: any[]) => Port.Todolist;
+        };
+    }
+
+
+    export function build(adapter: Port.Builder): ChooseAndIgnoreTask.Contract {
+        assert(adapter?.todolist !== undefined, 'todolist called before injecting adapter');
+        let todolist = adapter.todolist();
+        return new UseCase({todolist})
     }
 }
