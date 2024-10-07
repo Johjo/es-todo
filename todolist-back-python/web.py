@@ -46,7 +46,8 @@ def close_item(name, item_index):
 @app.route('/todo/<name>/item/<task_id>/reword')
 def reword_task(name, task_id):
     task = read.get_task(name, task_id)
-    return template('reword', todolist_name=name, task_id=task_id, task_name=task.name, query_string=request.query_string)
+    return template('reword', todolist_name=name, task_id=task_id, task_name=task.name,
+                    query_string=request.query_string)
 
 
 @app.post('/todo/<name>/item/<task_id>/reword')
@@ -63,7 +64,6 @@ def reset_fvp_algorithm(name):
 
 @app.route('/todo/<todolist_name>')
 def todolist(todolist_name) -> str:
-
     print(f"request.urlparts : {request.urlparts}")
     print(f"request.urlparts[2] : {request.urlparts[2]}")
     print(f"request.urlparts[3] : {request.urlparts[3]}")
@@ -72,7 +72,7 @@ def todolist(todolist_name) -> str:
     only_inbox: bool = get_string_from_request_get('only_inbox') == '1'
     context: str = get_string_from_request_get('context')
     which_task_response = read.which_task_old(todolist_name=todolist_name, only_inbox=only_inbox, context=context,
-                                   dependencies=DependencyListWeb.get_shared_instance())
+                                              dependencies=DependencyListWeb.get_shared_instance())
     number_of_items = read.count_open_items(todolist_name)
     # todo: read step 1: introduce fake reading
     counts_by_context = read.current_contexts(todolist_name)
@@ -126,12 +126,17 @@ def redirect_to_index(name):
 def export_todolist_to_markdown(name):
     markdown = read.export_todo_list_to_markdown(name, dependencies=DependencyListWeb.get_shared_instance())
     number_of_items = read.count_open_items(name)
-    return template("export", todolist_name=name, number_of_items=number_of_items, markdown_export=markdown)
+    return template("export",
+                    todolist_name=name, number_of_items=number_of_items,
+                    markdown_export=markdown,
+                    counts_by_context=read.current_contexts(name),
+                    query_string=request.query_string, urlencode=urllib.parse.quote)
 
 
 @app.route('/todo/<name>/import')
 def import_todolist_from_markdown(name):
-    return template("import", todolist_name=name, number_of_items=0)
+    return template("import", todolist_name=name, number_of_items=0, counts_by_context=read.current_contexts(name),
+                    query_string=request.query_string, urlencode=urllib.parse.quote)
 
 
 @app.post('/todo/<name>/import')
@@ -169,13 +174,13 @@ class DependencyListForWeb(DependencyList):
     def fvp_session_repository_for_which_task_query(self) -> FvpSessionRepository:
         return JsonSessionRepository("session_fvp.json")
 
-
     def task_reader_for_which_task_query(self, todolist_name: str, only_inbox: bool, context: str) -> TaskReader:
         return TaskReaderTodolist(todolist_name=todolist_name, only_inbox=only_inbox, context=context)
 
 
 if __name__ == '__main__':
     from dotenv import load_dotenv
+
     app.dependencies = DependencyListForWeb()
     load_dotenv()
 
@@ -185,5 +190,3 @@ if __name__ == '__main__':
     host = os.environ["HOST"]
     port = os.environ["PORT"]
     app.run(reloader=True, host=host, port=port, debug=True)
-
-
