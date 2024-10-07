@@ -1,5 +1,5 @@
 import {WhichTaskUpdated} from "@/lib/todolist.slice";
-import {Dependencies} from "@/primary/controller/dependencies";
+import {Dependencies, DependenciesUseCase} from "@/primary/controller/dependencies";
 import {WhichTask} from "@/hexagon/whichTaskQuery/whichTask.query";
 import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 
@@ -8,13 +8,10 @@ export class Controller {
     private _whichTaskQuery: WhichTask.Contract;
     private _chooseAndIgnoreTask: ChooseAndIgnoreTask.Contract;
 
-    constructor(private readonly dependencies: Dependencies, store: StoreContract) {
-        assert(this.dependencies?.whichTask?.query !== undefined, 'whichTask use case called before injecting use case');
-        assert(this.dependencies?.chooseAndIgnoreTask?.useCase !== undefined, 'chooseAndIgnoreTask use case called before injecting adapter');
-
-        this._chooseAndIgnoreTask = this.dependencies?.chooseAndIgnoreTask?.useCase(this.dependencies?.chooseAndIgnoreTask?.adapter);
+    constructor(dependencies: Dependencies, store: StoreContract) {
         this._store = store;
-        this._whichTaskQuery = this.dependencies.whichTask?.query(this.dependencies.whichTask.adapter);
+        this._whichTaskQuery = dependencies.whichTask.useCase(dependencies);
+        this._chooseAndIgnoreTask = dependencies.chooseAndIgnoreTask.useCase(dependencies);
     }
 
     chooseAndIgnoreTask(chosenTaskId: number, ignoredTaskId: number) {

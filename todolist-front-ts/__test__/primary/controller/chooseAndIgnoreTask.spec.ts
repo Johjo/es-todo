@@ -2,13 +2,18 @@ import {WhichTaskUpdated} from "@/lib/todolist.slice";
 import {Controller} from "@/primary/controller/chooseAndIgnoreTask";
 import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 import {Task, WhichTask} from "@/hexagon/whichTaskQuery/whichTask.query";
-import {Dependencies} from "@/primary/controller/dependencies";
+import {
+    allUseCasesDependencies,
+    Dependencies,
+    emptyDependencies,
+    injectAllUseCase
+} from "@/primary/controller/dependencies";
 import {
     ChooseTaskForTest,
-    injectAllUseCase,
     StoreForTest,
     WhichTaskQueryForTest
 } from "@/__test__/primary/controller/fixture";
+import {adapter} from "next/dist/server/web/adapter";
 
 
 describe('controller', () => {
@@ -20,8 +25,11 @@ describe('controller', () => {
         ('should call chooseAndIgnoreTask with %p', (chosenTaskId, ignoredTaskId, expected) => {
             const chooseTask = new ChooseTaskForTest();
             const controller = new Controller({
+                ...emptyDependencies,
+                whichTask: {useCase: () => new WhichTaskQueryForTest()},
                 chooseAndIgnoreTask: {useCase: () => chooseTask},
-                whichTask: {query: () => new WhichTaskQueryForTest()},
+                // chooseAndIgnoreTask: {useCase: () => chooseTask},
+                // whichTaskOld: {query: () => new WhichTaskQueryForTest()},
             }, new StoreForTest());
 
             controller.chooseAndIgnoreTask(chosenTaskId, ignoredTaskId);
@@ -45,8 +53,9 @@ describe('controller', () => {
             whichTaskQuery.feed(tasks);
 
             const controller = new Controller({
+                ...emptyDependencies,
                 chooseAndIgnoreTask: {useCase: () => new ChooseTaskForTest()},
-                whichTask: {query: () => whichTaskQuery},
+                whichTask: {useCase: () => whichTaskQuery}
             }, store);
             controller.chooseAndIgnoreTask(3, 4);
 
@@ -58,7 +67,8 @@ describe('controller', () => {
 
     describe('inject adapters', () => {
         class TodolistForTest implements WhichTask.Port.Todolist, ChooseAndIgnoreTask.Port.Todolist {
-            private _tasks: Task[] |undefined = undefined;
+            private _tasks: Task[] | undefined = undefined;
+
             whichTask(): Task[] {
                 assert(this._tasks !== undefined, 'whichTask() called before feed()');
                 return this._tasks;
@@ -86,10 +96,10 @@ describe('controller', () => {
             const expectedTask = {id: 5, name: "buy the milk"};
             todolist.feed([expectedTask]);
 
-            const dependencies: Dependencies = injectAllUseCase({
-                chooseAndIgnoreTask: {adapter : {todolist: () => todolist}},
-                whichTask: {adapter: {todolist: () => todolist}},
-            });
+            const dependencies : Dependencies = {...allUseCasesDependencies,
+                whichTask: {...allUseCasesDependencies.whichTask,adapter: {todolist: () => todolist}},
+                chooseAndIgnoreTask: {...allUseCasesDependencies.chooseAndIgnoreTask, adapter: {todolist: () => todolist}}
+            }
 
             const controller = new Controller(dependencies, store);
             controller.chooseAndIgnoreTask(1, 2);

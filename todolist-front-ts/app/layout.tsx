@@ -7,14 +7,13 @@ import {Nav} from "./components/Nav";
 import "./styles/globals.css";
 import styles from "./styles/layout.module.css";
 import {DependenciesProvider} from "@/app/dependenciesProvider";
-import {Dependencies} from "@/primary/controller/dependencies";
+import {injectDependencies} from "@/primary/controller/dependencies";
 
 interface Props {
   readonly children: ReactNode;
 }
-function injectDependencies() : Dependencies {
-  return {};
-}
+
+
 
 export default function RootLayout({ children }: Props) {
   return (

@@ -1,7 +1,7 @@
 import {WhichTaskUpdated} from "@/lib/todolist.slice";
 import {StoreForTest, WhichTaskQueryForTest} from "@/__test__/primary/controller/fixture";
 import {Controller} from "@/primary/controller/whichTask";
-import {Dependencies} from "@/primary/controller/dependencies";
+import {Dependencies, DependenciesUseCase, emptyDependencies} from "@/primary/controller/dependencies";
 
 
 describe('controller', () => {
@@ -19,8 +19,11 @@ describe('controller', () => {
 
         whichTaskQuery.feed(tasksToExamine);
         // act
-        const dependencies : Dependencies = {
-            whichTask : {query : () => whichTaskQuery}};
+        const dependencies: Dependencies = {
+            ...emptyDependencies,
+            whichTask: {...emptyDependencies.whichTask, useCase: () => whichTaskQuery}
+        }
+
         new Controller(dependencies, store).execute();
 
         // assert

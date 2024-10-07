@@ -1,6 +1,5 @@
-import {Task, WhichTask, WhichTaskQuery} from "@/hexagon/whichTaskQuery/whichTask.query";
+import {Task, WhichTask} from "@/hexagon/whichTaskQuery/whichTask.query";
 import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
-import {Dependencies} from "@/primary/controller/dependencies";
 
 export class ChooseTaskForTest implements ChooseAndIgnoreTask.Contract {
     private _history: undefined | [number, number] = undefined;
@@ -39,10 +38,3 @@ export class StoreForTest {
     }
 }
 
-export function injectAllUseCase(dependencies: Dependencies): Dependencies {
-    return {
-        ...dependencies,
-        chooseAndIgnoreTask: {...dependencies.chooseAndIgnoreTask, useCase: ChooseAndIgnoreTask.build},
-        whichTask: {...dependencies.whichTask, query: WhichTask.build},
-    }
-}

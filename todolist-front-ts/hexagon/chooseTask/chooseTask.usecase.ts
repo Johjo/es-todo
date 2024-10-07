@@ -1,3 +1,5 @@
+import {Contract, Port} from "@/hexagon/whichTaskQuery/whichTask.query";
+
 export class ChooseAndIgnoreTaskUseCase implements ChooseAndIgnoreTaskContract {
     private todolist: TodolistPort;
 
@@ -32,9 +34,16 @@ export namespace ChooseAndIgnoreTask {
     }
 
 
-    export function build(adapter: Port.Builder): ChooseAndIgnoreTask.Contract {
-        assert(adapter?.todolist !== undefined, 'todolist called before injecting adapter');
-        let todolist = adapter.todolist();
+    export type Dependencies = {
+        chooseAndIgnoreTask: {
+            useCase: (dependencies: Dependencies) => Contract,
+            adapter: { todolist: (dependencies: Dependencies) => Port.Todolist; }
+        }
+    };
+
+
+    export function build(dependencies: Dependencies): Contract {
+        let todolist = dependencies.chooseAndIgnoreTask.adapter.todolist(dependencies);
         return new UseCase({todolist})
     }
 }

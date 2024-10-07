@@ -3,8 +3,8 @@ import TodolistPage from "@/app/todo/page";
 import {describe} from "vitest";
 import React from "react";
 import {screen} from "@testing-library/react";
-import {Dependencies} from "@/primary/controller/dependencies";
 import {Task, WhichTask} from "@/hexagon/whichTaskQuery/whichTask.query";
+import {Dependencies, emptyDependencies} from "@/primary/controller/dependencies";
 
 class WhichTaskQueryForTest implements WhichTask.Contract {
     private _tasks: Task[] | undefined;
@@ -25,7 +25,8 @@ describe("WhichTask", () => {
         whichTask.feed([expectedTask]);
 
         const dependencies: Dependencies = {
-            whichTask: {query: () => whichTask},
+            ...emptyDependencies,
+            whichTask: {useCase: () => whichTask},
         };
         renderWithProvider(<TodolistPage/>, dependencies);
 
