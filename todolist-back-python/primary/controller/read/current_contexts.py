@@ -13,9 +13,10 @@ class OpenTaskReaderApp(OpenTaskReader):
     def all(self) -> list[str]:
         self.app.open_todolist(self.name)
         todolist_id = self.app.open_todolist(self.name)
-        return [task.name for task in self.app.all_tasks(todolist_id)]
+        return [task.name for task in self.app.all_tasks(todolist_id) if task.done == False]
 
 
 def current_contexts(name: str):
     task_reader = OpenTaskReaderApp(name)
-    return TodoContextQuery(task_reader).all_contexts()
+    contexts = TodoContextQuery(task_reader).all_contexts()
+    return contexts
