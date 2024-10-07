@@ -88,7 +88,8 @@ def todolist(todolist_name) -> str:
                             index_2=index_2,
                             name_2=name_2,
                             number_of_items=number_of_items, counts_by_context=counts_by_context,
-                            urlencode=urllib.parse.quote)
+                            urlencode=urllib.parse.quote,
+                            url=request.url)
 
     return template('todolist', todolist_name=todolist_name, response=response)
 
@@ -104,8 +105,10 @@ def index():
 
 @app.post('/todo/<name>/item/choose/<chosen_task>/ignore/<ignored_task>')
 def choose_and_ignore_task(name, chosen_task, ignored_task):
+    redirect_url = get_string_from_request_post("redirect")
     write.choose_and_ignore_task(chosen_task, ignored_task, dependencies=DependencyListWeb.get_shared_instance())
-    return redirect(f'/todo/{name}')
+    print(f"go to {redirect_url}")
+    return redirect(redirect_url)
 
 
 @app.route('/todo/<name>/export')
