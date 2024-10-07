@@ -51,27 +51,22 @@ class FinalVersionPerfectedSession:
         self.task_priorities : OrderedDict[int, int] = task_priorities
 
     def which_task(self, open_tasks: list[Task]) -> NothingToDo | DoTheTask | ChooseTheTask :
-        if not open_tasks:
-            return NothingToDo()
+        ids = [task.id for task in open_tasks]
+        tasks = [task for task in open_tasks if self.task_priorities.get(task.id, None) not in ids]
+        match tasks:
+            case [task]:
+                return task.to_do_the_task()
+            case [task_1, task_2, *tasks]:
+                return task_1.to_choose_the_task(task_2)
+            case _:
+                return NothingToDo()
 
-        tasks_to_priorize = self._all_tasks_to_priorize(open_tasks)
 
-        if len(tasks_to_priorize) == 1:
-            return tasks_to_priorize[0].to_do_the_task()
 
-        return tasks_to_priorize[0].to_choose_the_task(tasks_to_priorize[1])
-
-    def _all_tasks_to_priorize(self, open_tasks : list[Task]) -> list[Task]:
-        max_priority = max([self.task_priorities.get(task.id, 0) for task in open_tasks])
-        tasks_to_priorize = [task for task in open_tasks if
-                             self.task_priorities.get(task.id, max_priority) == max_priority]
-        return tasks_to_priorize
 
     def choose_and_ignore_task(self, id_chosen, id_ignored) -> None:
-        if id_chosen not in self.task_priorities:
-            self.task_priorities[id_chosen] = self.task_priorities.get(id_ignored, 0) + 1
+        self.task_priorities[id_ignored] = id_chosen
 
-        self.task_priorities[id_ignored] = self.task_priorities[id_chosen] - 1
 
     def reset(self) -> None:
         self.task_priorities = OrderedDict()

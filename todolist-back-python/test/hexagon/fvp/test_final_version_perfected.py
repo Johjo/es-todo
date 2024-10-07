@@ -318,6 +318,118 @@ def test_acceptance_with_four_tasks_01(sut):
     assert actual == NothingToDo()
 
 
+# - [ ] Email  #testfvp
+# - [ ] In-Tray #testfvp
+# - [ ] (3) Voicemail #testfvp
+# - [ ] Project X Report #testfvp
+# - [ ] (1) Tidy Desk #testfvp
+# - [ ] Call Dissatisfied Customer #testfvp
+# - [ ] (4) Make Dental Appointment #testfvp
+# - [ ] File Invoices #testfvp
+# - [ ] Discuss Project Y with Bob #testfvp
+# - [ ] (2)Back Up   #testfvp
+
+
+def test_acceptance_full(sut):
+    open_tasks = [Task(id=an_id(1), name="email"), Task(id=an_id(2), name="In-Tray"),
+                  Task(id=an_id(3), name="voicemail"), Task(id=an_id(4), name="Project X Report"),
+                  Task(id=an_id(5), name="Tidy Desk"), Task(id=an_id(6), name="Call Dissatisfied Customer"),
+                  Task(id=an_id(7), name="Make Dental Appointment"), Task(id=an_id(8), name="File Invoices"),
+                  Task(id=an_id(9), name="Discuss Project Y with Bob"), Task(id=an_id(10), name="Back Up")]
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(1), name_1="email", id_2=an_id(2), name_2="In-Tray")
+
+    sut.choose_and_ignore_task(an_id(1), an_id(2))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(1), name_1="email", id_2=an_id(3), name_2="voicemail")
+
+    sut.choose_and_ignore_task(an_id(3), an_id(1))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(3), name_1="voicemail", id_2=an_id(4), name_2="Project X Report")
+
+    sut.choose_and_ignore_task(an_id(3), an_id(4))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(3), name_1="voicemail", id_2=an_id(5), name_2="Tidy Desk")
+
+    sut.choose_and_ignore_task(an_id(5), an_id(3))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(5), name_1="Tidy Desk", id_2=an_id(6), name_2="Call Dissatisfied Customer")
+
+    sut.choose_and_ignore_task(an_id(5), an_id(6))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(5), name_1="Tidy Desk", id_2=an_id(7), name_2="Make Dental Appointment")
+
+    sut.choose_and_ignore_task(an_id(5), an_id(7))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(5), name_1="Tidy Desk", id_2=an_id(8), name_2="File Invoices")
+
+    sut.choose_and_ignore_task(an_id(5), an_id(8))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(5), name_1="Tidy Desk", id_2=an_id(9), name_2="Discuss Project Y with Bob")
+
+    sut.choose_and_ignore_task(an_id(5), an_id(9))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(5), name_1="Tidy Desk", id_2=an_id(10), name_2="Back Up")
+
+    sut.choose_and_ignore_task(an_id(5), an_id(10))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == DoTheTask(id=an_id(5), name="Tidy Desk")
+
+    print(sut.task_priorities)
+
+    open_tasks.remove(Task(id=an_id(5), name="Tidy Desk"))
+
+    print(sut.task_priorities)
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(3), name_1="voicemail", id_2=an_id(6), name_2="Call Dissatisfied Customer")
+
+    sut.choose_and_ignore_task(an_id(3), an_id(6))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(3), name_1="voicemail", id_2=an_id(7), name_2="Make Dental Appointment")
+
+    sut.choose_and_ignore_task(an_id(7), an_id(3))
+
+    print("---", sut.task_priorities)
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(7), name_1="Make Dental Appointment", id_2=an_id(8), name_2="File Invoices")
+
+    sut.choose_and_ignore_task(an_id(7), an_id(8))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(7), name_1="Make Dental Appointment", id_2=an_id(9), name_2="Discuss Project Y with Bob")
+
+    sut.choose_and_ignore_task(an_id(7), an_id(9))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == ChooseTheTask(id_1=an_id(7), name_1="Make Dental Appointment", id_2=an_id(10), name_2="Back Up")
+
+    sut.choose_and_ignore_task(an_id(10), an_id(7))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == DoTheTask(id=an_id(10), name="Back Up")
+
+    open_tasks.remove(Task(id=an_id(10), name="Back Up"))
+
+    actual = sut.which_task(open_tasks)
+    assert actual == DoTheTask(an_id(7), name="Make Dental Appointment")
+
+
+
+
+
 def test_empty_snapshot(sut):
     snapshot = sut.to_snapshot()
     d = OrderedDict()
@@ -326,7 +438,7 @@ def test_empty_snapshot(sut):
 def test_write_priorities_to_snapshot(sut):
     sut.choose_and_ignore_task(an_id(1), an_id(2))
     snapshot = sut.to_snapshot()
-    assert snapshot == FvpSnapshot(OrderedDict({an_id(1): 1, an_id(2): 0}))
+    assert snapshot == FvpSnapshot(OrderedDict({an_id(2): an_id(1)}))
 
 def test_read_priorities_from_snapshot(sut):
     snapshot = FvpSnapshot(OrderedDict({an_id(1): 1, an_id(2): 0}))
