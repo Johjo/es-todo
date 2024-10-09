@@ -36,6 +36,12 @@ class Task:
     def from_snapshot(cls, snapshot: TaskSnapshot) -> 'Task':
         return Task(key=snapshot.key, name=snapshot.name, is_open=snapshot.is_open)
 
+    def reword(self, new_name) -> 'Task':
+        return replace(self, name=new_name)
+
+    def close_task(self) -> 'Task':
+        return replace(self, is_open=False)
+
 
 @dataclass(frozen=True)
 class TodolistAggregate:
@@ -59,7 +65,13 @@ class TodolistAggregate:
     def close_task(self, key) -> Result['TodolistAggregate', str]:
         if not [task for task in self.tasks if task.key == key]:
             return Error(f"The task '{key}' does not exist")
-        return Ok(replace(self, tasks=(*[replace(task, is_open=task.key != key) for task in self.tasks],)))
+        return Ok(replace(self, tasks=(*[task.close_task() if task.key == key else task for task in self.tasks],)))
+
+    def reword_task(self, key: TaskKey, new_name: str) -> Result['TodolistAggregate', str]:
+        if not [task for task in self.tasks if task.key == key]:
+            return Error(f"The task '{key}' does not exist")
+
+        return Ok(replace(self, tasks=(*[task.reword(new_name) if task.key == key else task for task in self.tasks],)))
 
 
 class TodolistSetPort(ABC):

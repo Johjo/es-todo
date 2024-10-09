@@ -24,6 +24,18 @@ def test_close_task(sut: CloseTask, todolist_set: TodolistSetForTest, fake: Todo
     assert actual == replace(todolist, tasks=[(replace(task, is_open=False))])
 
 
+def test_close_when_two_task(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+    first_task = fake.a_task(key=1)
+    closed_task = fake.a_task(key=2)
+    todolist = replace(fake.a_todolist(), tasks=[first_task, closed_task])
+    todolist_set.feed(todolist)
+
+    sut.execute(todolist.name, closed_task.key)
+
+    actual = todolist_set.by(todolist.name).value
+    assert actual == replace(todolist, tasks=[first_task, (replace(closed_task, is_open=False))])
+
+
 def test_tell_ok_when_close_task(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
     task = fake.a_task()
     todolist = replace(fake.a_todolist(), tasks=[task])
