@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Self
 
-from expression import Option
+from expression import Option, Result, Error, Ok
+
 
 @dataclass(frozen=True)
 class TaskKey:
@@ -13,24 +14,27 @@ class TaskKey:
 class TaskSnapshot:
     key: TaskKey
     name: str
+    is_open: bool
+
 
 @dataclass
 class TodolistSnapshot:
     name: str
-    tasks : list[TaskSnapshot]
+    tasks: list[TaskSnapshot]
 
 
 @dataclass(frozen=True)
 class Task:
     key: TaskKey
     name: str
+    is_open: bool
 
     def to_snapshot(self) -> TaskSnapshot:
-        return TaskSnapshot(key=self.key, name=self.name)
+        return TaskSnapshot(key=self.key, name=self.name, is_open=self.is_open)
 
     @classmethod
-    def from_snapshot(cls, snapshot) -> 'Task':
-        return Task(key=snapshot.key, name=snapshot.name)
+    def from_snapshot(cls, snapshot: TaskSnapshot) -> 'Task':
+        return Task(key=snapshot.key, name=snapshot.name, is_open=snapshot.is_open)
 
 
 @dataclass(frozen=True)
@@ -38,19 +42,24 @@ class TodolistAggregate:
     name: str
     tasks: tuple[Task, ...]
 
-    def to_snapshot(self) -> TodolistSnapshot:
-        return TodolistSnapshot(self.name, tasks=[task.to_snapshot() for task in self.tasks])
-
-    @classmethod
-    def from_snapshot(cls, snapshot: TodolistSnapshot) -> 'TodolistAggregate':
-        return TodolistAggregate(name=snapshot.name, tasks=(*[Task.from_snapshot(task) for task in snapshot.tasks], ))
-
-    def open_task(self, task: Task) -> 'TodolistAggregate':
-        return TodolistAggregate(name=self.name, tasks=self.tasks + (task,))
-
     @classmethod
     def create(cls, todolist_name) -> 'TodolistAggregate':
         return TodolistAggregate(name=todolist_name, tasks=())
+
+    @classmethod
+    def from_snapshot(cls, snapshot: TodolistSnapshot) -> 'TodolistAggregate':
+        return TodolistAggregate(name=snapshot.name, tasks=(*[Task.from_snapshot(task) for task in snapshot.tasks],))
+
+    def to_snapshot(self) -> TodolistSnapshot:
+        return TodolistSnapshot(self.name, tasks=[task.to_snapshot() for task in self.tasks])
+
+    def open_task(self, task: Task) -> Result['TodolistAggregate', str]:
+        return Ok(replace(self, tasks=self.tasks + (task,)))
+
+    def close_task(self, key) -> Result['TodolistAggregate', str]:
+        if not [task for task in self.tasks if task.key == key]:
+            return Error(f"The task '{key}' does not exist")
+        return Ok(replace(self, tasks=(*[replace(task, is_open=task.key != key) for task in self.tasks],)))
 
 
 class TodolistSetPort(ABC):

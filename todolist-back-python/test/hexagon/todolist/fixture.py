@@ -1,6 +1,7 @@
 from expression import Option, Nothing, Some
+from faker import Faker
 
-from hexagon.todolist.aggregate import TodolistSnapshot, TodolistSetPort, TaskKey
+from hexagon.todolist.aggregate import TodolistSnapshot, TodolistSetPort, TaskKey, TaskSnapshot
 
 
 def a_todolist_snapshot(name: str) -> TodolistSnapshot:
@@ -28,3 +29,7 @@ class TodolistSetForTest(TodolistSetPort):
 
 def a_task_key(value: int):
     return TaskKey(value=value)
+
+
+def a_task(key: int, faker: Faker):
+    return TaskSnapshot(key=a_task_key(key), name=faker.sentence())

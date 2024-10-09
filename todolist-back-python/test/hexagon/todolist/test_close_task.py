@@ -1,0 +1,44 @@
+from dataclasses import replace
+
+import pytest
+from expression import Ok, Error
+
+from hexagon.todolist.close_task import CloseTask
+from test.hexagon.todolist.conftest import TodolistFaker
+from test.hexagon.todolist.fixture import TodolistSetForTest
+
+
+@pytest.fixture
+def sut(todolist_set: TodolistSetForTest):
+    return CloseTask(todolist_set)
+
+
+def test_close_task(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+    task = fake.a_task()
+    todolist = replace(fake.a_todolist(), tasks=[task])
+    todolist_set.feed(todolist)
+
+    sut.execute(todolist.name, task.key)
+
+    actual = todolist_set.by(todolist.name).value
+    assert actual == replace(todolist, tasks=[(replace(task, is_open=False))])
+
+
+def test_tell_ok_when_close_task(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+    task = fake.a_task()
+    todolist = replace(fake.a_todolist(), tasks=[task])
+    todolist_set.feed(todolist)
+
+    response = sut.execute(todolist.name, task.key)
+
+    assert response == Ok(None)
+
+
+def test_tell_error_if_task_does_not_exist(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+    todolist = fake.a_todolist()
+    todolist_set.feed(todolist)
+
+    task = fake.a_task()
+    response = sut.execute(todolist.name, task.key)
+
+    assert response == Error(f"The task '{task.key}' does not exist")
