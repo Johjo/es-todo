@@ -1,29 +1,6 @@
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
+from expression import Result, Nothing, Error, Ok
 
-from expression import Result, Nothing, Error, Ok, Option
-
-
-@dataclass
-class TodolistSnapshot:
-    name: str
-
-
-class TodolistAggregate:
-    def __init__(self, name: str) -> None:
-        self._name = name
-
-    def to_snapshot(self) -> TodolistSnapshot:
-        return TodolistSnapshot(self._name)
-
-
-class TodolistSetPort(ABC):
-    @abstractmethod
-    def by(self, todolist_name: str) -> Option[TodolistSnapshot]:
-        pass
-
-    def save(self, snapshot: TodolistSnapshot) -> None:
-        pass
+from hexagon.todolist.aggregate import TodolistAggregate, TodolistSetPort
 
 
 class TodolistCreate:
@@ -34,5 +11,5 @@ class TodolistCreate:
         if self._todolist_set.by(todolist_name) != Nothing:
             return Error(None)
 
-        self._todolist_set.save(TodolistAggregate(todolist_name).to_snapshot())
+        self._todolist_set.save_snapshot(TodolistAggregate.create(todolist_name).to_snapshot())
         return Ok(None)
