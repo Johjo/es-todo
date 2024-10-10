@@ -1,7 +1,7 @@
 import pytest
 from expression import Ok, Error, Some, Result
 
-from hexagon.todolist.create_todolist import TodolistCreate
+from hexagon.todolist.write.create_todolist import TodolistCreate
 from test.hexagon.todolist.fixture import a_todolist_snapshot, TodolistSetForTest
 
 

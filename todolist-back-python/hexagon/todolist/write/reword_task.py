@@ -1,5 +1,5 @@
 from hexagon.todolist.aggregate import TodolistSetPort
-from hexagon.todolist.update_todolist_aggregate import UpdateTodolistAggregate
+from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
 
 
 class RewordTask:

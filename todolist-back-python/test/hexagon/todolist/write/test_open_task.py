@@ -4,7 +4,7 @@ import pytest
 from expression import Ok, Error
 
 from hexagon.todolist.aggregate import TaskSnapshot, TodolistSetPort
-from hexagon.todolist.open_task import OpenTask
+from hexagon.todolist.write.open_task import OpenTask
 from test.hexagon.todolist.conftest import todolist_set, TodolistFaker
 from test.hexagon.todolist.fixture import TodolistSetForTest, a_todolist_snapshot, a_task_key, a_task
 
