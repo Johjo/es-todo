@@ -3,20 +3,9 @@ from dataclasses import replace
 import pytest
 from expression import Ok, Error
 
-from hexagon.todolist.aggregate import TodolistSetPort, TaskSnapshot
-from hexagon.todolist.write.reword_task import RewordTask
-from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
+from hexagon.todolist.write.import_many_task import ImportManyTask
 from test.hexagon.todolist.conftest import TodolistFaker
 from test.hexagon.todolist.fixture import TodolistSetForTest
-
-
-class ImportManyTask:
-    def __init__(self, todolist_set: TodolistSetPort):
-        self._todolist_set = todolist_set
-
-    def execute(self, todolist_name: str, tasks: list[TaskSnapshot]):
-        update = lambda todolist: todolist.import_tasks(tasks)
-        return UpdateTodolistAggregate(self._todolist_set).execute(todolist_name, update)
 
 
 @pytest.fixture
@@ -35,7 +24,7 @@ def test_import_many_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
     assert actual == replace(todolist, tasks=expected_tasks)
 
 
-def test_reword_when_existing_task(sut: ImportManyTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+def test_import_many_task_when_existing_task(sut: ImportManyTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
     first_task = fake.a_task(key=1)
     expected_task = fake.a_task(key=2)
     todolist = replace(fake.a_todolist(), tasks=[first_task])
@@ -55,3 +44,9 @@ def test_tell_ok_when_import_task(sut: ImportManyTask, todolist_set: TodolistSet
     response = sut.execute(todolist.name, imported_tasks)
 
     assert response == Ok(None)
+
+
+def test_tell_error_when_todolist_doest_not_exist(sut: ImportManyTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+    response = sut.execute("unknown_todolist", [fake.a_task(1)])
+
+    assert response == Error("todolist not found")
