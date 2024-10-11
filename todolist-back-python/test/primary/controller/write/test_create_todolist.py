@@ -38,9 +38,9 @@ class TodolistController:
     def __init__(self, dependencies: Dependencies) -> None:
         self.dependencies = dependencies
 
-    def create_todolist(self):
+    def create_todolist(self, todolist_name):
         todolist_create = self.dependencies.get_use_case(TodolistCreate)
-        todolist_create.execute(todolist_name="my_todolist")
+        todolist_create.execute(todolist_name=todolist_name)
 
 
 @pytest.fixture
@@ -61,22 +61,22 @@ def todolist_create_factory(dependencies: Dependencies):
     return TodolistCreate(dependencies.get_adapter(TodolistSetPort))
 
 
-def test_inject_use_case(empty_dependencies):
-    todolist_create = MagicMock()
-    dependencies = empty_dependencies.feed_use_case(TodolistCreate, lambda d: todolist_create)
+@pytest.mark.parametrize("todolist_name", ["my_todolist", "my_todolist2"])
+def test_use_case(empty_dependencies, todolist_name: str):
+    use_case = MagicMock()
+    dependencies = empty_dependencies.feed_use_case(TodolistCreate, lambda d: use_case)
 
-    TodolistController(dependencies).create_todolist()
+    TodolistController(dependencies).create_todolist(todolist_name)
 
-    todolist_create.execute.assert_called_once_with(todolist_name="my_todolist")
+    use_case.execute.assert_called_once_with(todolist_name=todolist_name)
 
 
-def test_inject_adapter(dependencies_with_use_cases):
+def test_create_todolist(dependencies_with_use_cases):
     todolist_set = TodolistSetForTest()
     dependencies = dependencies_with_use_cases.feed_adapter(TodolistSetPort, lambda _: todolist_set)
 
-    TodolistController(dependencies).create_todolist()
+    TodolistController(dependencies).create_todolist("my_todolist")
 
-    todolist_set = dependencies.get_adapter(TodolistSetPort)
     assert todolist_set.by("my_todolist").value.name == "my_todolist"
 
 # def test_create_todolist():
