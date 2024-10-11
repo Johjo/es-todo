@@ -33,3 +33,16 @@ def a_task_key(value: int):
 
 def a_task(key: int, faker: Faker):
     return TaskSnapshot(key=a_task_key(key), name=faker.sentence())
+
+
+class TodolistFaker:
+    def __init__(self, fake: Faker):
+        self.fake = fake
+
+    def a_task(self, key: None | int = None) -> TaskSnapshot:
+        if key is None:
+            key = self.fake.random_int()
+        return TaskSnapshot(key=TaskKey(key), name=self.fake.sentence(), is_open=True)
+
+    def a_todolist(self) -> TodolistSnapshot:
+        return TodolistSnapshot(name=self.fake.word(), tasks=[])

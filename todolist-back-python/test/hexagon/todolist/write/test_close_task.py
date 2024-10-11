@@ -4,8 +4,7 @@ import pytest
 from expression import Ok, Error
 
 from hexagon.todolist.write.close_task import CloseTask
-from test.hexagon.todolist.conftest import TodolistFaker
-from test.hexagon.todolist.fixture import TodolistSetForTest
+from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
 
 
 @pytest.fixture
