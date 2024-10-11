@@ -9,11 +9,6 @@ from primary.controller.write.todolist import TodolistWriteController
 from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
 
 
-@pytest.fixture
-def fake() -> TodolistFaker:
-    return TodolistFaker(Faker())
-
-
 def test_close_task(dependencies_with_use_cases: Dependencies, fake: TodolistFaker):
     task = fake.a_task()
     todolist = replace(fake.a_todolist(), tasks=[task])

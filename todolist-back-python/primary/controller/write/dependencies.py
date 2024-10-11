@@ -7,6 +7,7 @@ from hexagon.todolist.aggregate import TodolistSetPort
 from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
 from hexagon.todolist.write.open_task import OpenTask
+from hexagon.todolist.write.reword_task import RewordTask
 
 
 @dataclass(frozen=True)
@@ -38,7 +39,8 @@ def inject_use_cases(dependencies: Dependencies) -> Dependencies:
     factories = {
         TodolistCreate: todolist_create_factory,
         OpenTask : open_task_use_case_factory,
-        CloseTask: close_task_use_case_factory
+        CloseTask: close_task_use_case_factory,
+        RewordTask: reword_task_use_case_factory,
     }
 
     for use_case, factory in factories.items():
@@ -55,3 +57,7 @@ def open_task_use_case_factory(dependencies: Dependencies):
 
 def close_task_use_case_factory(dependencies):
     return CloseTask(dependencies.get_adapter(TodolistSetPort))
+
+
+def reword_task_use_case_factory(dependencies: Dependencies) -> RewordTask:
+    return RewordTask(dependencies.get_adapter(TodolistSetPort))
