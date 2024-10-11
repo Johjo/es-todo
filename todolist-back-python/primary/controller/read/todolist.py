@@ -5,8 +5,10 @@ from domain.todo.todoapp import TodoApp
 from hexagon.fvp.domain_model import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import WhichTaskQuery
 from hexagon.query.context_query import TodoContextQuery
+from hexagon.todolist.aggregate import TodolistSetPort
 from primary.controller.dependency_list import DependencyList
 from primary.controller.read.current_contexts import OpenTaskReaderApp
+from primary.controller.write.dependencies import Dependencies
 
 
 @dataclass
@@ -69,3 +71,12 @@ def get_all_contexts(todolist_name):
     task_reader = OpenTaskReaderApp(todolist_name)
     all_contexts = [context for context in TodoContextQuery(task_reader).all_contexts().keys()]
     return all_contexts
+
+
+class TodolistReadController:
+    def __init__(self, dependencies: Dependencies):
+        self.dependencies = dependencies
+
+    def all_todolist_by_name(self) -> list[str]:
+        todolist_set = self.dependencies.get_adapter(TodolistSetPort)
+        return todolist_set.all_by_name()

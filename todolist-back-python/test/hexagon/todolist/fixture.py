@@ -18,13 +18,17 @@ class TodolistSetForTest(TodolistSetPort):
     def history(self):
         return [name for name in self._all_snapshot]
 
-    def feed(self, snapshot: TodolistSnapshot):
-        self._all_snapshot[snapshot.name] = snapshot
+    def feed(self, *snapshots: TodolistSnapshot):
+        for snapshot in snapshots:
+            self._all_snapshot[snapshot.name] = snapshot
 
     def by(self, todolist_name: str) -> Option[TodolistSnapshot]:
         if todolist_name not in self._all_snapshot:
             return Nothing
         return Some(self._all_snapshot[todolist_name])
+
+    def all_by_name(self) -> list[str]:
+        return [snapshot.name for snapshot in self._all_snapshot.values()]
 
 
 def a_task_key(value: int):
