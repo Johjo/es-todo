@@ -177,7 +177,7 @@ class DependencyListForWeb(DependencyList):
 if __name__ == '__main__':
     from dotenv import load_dotenv
 
-    app.dependencies = DependencyListForWeb()
+    app._dependencies = DependencyListForWeb()
     load_dotenv()
 
     os.environ["PERSISTENCE_MODULE"] = 'eventsourcing.sqlite'
