@@ -15,7 +15,7 @@ def test_reword_task(dependencies: Dependencies, fake: TodolistFaker):
 
     dependencies = dependencies.feed_adapter(TodolistSetPort, lambda _: todolist_set)
     controller = TodolistWriteController(dependencies)
-    controller.reword_task("buy the milk", task.key.value, todolist.name)
+    controller.reword_task(todolist.name, task.key.value,"buy the milk")
 
     actual = todolist_set.by(todolist.name).value
     assert actual == replace(todolist, tasks=[(replace(task, name="buy the milk"))])
