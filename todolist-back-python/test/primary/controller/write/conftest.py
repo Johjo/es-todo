@@ -6,17 +6,6 @@ from test.hexagon.todolist.fixture import TodolistFaker
 
 
 @pytest.fixture
-def empty_dependencies():
-    return Dependencies.create_empty()
-
-
-# todo: remove this fixture
-@pytest.fixture
-def dependencies_with_use_cases():
-    return inject_use_cases(Dependencies.create_empty())
-
-
-@pytest.fixture
 def dependencies():
     return inject_use_cases(Dependencies.create_empty())
 
