@@ -4,6 +4,7 @@ from dataclasses import dataclass, replace, field
 from typing import Any
 
 from hexagon.todolist.aggregate import TodolistSetPort
+from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
 from hexagon.todolist.write.open_task import OpenTask
 
@@ -37,6 +38,7 @@ def inject_use_cases(dependencies: Dependencies) -> Dependencies:
     factories = {
         TodolistCreate: todolist_create_factory,
         OpenTask : open_task_use_case_factory,
+        CloseTask: close_task_use_case_factory
     }
 
     for use_case, factory in factories.items():
@@ -49,3 +51,7 @@ def todolist_create_factory(dependencies: Dependencies):
 
 def open_task_use_case_factory(dependencies: Dependencies):
     return OpenTask(dependencies.get_adapter(TodolistSetPort))
+
+
+def close_task_use_case_factory(dependencies):
+    return CloseTask(dependencies.get_adapter(TodolistSetPort))

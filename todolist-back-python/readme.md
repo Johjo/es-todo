@@ -18,3 +18,15 @@
 5. test e2e
     - controller -> use case -> adapter : test e2e (peu / lent) (meilleur lecture des erreurs)
     - web -> controller -> use case -> adapter : test e2e (peu / lent) (on traverse tout)
+
+
+# step 1 : copy use case test
+# step 2 : remove fixture
+# step 3 : introduce dependencies
+# step 4 : pass adapter from dependencies
+# step 5 : create use case factory from dependencies
+# step 6 : feed dependencies with use case factory
+# step 7 : move use case factory to method inject use case
+# step 8 : create controller
+# step 9 : extract method using use case
+# step 10 : move method to controller

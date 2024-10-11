@@ -31,8 +31,8 @@ def a_task_key(value: int):
     return TaskKey(value=value)
 
 
-def a_task(key: int, faker: Faker):
-    return TaskSnapshot(key=a_task_key(key), name=faker.sentence())
+def a_task(key: int, faker: Faker) -> TaskSnapshot:
+    return TaskSnapshot(key=a_task_key(key), name=faker.sentence(), is_open=True)
 
 
 class TodolistFaker:
