@@ -9,7 +9,7 @@ from hexagon.fvp.port import FvpSessionRepository
 from hexagon.fvp.read.which_task import TaskReader
 from primary.controller import write, read
 from primary.controller.read.which_task import DependencyList
-from primary.web import app
+from primary.web_old import app
 from secondary.fvp.json_session_repository import JsonSessionRepository
 from secondary.fvp.task_reader_todolist import TaskReaderTodolist
 from utils import SharedInstanceBuiltIn
