@@ -1,5 +1,4 @@
 from abc import ABC
-from collections import namedtuple
 from dataclasses import dataclass, replace, field
 from typing import Any
 
