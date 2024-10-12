@@ -1,21 +1,39 @@
-<html>
+b'<html>
+
 <head>
+
     <title>Todo</title>
+
 </head>
+
 <body>
 
+
+
 <a href="/todo/Jonathan">Jonathan</a>
+
 <ul>
-    % for todolist_name in todolist_name_set:
-        <li><a href="/todo/{{todolist_name}}">{{todolist_name}}</a></li>
-    % end
+
+        <li><a href="/todo/1-todolist-1">1-todolist-1</a></li>
+
+        <li><a href="/todo/2-todolist-2">2-todolist-2</a></li>
+
 </ul>
 
 
-Créer une todolist
+
+
+
+Cr\xc3\xa9er une todolist
+
 <form action="/todo" method="post">
+
     <input type="text" name="name" value="">
+
     <input type="submit" value="create">
+
 </form>
+
 </body>
-</html>
+
+</html>'
