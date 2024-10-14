@@ -1,13 +1,22 @@
+from abc import ABC, abstractmethod
+
 from expression import Result
 
 from hexagon.todolist.aggregate import TaskKey, Task, TodolistSetPort
 from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
 
 
-class OpenTask:
-    def __init__(self, todolist_set: TodolistSetPort):
-        self._todolist_set = todolist_set
+class TaskKeyGeneratorPort(ABC):
+    @abstractmethod
+    def generate(self) -> TaskKey:
+        pass
 
-    def execute(self, todolist_name, key: TaskKey, name: str) -> Result[None, str]:
-        update = lambda aggregate: aggregate.open_task(Task(key=key, name=name, is_open=True))
+
+class OpenTask:
+    def __init__(self, todolist_set: TodolistSetPort, task_key_generator: TaskKeyGeneratorPort):
+        self._todolist_set = todolist_set
+        self._task_key_generator = task_key_generator
+
+    def execute(self, todolist_name, name: str) -> Result[None, str]:
+        update = lambda aggregate: aggregate.open_task(Task(key=self._task_key_generator.generate(), name=name, is_open=True))
         return UpdateTodolistAggregate(self._todolist_set).execute(todolist_name, update)

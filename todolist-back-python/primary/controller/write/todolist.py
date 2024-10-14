@@ -21,9 +21,9 @@ class TodolistWriteController:
         use_case: TodolistCreate = self.dependencies.get_use_case(TodolistCreate)
         use_case.execute(todolist_name=todolist_name)
 
-    def open_task(self, todolist_name: str, task_key: int, task_name: str):
+    def open_task(self, todolist_name: str, task_name: str):
         use_case: OpenTask = self.dependencies.get_use_case(OpenTask)
-        use_case.execute(todolist_name=todolist_name, key=TaskKey(task_key), name=task_name)
+        use_case.execute(todolist_name=todolist_name, name=task_name)
 
     def close_task(self, todolist_name: str, task_key: int):
         use_case: CloseTask = self.dependencies.get_use_case(CloseTask)
