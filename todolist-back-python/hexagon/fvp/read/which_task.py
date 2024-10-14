@@ -7,7 +7,7 @@ from hexagon.fvp.port import FvpSessionSetPort
 
 @dataclass(frozen=True)
 class TaskFilter:
-    pass
+    todolist_name: str
 
 
 class TodolistPort(ABC):

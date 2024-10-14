@@ -10,7 +10,7 @@
 <div>
 Ajouter une tâche
 <form action="/todo/{{todolist_name}}/item?{{query_string}}" method="post">
-    <input type="text" name="item">
+    <input type="text" name="task_name">
     <input type="submit" value="Add item">
 </form>
 </div>

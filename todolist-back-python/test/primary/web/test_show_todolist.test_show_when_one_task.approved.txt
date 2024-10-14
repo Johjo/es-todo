@@ -14,9 +14,23 @@ b'<html>
 
 <p>
 
-<h2> Rien \xc3\xa0 faire </h2>
+    <div>
+
+    <h2> buy the milk </h2> <a href="/todo/my_todolist/item/1/reword?xxxx_query_string">Renommer</a>
+
+    </div>
+
+    <form action="/todo/my_todolist/item/1/close?xxxx_query_string" method="post">
+
+    <input type="submit" value="C\'est fait">
+
+    </form>
 
 </p>
+
+
+
+
 
 
 

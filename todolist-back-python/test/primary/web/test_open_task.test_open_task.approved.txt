@@ -14,9 +14,23 @@ b'<html>
 
 <p>
 
-<h2> Rien \xc3\xa0 faire </h2>
+    <div>
+
+    <h2> the task </h2> <a href="/todo/todolist/item/1/reword?xxxx_query_string">Renommer</a>
+
+    </div>
+
+    <form action="/todo/todolist/item/1/close?xxxx_query_string" method="post">
+
+    <input type="submit" value="C\'est fait">
+
+    </form>
 
 </p>
+
+
+
+
 
 
 
@@ -24,9 +38,9 @@ b'<html>
 
 Ajouter une t\xc3\xa2che
 
-<form action="/todo/todolist/item?" method="post">
+<form action="/todo/todolist/item?xxxx_query_string" method="post">
 
-    <input type="text" name="item">
+    <input type="text" name="task_name">
 
     <input type="submit" value="Add item">
 
@@ -38,7 +52,7 @@ Ajouter une t\xc3\xa2che
 
 Red\xc3\xa9marrer l\'algo
 
-<form action="/todo/todolist/reset?" method="post">
+<form action="/todo/todolist/reset?xxxx_query_string" method="post">
 
     <input type="submit" value="Reset">
 
@@ -46,7 +60,7 @@ Red\xc3\xa9marrer l\'algo
 
 
 
-Il y a 0 t\xc3\xa2ches en attente.
+Il y a xxxx_number_of_items t\xc3\xa2ches en attente.
 
 
 
@@ -57,6 +71,8 @@ Il y a 0 t\xc3\xa2ches en attente.
 <ul>
 
 <li> <a href="/todo/todolist?only_inbox=1">Inbox</a></li>
+
+<li> <a href="/todo/todolist?context=xxxx1">xxxx1</a> : xxxx2 </li>
 
 </ul>
 

@@ -20,7 +20,7 @@ def test_open_task(todolist_set: TodolistSetForTest, task_key_generator : TaskKe
     task_key_generator.feed(expected_task.key)
 
 
-    response = app.post(f'/todo/{todolist.name}/item', params={'name': expected_task.name})
+    response = app.post(f'/todo/{todolist.name}/item', params={'task_name': expected_task.name})
 
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
