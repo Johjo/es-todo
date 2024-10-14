@@ -1,3 +1,4 @@
+from abc import ABC
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 
@@ -22,6 +23,7 @@ class Task:
             "name": self.name
         }
 
+
 @dataclass
 class TodoList:
     tasks: list[Task]
@@ -37,6 +39,10 @@ class TodoList:
             "numberOfTasks": self.number_of_tasks,
             "contexts": self.contexts
         }
+
+
+class TodolistPort(ABC):
+    pass
 
 
 def todolist(todolist_name, dependencies: DependencyList) -> TodoList:
@@ -80,3 +86,7 @@ class TodolistReadController:
     def all_todolist_by_name(self) -> list[str]:
         todolist_set = self.dependencies.get_adapter(TodolistSetPort)
         return todolist_set.all_by_name()
+
+    def task_by(self, todolist_name: str, task_key: int) -> Task:
+        todolist = self.dependencies.get_adapter(TodolistPort)
+        return todolist.task_by(todolist_name=todolist_name, task_key=task_key)
