@@ -30,15 +30,22 @@ def create_todolist():
 
 
 @bottle_app.route("/todo/<todolist_name>")
-# @view("index")
 def show_todolist(todolist_name):
     return template("nothing", {
         "todolist_name": todolist_name,
         "query_string":"", # todo: fill query string
         "number_of_items":0, # todo fill number of items
         "counts_by_context": {}, # todo fill counts by context
-
     })
+
+@bottle_app.post("/todo/<todolist_name>/item")
+def open_task(todolist_name: str):
+    task_name = get_string_from_request_post("name")
+    TodolistWriteController(bottle_config.dependencies).open_task(todolist_name, task_name)
+    return show_todolist(todolist_name)
+
 
 def get_string_from_request_post(field_name):
     return request.forms.getunicode(field_name)
+
+

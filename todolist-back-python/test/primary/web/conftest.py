@@ -4,9 +4,11 @@ from faker import Faker
 from webtest import TestApp
 
 from hexagon.todolist.aggregate import TodolistSetPort
+from hexagon.todolist.write.open_task import TaskKeyGeneratorPort
 from primary.controller.write.dependencies import Dependencies, inject_use_cases
 from primary.web.pages import bottle_app, bottle_config
 from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest
+from test.hexagon.todolist.write.test_open_task import TaskKeyGeneratorForTest
 
 
 @pytest.fixture
@@ -36,8 +38,13 @@ def todolist_set():
     return TodolistSetForTest()
 
 @pytest.fixture
-def test_dependencies(todolist_set) -> Dependencies:
+def task_key_generator():
+    return TaskKeyGeneratorForTest()
+
+@pytest.fixture
+def test_dependencies(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorPort) -> Dependencies:
     dependencies = inject_use_cases(bottle_config.dependencies)
     dependencies = dependencies.feed_adapter(TodolistSetPort, lambda _: todolist_set)
+    dependencies = dependencies.feed_adapter(TaskKeyGeneratorPort, lambda _: task_key_generator)
 
     return dependencies
