@@ -2,7 +2,7 @@ import json
 import os
 
 from hexagon.fvp.domain_model import FvpSnapshot
-from hexagon.fvp.port import FvpSessionRepository
+from hexagon.fvp.port import FvpSessionSetPort
 from secondary.fvp.json_session_repository import JsonSessionRepository
 from test.secondary.fvp.test_session_repository_contract_testing import TestSessionRepositoryContractTesting
 
@@ -12,7 +12,7 @@ class TestJsonSessionRepository(TestSessionRepositoryContractTesting):
         with open(self.path, 'w') as file:
             file.write(json.dumps(snapshot.to_primitive_dict(), indent=4))
 
-    def _create_sut(self) -> FvpSessionRepository:
+    def _create_sut(self) -> FvpSessionSetPort:
         if not os.path.exists('data_test'):
             os.makedirs('data_test')
         self.path = 'data_test/session_fvp.json'

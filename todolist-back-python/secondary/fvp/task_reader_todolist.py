@@ -1,16 +1,16 @@
 from domain.todo.todoapp import TodoApp
 from hexagon.fvp.domain_model import Task
-from hexagon.fvp.read.which_task import TaskReader
+from hexagon.fvp.read.which_task import TodolistPort
 
 
 # todo: cette classe est difficile à tester parce qu'elle utilise todoapp
-class TaskReaderTodolist(TaskReader):
+class TaskReaderTodolist(TodolistPort):
     def __init__(self, todolist_name: str, only_inbox: bool, context: str):
         self.name = todolist_name
         self.only_inbox = only_inbox
         self.context = context
 
-    def all(self) -> list[Task]:
+    def all_open_tasks(self) -> list[Task]:
         app = TodoApp()
         todolist_id = app.open_todolist(self.name)
         tasks = [Task(id=task.index, name=task.name) for task in app.get_open_items(todolist_id)]

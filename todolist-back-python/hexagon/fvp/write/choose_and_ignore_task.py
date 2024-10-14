@@ -1,9 +1,9 @@
 from hexagon.fvp.domain_model import FinalVersionPerfectedSession
-from hexagon.fvp.port import FvpSessionRepository
+from hexagon.fvp.port import FvpSessionSetPort
 
 
 class ChooseAndIgnoreTaskFvp:
-    def __init__(self, set_of_fvp_sessions: FvpSessionRepository):
+    def __init__(self, set_of_fvp_sessions: FvpSessionSetPort):
         self.set_of_fvp_sessions = set_of_fvp_sessions
 
     def execute(self, chosen_task_id, ignored_task_id):

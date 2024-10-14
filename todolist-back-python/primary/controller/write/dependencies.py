@@ -2,6 +2,8 @@ from abc import ABC
 from dataclasses import dataclass, replace, field
 from typing import Any
 
+from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.read.which_task import WhichTaskQuery, TodolistPort
 from hexagon.todolist.aggregate import TodolistSetPort
 from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
@@ -25,6 +27,9 @@ class Dependencies(ABC):
         assert use_case in self.use_case_factory, f"use_case for {use_case} must be injected first"
         return self.use_case_factory[use_case](self)
 
+    def get_query(self, query: Any) -> Any:
+        return self.get_use_case(query)
+
     def get_adapter(self, port) -> Any:
         assert port in self.adapter_factory, f"adapter for {port} must be injected first"
         return self.adapter_factory[port](self)
@@ -40,7 +45,8 @@ def inject_use_cases(dependencies: Dependencies) -> Dependencies:
         OpenTask: open_task_use_case_factory,
         CloseTask: close_task_use_case_factory,
         RewordTask: reword_task_use_case_factory,
-        ImportManyTask: import_many_task_use_case_factory
+        ImportManyTask: import_many_task_use_case_factory,
+        WhichTaskQuery: which_task_query_factory
     }
 
     for use_case, factory in factories.items():
@@ -68,3 +74,6 @@ def reword_task_use_case_factory(dependencies: Dependencies) -> RewordTask:
 
 def import_many_task_use_case_factory(dependencies: Dependencies) -> ImportManyTask:
     return ImportManyTask(dependencies.get_adapter(TodolistSetPort))
+
+def which_task_query_factory(dependencies: Dependencies) -> WhichTaskQuery:
+    return WhichTaskQuery(dependencies.get_adapter(TodolistPort), dependencies.get_adapter(FvpSessionSetPort))

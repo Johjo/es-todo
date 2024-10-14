@@ -56,7 +56,7 @@ def get_tasks(dependencies, todolist_name):
     set_of_open_tasks = dependencies.task_reader_for_fvp_which_task(todolist_name=todolist_name, only_inbox=False,
                                                                     context="")
     set_of_fvp_sessions = dependencies.fvp_session_repository_for_fvp()
-    response = WhichTaskQuery(set_of_open_tasks=set_of_open_tasks, set_of_fvp_sessions=set_of_fvp_sessions).which_task()
+    response = WhichTaskQuery(todolist=set_of_open_tasks, fvp_sessions_set=set_of_fvp_sessions).which_task()
     tasks = []
     match response:
         case DoTheTask(id=task_id, name=task_name):

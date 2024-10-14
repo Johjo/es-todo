@@ -1,25 +1,26 @@
 from abc import ABC, abstractmethod
 
 from hexagon.fvp.domain_model import NothingToDo, DoTheTask, ChooseTheTask
-from hexagon.fvp.port import FvpSessionRepository
-from hexagon.fvp.read.which_task import WhichTaskQueryContract, WhichTaskQuery, TaskReader
+from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.read.which_task import WhichTaskQueryContract, WhichTaskQuery, TodolistPort
 from utils import SharedInstanceBuiltIn
 
 
+# todo : remove this
 class DependencyList(ABC):
     def which_task_query(self, todolist_name: str, only_inbox: bool, context: str) -> WhichTaskQueryContract:
         set_of_open_tasks = self.task_reader_for_which_task_query(todolist_name=todolist_name,
                                                                   only_inbox=only_inbox,
                                                                   context=context)
         set_of_fvp_sessions = self.fvp_session_repository_for_which_task_query()
-        return WhichTaskQuery(set_of_open_tasks=set_of_open_tasks, set_of_fvp_sessions=set_of_fvp_sessions)
+        return WhichTaskQuery(todolist=set_of_open_tasks, fvp_sessions_set=set_of_fvp_sessions)
 
     @abstractmethod
-    def task_reader_for_which_task_query(self, todolist_name: str, only_inbox: bool, context: str) -> TaskReader:
+    def task_reader_for_which_task_query(self, todolist_name: str, only_inbox: bool, context: str) -> TodolistPort:
         pass
 
     @abstractmethod
-    def fvp_session_repository_for_which_task_query(self) -> FvpSessionRepository:
+    def fvp_session_repository_for_which_task_query(self) -> FvpSessionSetPort:
         pass
 
 

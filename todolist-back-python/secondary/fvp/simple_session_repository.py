@@ -2,11 +2,11 @@ from collections import OrderedDict
 from uuid import UUID
 
 from hexagon.fvp.domain_model import FvpSnapshot
-from hexagon.fvp.port import FvpSessionRepository
+from hexagon.fvp.port import FvpSessionSetPort
 from utils import SharedInstanceBuiltIn
 
 
-class SimpleSessionRepository(FvpSessionRepository, SharedInstanceBuiltIn):
+class FvpSessionSetForTest(FvpSessionSetPort, SharedInstanceBuiltIn):
     def __init__(self) -> None:
         self.snapshot: FvpSnapshot | None = None
 
@@ -15,7 +15,7 @@ class SimpleSessionRepository(FvpSessionRepository, SharedInstanceBuiltIn):
 
     def by(self) -> FvpSnapshot | None:
         if self.snapshot is None:
-            return FvpSnapshot(OrderedDict[UUID, int]())
+            return FvpSnapshot(OrderedDict[int, int]())
         return self.snapshot
 
     def feed(self, snapshot: FvpSnapshot) -> None:

@@ -1,59 +1,93 @@
 from collections import OrderedDict
-from uuid import uuid4
+from dataclasses import replace
+from uuid import uuid4, UUID
 
 import pytest
+from faker import Faker
 
 from hexagon.fvp.domain_model import Task, NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot
-from hexagon.fvp.read.which_task import TaskReader, WhichTaskQuery
-from secondary.fvp.simple_session_repository import SimpleSessionRepository
+from hexagon.fvp.read.which_task import TodolistPort, WhichTaskQuery, TaskFilter
+from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.fixture import an_id
 
 
-class SimpleTaskReader(TaskReader):
-    def all(self) -> list[Task]:
-        return self._tasks
-
+class TodolistForTest(TodolistPort):
     def __init__(self) -> None:
-        self._tasks: list[Task] = []
+        self._tasksByFilter: dict[TaskFilter | None, list[Task]] = {}
 
-    def feed(self, task) -> None:
-        self._tasks.append(task)
+    def all_open_tasks(self, task_filter: TaskFilter | None) -> list[Task]:
+        assert task_filter in self._tasksByFilter, "tasks must be fed before being read"
+        return self._tasksByFilter[task_filter]
 
-
-@pytest.fixture
-def sut(set_of_fvp_sessions: SimpleSessionRepository, set_of_open_tasks: SimpleTaskReader):
-    return WhichTaskQuery(set_of_open_tasks, set_of_fvp_sessions)
-
-
-@pytest.fixture
-def set_of_open_tasks():
-    return SimpleTaskReader()
+    def feed(self, task_filter: TaskFilter, *tasks: Task):
+        self._tasksByFilter[task_filter] = [task for task in tasks]
 
 
 @pytest.fixture
-def set_of_fvp_sessions():
-    return SimpleSessionRepository()
+def sut(fvp_session_set: FvpSessionSetForTest, todolist: TodolistForTest):
+    return WhichTaskQuery(todolist, fvp_session_set)
 
 
-def test_which_task_without_tasks(sut):
-    assert sut.which_task() == NothingToDo()
+@pytest.fixture
+def todolist():
+    return TodolistForTest()
 
 
-def test_which_task_with_one_task(sut, set_of_open_tasks):
-    set_of_open_tasks.feed(Task(id=an_id(1), name="buy milk"))
-    assert sut.which_task() == DoTheTask(id=an_id(1), name="buy milk")
+@pytest.fixture
+def fvp_session_set():
+    return FvpSessionSetForTest()
 
 
-def test_which_task_with_two_tasks(sut, set_of_open_tasks):
-    set_of_open_tasks.feed(Task(id=an_id(1), name="buy milk"))
-    set_of_open_tasks.feed(Task(id=an_id(2), name="buy water"))
-    assert sut.which_task() == ChooseTheTask(id_1=an_id(1), name_1="buy milk", id_2=an_id(2),
-                                             name_2="buy water")
+class FvpFaker:
+    def __init__(self, fake: Faker):
+        self.fake = fake
+
+    def a_task(self, key: None | int = None) -> Task:
+        if key is None:
+            key = self.fake.random_int()
+        return Task(id=an_id(key), name=self.fake.sentence())
+
+    @staticmethod
+    def a_task_filter():
+        return TaskFilter()
 
 
-def test_load_existing_session(sut, set_of_open_tasks, set_of_fvp_sessions):
-    set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[uuid4, int]({an_id(2): an_id(1)})))
-    set_of_open_tasks.feed(Task(id=an_id(1), name="buy milk"))
-    set_of_open_tasks.feed(Task(id=an_id(2), name="buy water"))
+@pytest.fixture
+def fake() -> FvpFaker:
+    return FvpFaker(Faker())
 
-    assert sut.which_task() == DoTheTask(id=an_id(1), name="buy milk")
+
+def test_which_task_without_tasks(sut: WhichTaskQuery, todolist: TodolistForTest, fake: FvpFaker):
+    task_filter = fake.a_task_filter()
+    todolist.feed(task_filter)
+    assert sut.which_task(task_filter) == NothingToDo()
+
+
+def test_which_task_with_one_task(sut: WhichTaskQuery, todolist: TodolistForTest, fake: FvpFaker):
+    expected_task = replace(fake.a_task(1), name="buy milk")
+    task_filter = fake.a_task_filter()
+    todolist.feed(task_filter, expected_task)
+
+    assert sut.which_task(task_filter) == DoTheTask(id=expected_task.id, name=expected_task.name)
+
+
+def test_which_task_with_two_tasks(sut: WhichTaskQuery, todolist: TodolistForTest, fake: FvpFaker):
+    primary_task = replace(fake.a_task(1), name="buy milk")
+    secondary_task = replace(fake.a_task(2), name="buy water")
+    task_filter = fake.a_task_filter()
+    todolist.feed(task_filter, primary_task, secondary_task)
+
+    assert sut.which_task(task_filter) == ChooseTheTask(id_1=primary_task.id, name_1=primary_task.name,
+                                                        id_2=secondary_task.id, name_2=secondary_task.name)
+
+
+def test_load_existing_session(sut: WhichTaskQuery, todolist: TodolistForTest, fvp_session_set: FvpSessionSetForTest,
+                               fake: FvpFaker):
+    chosen_task = replace(fake.a_task(1), name="buy milk")
+    ignored_task = replace(fake.a_task(2), name="buy water")
+    task_filter = fake.a_task_filter()
+
+    fvp_session_set.feed(FvpSnapshot.from_primitive_dict({ignored_task.id: chosen_task.id}))
+    todolist.feed(task_filter, chosen_task, ignored_task)
+
+    assert sut.which_task(task_filter) == DoTheTask(id=chosen_task.id, name=chosen_task.name)

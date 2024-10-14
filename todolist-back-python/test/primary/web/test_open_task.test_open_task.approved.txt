@@ -1,1 +1,83 @@
-b'{"todolist_name_set": ["todolist"]}'
+b'<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Todo</title>
+
+</head>
+
+<body>
+
+
+
+<p>
+
+<h2> Rien \xc3\xa0 faire </h2>
+
+</p>
+
+
+
+<div>
+
+Ajouter une t\xc3\xa2che
+
+<form action="/todo/todolist/item?" method="post">
+
+    <input type="text" name="item">
+
+    <input type="submit" value="Add item">
+
+</form>
+
+</div>
+
+
+
+Red\xc3\xa9marrer l\'algo
+
+<form action="/todo/todolist/reset?" method="post">
+
+    <input type="submit" value="Reset">
+
+</form>
+
+
+
+Il y a 0 t\xc3\xa2ches en attente.
+
+
+
+
+
+<h2> Contexte </h2>
+
+<ul>
+
+<li> <a href="/todo/todolist?only_inbox=1">Inbox</a></li>
+
+</ul>
+
+
+
+
+
+<ul>
+
+<li><a href="/todo/todolist/export">Exporter les t\xc3\xa2ches</a></li>
+
+<li><a href="/todo/todolist/import">Importer des t\xc3\xa2ches</a></li>
+
+</ul>
+
+
+
+
+
+
+
+</body>
+
+</html>'

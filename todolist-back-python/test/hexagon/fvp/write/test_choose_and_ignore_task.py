@@ -5,12 +5,12 @@ import pytest
 from test.fixture import an_id
 from hexagon.fvp.domain_model import FvpSnapshot
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
-from secondary.fvp.simple_session_repository import SimpleSessionRepository
+from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 
 
 @pytest.fixture
 def set_of_fvp_sessions():
-    return SimpleSessionRepository()
+    return FvpSessionSetForTest()
 
 
 @pytest.fixture

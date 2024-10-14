@@ -6,11 +6,11 @@ from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 
 
 from hexagon.fvp.domain_model import FvpSnapshot
-from secondary.fvp.simple_session_repository import SimpleSessionRepository
+from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 
 
 def test_reset_session():
-    set_of_fvp_sessions = SimpleSessionRepository()
+    set_of_fvp_sessions = FvpSessionSetForTest()
     set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[uuid4, int]({an_id(1): 1, an_id(2): 0})))
     sut = ResetFvpSession(set_of_fvp_sessions)
     sut.execute()

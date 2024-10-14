@@ -3,10 +3,10 @@ from collections import OrderedDict
 from uuid import UUID
 
 from hexagon.fvp.domain_model import FvpSnapshot
-from hexagon.fvp.port import FvpSessionRepository
+from hexagon.fvp.port import FvpSessionSetPort
 
 
-class JsonSessionRepository(FvpSessionRepository):
+class JsonSessionRepository(FvpSessionSetPort):
     def __init__(self, path: str):
         self.path = path
 

@@ -1,32 +1,41 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 from hexagon.fvp.domain_model import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask
-from hexagon.fvp.port import FvpSessionRepository
+from hexagon.fvp.port import FvpSessionSetPort
 
 
-class TaskReader(ABC):
+@dataclass(frozen=True)
+class TaskFilter:
+    pass
+
+
+class TodolistPort(ABC):
     @abstractmethod
-    def all(self) -> list[Task]:
+    def all_open_tasks(self, task_filter: TaskFilter) -> list[Task]:
         pass
 
 
+# todo: faire disparaître ce contrat
 class WhichTaskQueryContract(ABC):
     @abstractmethod
-    def which_task(self) -> NothingToDo | DoTheTask | ChooseTheTask:
+    def which_task(self, task_filter: TaskFilter) -> NothingToDo | DoTheTask | ChooseTheTask:
         pass
 
 
 class WhichTaskQuery(WhichTaskQueryContract):
-    def __init__(self, set_of_open_tasks: TaskReader, set_of_fvp_sessions: FvpSessionRepository):
-        self.set_of_fvp_sessions = set_of_fvp_sessions
-        self.set_of_open_tasks = set_of_open_tasks
+    def __init__(self, todolist: TodolistPort, fvp_sessions_set: FvpSessionSetPort):
+        self._fvp_sessions_set = fvp_sessions_set
+        self._todolist = todolist
 
-    def which_task(self):
+    def which_task(self, task_filter: TaskFilter) -> NothingToDo | DoTheTask | ChooseTheTask:
         session = self._get_or_create_session()
-        return session.which_task(self.set_of_open_tasks.all())
+        open_tasks = self._todolist.all_open_tasks(task_filter)
+        return session.which_task(open_tasks)
 
+    # todo: rendre ça plus fonctionnel
     def _get_or_create_session(self):
-        snapshot = self.set_of_fvp_sessions.by()
+        snapshot = self._fvp_sessions_set.by()
         if snapshot:
             session = FinalVersionPerfectedSession.from_snapshot(snapshot)
         else:

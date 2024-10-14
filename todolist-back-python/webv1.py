@@ -5,8 +5,8 @@ import urllib.parse
 from bottle import template, request, redirect, response
 
 from hexagon.fvp.domain_model import NothingToDo, ChooseTheTask, DoTheTask
-from hexagon.fvp.port import FvpSessionRepository
-from hexagon.fvp.read.which_task import TaskReader
+from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.read.which_task import TodolistPort
 from primary.controller import write, read
 from primary.controller.read.which_task import DependencyList
 from primary.web_old import app
@@ -167,10 +167,10 @@ def rest_todolist(name):
 
 
 class DependencyListForWeb(DependencyList):
-    def fvp_session_repository_for_which_task_query(self) -> FvpSessionRepository:
+    def fvp_session_repository_for_which_task_query(self) -> FvpSessionSetPort:
         return JsonSessionRepository("session_fvp.json")
 
-    def task_reader_for_which_task_query(self, todolist_name: str, only_inbox: bool, context: str) -> TaskReader:
+    def task_reader_for_which_task_query(self, todolist_name: str, only_inbox: bool, context: str) -> TodolistPort:
         return TaskReaderTodolist(todolist_name=todolist_name, only_inbox=only_inbox, context=context)
 
 
