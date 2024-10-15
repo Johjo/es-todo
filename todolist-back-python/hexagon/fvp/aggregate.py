@@ -87,7 +87,3 @@ class FvpSessionSetPort(ABC):
     @abstractmethod
     def by(self) -> FvpSnapshot | None:
         pass
-
-class FinalVersionPerfected:
-    class Port:
-        SessionSet = FvpSessionSetPort

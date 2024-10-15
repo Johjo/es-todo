@@ -20,9 +20,3 @@ class OpenTaskUseCase:
     def execute(self, todolist_name, name: str) -> Result[None, str]:
         update = lambda aggregate: aggregate.open_task(Task(key=self._task_key_generator.generate(), name=name, is_open=True))
         return UpdateTodolistAggregate(self._todolist_set).execute(todolist_name, update)
-
-
-class OpenTask:
-    UseCase = OpenTaskUseCase
-    class Port:
-        TaskKeyGenerator = TaskKeyGeneratorPort

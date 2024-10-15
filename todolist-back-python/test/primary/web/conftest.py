@@ -3,11 +3,12 @@ import pytest
 from faker import Faker
 from webtest import TestApp
 
-from hexagon.fvp.aggregate import Task, FinalVersionPerfected
-from hexagon.fvp.read.which_task import TaskFilter, WhichTask
-from hexagon.todolist.aggregate import TodolistSetPort, Todolist
-from hexagon.todolist.write.open_task import TaskKeyGeneratorPort, OpenTask
-from primary.controller.read.todolist import TodolistPort
+from hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
+from hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
+from hexagon.fvp.aggregate import Task
+from hexagon.fvp.read.which_task import TaskFilter
+from hexagon.todolist.aggregate import TodolistSetPort as Todolist_Port_TodolistSet
+from hexagon.todolist.write.open_task import TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
 from primary.controller.write.dependencies import Dependencies, inject_use_cases
 from primary.web.pages import bottle_app, bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
@@ -47,8 +48,8 @@ def task_key_generator():
 
 
 # todo : move in a single file
-class TodolistForTest(WhichTask.Port.Todolist):
-    def __init__(self, todolist_set: TodolistSetPort):
+class TodolistForTest(WhichTask_Port_Todolist):
+    def __init__(self, todolist_set: Todolist_Port_TodolistSet):
         self._todolist_set = todolist_set
 
     def all_open_tasks(self, task_filter: TaskFilter) -> list[Task]:
@@ -58,14 +59,14 @@ class TodolistForTest(WhichTask.Port.Todolist):
 
 
 @pytest.fixture
-def todolist(todolist_set: TodolistSetPort) -> WhichTask.Port.Todolist:
+def todolist(todolist_set: Todolist_Port_TodolistSet) -> WhichTask_Port_Todolist:
     return TodolistForTest(todolist_set)
 
 @pytest.fixture
-def test_dependencies(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorPort, todolist: WhichTask.Port.Todolist) -> Dependencies:
+def test_dependencies(todolist_set: TodolistSetForTest, task_key_generator: OpenTask_Port_TaskKeyGenerator, todolist: WhichTask_Port_Todolist) -> Dependencies:
     dependencies = inject_use_cases(bottle_config.dependencies)
-    dependencies = dependencies.feed_adapter(Todolist.Port.TodolistSet, lambda _: todolist_set)
-    dependencies = dependencies.feed_adapter(OpenTask.Port.TaskKeyGenerator, lambda _: task_key_generator)
-    dependencies = dependencies.feed_adapter(WhichTask.Port.Todolist, lambda _: todolist)
-    dependencies = dependencies.feed_adapter(FinalVersionPerfected.Port.SessionSet, lambda _: FvpSessionSetForTest())
+    dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, lambda _: todolist_set)
+    dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
+    dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, lambda _: todolist)
+    dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: FvpSessionSetForTest())
     return dependencies

@@ -44,8 +44,3 @@ class WhichTaskQuery(WhichTaskQueryContract):
             session = FinalVersionPerfectedSession.create()
         return session
 
-
-class WhichTask:
-    class Port:
-        Todolist = TodolistPort
-
