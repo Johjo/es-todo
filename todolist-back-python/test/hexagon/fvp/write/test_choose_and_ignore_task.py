@@ -3,7 +3,7 @@ from typing import OrderedDict
 import pytest
 
 from test.fixture import an_id
-from hexagon.fvp.domain_model import FvpSnapshot
+from hexagon.fvp.aggregate import FvpSnapshot
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 

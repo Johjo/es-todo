@@ -1,7 +1,6 @@
 from collections import OrderedDict
 
-from hexagon.fvp.domain_model import FvpSnapshot
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 
 
 class ResetFvpSession:

@@ -3,11 +3,10 @@ import pytest
 from faker import Faker
 from webtest import TestApp
 
-from hexagon.fvp.domain_model import Task
-from hexagon.fvp.port import FvpSessionSetPort
-from hexagon.fvp.read.which_task import TodolistPort, TaskFilter
-from hexagon.todolist.aggregate import TodolistSetPort
-from hexagon.todolist.write.open_task import TaskKeyGeneratorPort
+from hexagon.fvp.aggregate import Task, FinalVersionPerfected
+from hexagon.fvp.read.which_task import TodolistPort, TaskFilter, WhichTask
+from hexagon.todolist.aggregate import TodolistSetPort, Todolist
+from hexagon.todolist.write.open_task import TaskKeyGeneratorPort, OpenTask
 from primary.controller.write.dependencies import Dependencies, inject_use_cases
 from primary.web.pages import bottle_app, bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
@@ -63,8 +62,8 @@ def todolist(todolist_set: TodolistSetPort) -> TodolistPort:
 @pytest.fixture
 def test_dependencies(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorPort, todolist: TodolistPort) -> Dependencies:
     dependencies = inject_use_cases(bottle_config.dependencies)
-    dependencies = dependencies.feed_adapter(TodolistSetPort, lambda _: todolist_set)
-    dependencies = dependencies.feed_adapter(TaskKeyGeneratorPort, lambda _: task_key_generator)
-    dependencies = dependencies.feed_adapter(TodolistPort, lambda _: todolist)
-    dependencies = dependencies.feed_adapter(FvpSessionSetPort, lambda _: FvpSessionSetForTest())
+    dependencies = dependencies.feed_adapter(Todolist.Port.TodolistSet, lambda _: todolist_set)
+    dependencies = dependencies.feed_adapter(OpenTask.Port.TaskKeyGenerator, lambda _: task_key_generator)
+    dependencies = dependencies.feed_adapter(WhichTask.Port.Todolist, lambda _: todolist)
+    dependencies = dependencies.feed_adapter(FinalVersionPerfected.Port.SessionSet, lambda _: FvpSessionSetForTest())
     return dependencies

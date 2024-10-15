@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from hexagon.fvp.domain_model import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
+    FvpSessionSetPort
 
 
 @dataclass(frozen=True)
@@ -41,3 +41,9 @@ class WhichTaskQuery(WhichTaskQueryContract):
         else:
             session = FinalVersionPerfectedSession.create()
         return session
+
+
+class WhichTask:
+    Query = WhichTaskQuery
+    class Port:
+        Todolist = TodolistPort

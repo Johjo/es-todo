@@ -4,7 +4,7 @@ from uuid import uuid4
 import pytest
 
 from test.fixture import an_id
-from hexagon.fvp.domain_model import Task, NothingToDo, DoTheTask, ChooseTheTask, FinalVersionPerfectedSession, \
+from hexagon.fvp.aggregate import Task, NothingToDo, DoTheTask, ChooseTheTask, FinalVersionPerfectedSession, \
     FvpSnapshot
 
 

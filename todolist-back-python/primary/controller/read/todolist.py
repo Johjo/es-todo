@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from uuid import UUID, uuid4
 
 from domain.todo.todoapp import TodoApp
-from hexagon.fvp.domain_model import NothingToDo, DoTheTask, ChooseTheTask
+from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import WhichTaskQuery
 from hexagon.query.context_query import TodoContextQuery
 from hexagon.todolist.aggregate import TodolistSetPort

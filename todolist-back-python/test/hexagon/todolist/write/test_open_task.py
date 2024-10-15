@@ -4,7 +4,7 @@ import pytest
 from expression import Ok, Error
 
 from hexagon.todolist.aggregate import TaskSnapshot, TodolistSetPort, TaskKey
-from hexagon.todolist.write.open_task import OpenTask, TaskKeyGeneratorPort
+from hexagon.todolist.write.open_task import OpenTaskUseCase, TaskKeyGeneratorPort
 from test.hexagon.todolist.conftest import todolist_set
 from test.hexagon.todolist.fixture import TodolistSetForTest, a_todolist_snapshot, a_task_key, a_task, TodolistFaker
 
@@ -27,11 +27,11 @@ def task_key_generator() -> TaskKeyGeneratorForTest:
 
 
 @pytest.fixture
-def sut(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest) -> OpenTask:
-    return OpenTask(todolist_set, task_key_generator)
+def sut(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest) -> OpenTaskUseCase:
+    return OpenTaskUseCase(todolist_set, task_key_generator)
 
 
-def test_open_task_when_no_task(sut: OpenTask, todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest, fake: TodolistFaker):
+def test_open_task_when_no_task(sut: OpenTaskUseCase, todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest, fake: TodolistFaker):
     todolist = fake.a_todolist()
     todolist_set.feed(todolist)
     expected_task = fake.a_task()

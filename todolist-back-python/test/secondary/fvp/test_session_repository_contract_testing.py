@@ -4,9 +4,8 @@ from uuid import uuid4, UUID
 
 import pytest
 
-from hexagon.fvp.port import FvpSessionSetPort
 from test.fixture import an_id
-from hexagon.fvp.domain_model import FvpSnapshot
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 
 
 class TestSessionRepositoryContractTesting(ABC):

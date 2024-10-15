@@ -5,7 +5,7 @@ from test.fixture import an_id
 from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 
 
-from hexagon.fvp.domain_model import FvpSnapshot
+from hexagon.fvp.aggregate import FvpSnapshot
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 
 

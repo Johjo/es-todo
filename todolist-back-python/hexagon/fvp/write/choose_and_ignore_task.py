@@ -1,5 +1,4 @@
-from hexagon.fvp.domain_model import FinalVersionPerfectedSession
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import FinalVersionPerfectedSession, FvpSessionSetPort
 
 
 class ChooseAndIgnoreTaskFvp:

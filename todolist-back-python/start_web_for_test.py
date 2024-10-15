@@ -1,9 +1,10 @@
 import os
 
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import FvpSessionSetPort, FinalVersionPerfected
 from hexagon.fvp.read.which_task import TodolistPort
-from hexagon.todolist.aggregate import TodolistSetPort, TaskKey
-from hexagon.todolist.write.open_task import TaskKeyGeneratorPort
+from hexagon.fvp.read.which_task import WhichTask
+from hexagon.todolist.aggregate import TodolistSetPort, TaskKey, Todolist
+from hexagon.todolist.write.open_task import TaskKeyGeneratorPort, OpenTask
 from primary.controller.write.dependencies import inject_use_cases, Dependencies
 from primary.web.pages import bottle_config, bottle_app
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
@@ -22,13 +23,17 @@ class TaskKeyGeneratorIncremental(TaskKeyGeneratorPort):
 
 def inject_adapter(dependencies: Dependencies):
     todolist_set = TodolistSetForTest()
+    dependencies = dependencies.feed_adapter(Todolist.Port.TodolistSet, lambda _: todolist_set)
+
     task_key_generator = TaskKeyGeneratorIncremental()
+    dependencies = dependencies.feed_adapter(OpenTask.Port.TaskKeyGenerator, lambda _: task_key_generator)
+
     todolist = TodolistForTest(todolist_set)
+    dependencies = dependencies.feed_adapter(WhichTask.Port.Todolist, lambda _: todolist)
+
     fvp_session_set = FvpSessionSetForTest()
-    dependencies = dependencies.feed_adapter(TodolistSetPort, lambda _: todolist_set)
-    dependencies = dependencies.feed_adapter(TaskKeyGeneratorPort, lambda _: task_key_generator)
-    dependencies = dependencies.feed_adapter(TodolistPort, lambda _: todolist)
-    dependencies = dependencies.feed_adapter(FvpSessionSetPort, lambda _: fvp_session_set)
+    dependencies = dependencies.feed_adapter(FinalVersionPerfected.Port.SessionSet, lambda _: fvp_session_set)
+
     return dependencies
 
 

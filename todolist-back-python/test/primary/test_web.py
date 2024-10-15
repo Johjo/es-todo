@@ -3,7 +3,7 @@ import pytest
 from approvaltests import verify  # type: ignore
 from webtest import TestApp, TestResponse  # type: ignore
 
-from hexagon.fvp.domain_model import ChooseTheTask
+from hexagon.fvp.aggregate import ChooseTheTask
 from test.primary.controller.read.test_which_task import DependencyListForTest, WhichTaskQueryForTest
 from primary.web_old import app as bottle_app
 

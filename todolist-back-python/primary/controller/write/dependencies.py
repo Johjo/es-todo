@@ -2,13 +2,13 @@ from abc import ABC
 from dataclasses import dataclass, replace, field
 from typing import Any
 
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import FvpSessionSetPort
 from hexagon.fvp.read.which_task import WhichTaskQuery, TodolistPort
 from hexagon.todolist.aggregate import TodolistSetPort
 from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
 from hexagon.todolist.write.import_many_task import ImportManyTask
-from hexagon.todolist.write.open_task import OpenTask, TaskKeyGeneratorPort
+from hexagon.todolist.write.open_task import OpenTaskUseCase, TaskKeyGeneratorPort
 from hexagon.todolist.write.reword_task import RewordTask
 
 
@@ -42,7 +42,7 @@ class Dependencies(ABC):
 def inject_use_cases(dependencies: Dependencies) -> Dependencies:
     factories = {
         TodolistCreate: todolist_create_factory,
-        OpenTask: open_task_use_case_factory,
+        OpenTaskUseCase: open_task_use_case_factory,
         CloseTask: close_task_use_case_factory,
         RewordTask: reword_task_use_case_factory,
         ImportManyTask: import_many_task_use_case_factory,
@@ -61,7 +61,7 @@ def todolist_create_factory(dependencies: Dependencies):
 def open_task_use_case_factory(dependencies: Dependencies):
     todolist_set = dependencies.get_adapter(TodolistSetPort)
     task_key_generator = dependencies.get_adapter(TaskKeyGeneratorPort)
-    return OpenTask(todolist_set, task_key_generator)
+    return OpenTaskUseCase(todolist_set, task_key_generator)
 
 
 def close_task_use_case_factory(dependencies):

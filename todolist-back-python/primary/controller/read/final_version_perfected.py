@@ -1,4 +1,4 @@
-from hexagon.fvp.domain_model import NothingToDo, DoTheTask, ChooseTheTask
+from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter, WhichTaskQuery
 from primary.controller.write.dependencies import Dependencies
 

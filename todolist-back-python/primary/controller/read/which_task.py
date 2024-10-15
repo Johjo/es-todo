@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
-from hexagon.fvp.domain_model import NothingToDo, DoTheTask, ChooseTheTask
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask, FvpSessionSetPort
 from hexagon.fvp.read.which_task import WhichTaskQueryContract, WhichTaskQuery, TodolistPort
 from utils import SharedInstanceBuiltIn
 

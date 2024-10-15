@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 from bottle import template, Bottle, view, response, request  # type: ignore
 
-from hexagon.fvp.domain_model import NothingToDo, DoTheTask, ChooseTheTask
+from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController

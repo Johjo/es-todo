@@ -4,8 +4,7 @@ from random import randint
 import pytest
 from faker import Faker
 
-from hexagon.fvp.domain_model import NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot, FvpSessionSetPort
 from hexagon.fvp.read.which_task import WhichTaskQueryContract, TodolistPort
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.which_task import DependencyList, which_task

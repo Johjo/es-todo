@@ -2,8 +2,7 @@ import json
 from collections import OrderedDict
 from uuid import UUID
 
-from hexagon.fvp.domain_model import FvpSnapshot
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 
 
 class JsonSessionRepository(FvpSessionSetPort):

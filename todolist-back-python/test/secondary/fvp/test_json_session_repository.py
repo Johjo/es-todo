@@ -1,8 +1,7 @@
 import json
 import os
 
-from hexagon.fvp.domain_model import FvpSnapshot
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 from secondary.fvp.json_session_repository import JsonSessionRepository
 from test.secondary.fvp.test_session_repository_contract_testing import TestSessionRepositoryContractTesting
 

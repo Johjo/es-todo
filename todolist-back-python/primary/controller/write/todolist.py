@@ -3,7 +3,7 @@ from hexagon.todolist.aggregate import TaskKey, TaskSnapshot
 from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
 from hexagon.todolist.write.import_many_task import ImportManyTask
-from hexagon.todolist.write.open_task import OpenTask
+from hexagon.todolist.write.open_task import OpenTaskUseCase
 from hexagon.todolist.write.reword_task import RewordTask
 from primary.controller.write.dependencies import Dependencies
 
@@ -22,7 +22,7 @@ class TodolistWriteController:
         use_case.execute(todolist_name=todolist_name)
 
     def open_task(self, todolist_name: str, task_name: str):
-        use_case: OpenTask = self.dependencies.get_use_case(OpenTask)
+        use_case: OpenTaskUseCase = self.dependencies.get_use_case(OpenTaskUseCase)
         use_case.execute(todolist_name=todolist_name, name=task_name)
 
     def close_task(self, todolist_name: str, task_key: int):

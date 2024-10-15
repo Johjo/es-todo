@@ -1,5 +1,5 @@
 from domain.todo.todoapp import TodoApp
-from hexagon.fvp.domain_model import Task
+from hexagon.fvp.aggregate import Task
 from hexagon.fvp.read.which_task import TodolistPort
 
 

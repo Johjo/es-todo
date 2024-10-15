@@ -1,7 +1,6 @@
 from typing import final
 
-from hexagon.fvp.domain_model import FvpSnapshot
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.secondary.fvp.test_session_repository_contract_testing import TestSessionRepositoryContractTesting
 

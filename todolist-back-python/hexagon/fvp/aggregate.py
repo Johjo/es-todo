@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from collections import OrderedDict
 from dataclasses import dataclass
 
@@ -45,12 +46,11 @@ class FvpSnapshot:
         return FvpSnapshot(OrderedDict[int, int](data))
 
 
-
 class FinalVersionPerfectedSession:
-    def __init__(self, task_priorities : OrderedDict[int, int]):
-        self.task_priorities : OrderedDict[int, int] = task_priorities
+    def __init__(self, task_priorities: OrderedDict[int, int]):
+        self.task_priorities: OrderedDict[int, int] = task_priorities
 
-    def which_task(self, open_tasks: list[Task]) -> NothingToDo | DoTheTask | ChooseTheTask :
+    def which_task(self, open_tasks: list[Task]) -> NothingToDo | DoTheTask | ChooseTheTask:
         ids = [task.id for task in open_tasks]
         tasks = [task for task in open_tasks if self.task_priorities.get(task.id, None) not in ids]
         match tasks:
@@ -61,12 +61,8 @@ class FinalVersionPerfectedSession:
             case _:
                 return NothingToDo()
 
-
-
-
     def choose_and_ignore_task(self, id_chosen, id_ignored) -> None:
         self.task_priorities[id_ignored] = id_chosen
-
 
     def reset(self) -> None:
         self.task_priorities = OrderedDict()
@@ -76,11 +72,22 @@ class FinalVersionPerfectedSession:
 
     @classmethod
     def from_snapshot(cls, snapshot: FvpSnapshot) -> 'FinalVersionPerfectedSession':
-        return FinalVersionPerfectedSession(task_priorities = snapshot.task_priorities)
+        return FinalVersionPerfectedSession(task_priorities=snapshot.task_priorities)
 
     @classmethod
     def create(cls) -> 'FinalVersionPerfectedSession':
         return FinalVersionPerfectedSession(OrderedDict())
 
 
+class FvpSessionSetPort(ABC):
+    @abstractmethod
+    def save(self, snapshot: FvpSnapshot) -> None:
+        pass
 
+    @abstractmethod
+    def by(self) -> FvpSnapshot | None:
+        pass
+
+class FinalVersionPerfected:
+    class Port:
+        SessionSet = FvpSessionSetPort

@@ -83,3 +83,8 @@ class TodolistSetPort(ABC):
 
     def save_snapshot(self, snapshot: TodolistSnapshot) -> None:
         pass
+
+
+class Todolist:
+    class Port:
+        TodolistSet = TodolistSetPort

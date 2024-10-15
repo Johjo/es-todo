@@ -4,8 +4,7 @@ import urllib.parse
 
 from bottle import template, request, redirect, response
 
-from hexagon.fvp.domain_model import NothingToDo, ChooseTheTask, DoTheTask
-from hexagon.fvp.port import FvpSessionSetPort
+from hexagon.fvp.aggregate import NothingToDo, ChooseTheTask, DoTheTask, FvpSessionSetPort
 from hexagon.fvp.read.which_task import TodolistPort
 from primary.controller import write, read
 from primary.controller.read.which_task import DependencyList

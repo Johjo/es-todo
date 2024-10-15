@@ -5,7 +5,7 @@ from uuid import uuid4, UUID
 import pytest
 from faker import Faker
 
-from hexagon.fvp.domain_model import Task, NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot
+from hexagon.fvp.aggregate import Task, NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot
 from hexagon.fvp.read.which_task import TodolistPort, WhichTaskQuery, TaskFilter
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.fixture import an_id
