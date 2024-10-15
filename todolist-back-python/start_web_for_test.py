@@ -28,8 +28,8 @@ def inject_adapter(dependencies: Dependencies):
     task_key_generator = TaskKeyGeneratorIncremental()
     dependencies = dependencies.feed_adapter(OpenTask.Port.TaskKeyGenerator, lambda _: task_key_generator)
 
-    todolist = TodolistForTest(todolist_set)
-    dependencies = dependencies.feed_adapter(WhichTask.Port.Todolist, lambda _: todolist)
+    which_task_todolist = TodolistForTest(todolist_set)
+    dependencies = dependencies.feed_adapter(WhichTask.Port.Todolist, lambda _: which_task_todolist)
 
     fvp_session_set = FvpSessionSetForTest()
     dependencies = dependencies.feed_adapter(FinalVersionPerfected.Port.SessionSet, lambda _: fvp_session_set)

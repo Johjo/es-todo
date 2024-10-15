@@ -1,0 +1,9 @@
+b'<form action="/todo/todolist/item/1/reword?xxxx_query_string" method="post">
+
+    <input type="text" name="new_name" value="initial name">
+
+    <input type="submit" value="Renommer">
+
+</form>
+
+'

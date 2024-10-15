@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 
@@ -12,6 +12,7 @@ from primary.controller.read.current_contexts import OpenTaskReaderApp
 from primary.controller.write.dependencies import Dependencies
 
 
+# todo : use a task key instead of an id
 @dataclass
 class Task:
     id: UUID
@@ -42,7 +43,9 @@ class TodoList:
 
 
 class TodolistPort(ABC):
-    pass
+    @abstractmethod
+    def task_by(self, todolist_name: str, task_key: int) -> Task:
+        pass
 
 
 def todolist(todolist_name, dependencies: DependencyList) -> TodoList:
@@ -88,5 +91,9 @@ class TodolistReadController:
         return todolist_set.all_by_name()
 
     def task_by(self, todolist_name: str, task_key: int) -> Task:
-        todolist = self.dependencies.get_adapter(TodolistPort)
-        return todolist.task_by(todolist_name=todolist_name, task_key=task_key)
+        the_todolist : TodolistPort = self.dependencies.get_adapter(TodolistPort) #todo renommer en todolist
+        return the_todolist.task_by(todolist_name=todolist_name, task_key=task_key)
+
+class TodolistRead:
+    class Port:
+        Todolist = TodolistPort

@@ -1,5 +1,7 @@
+import typing
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import TypeAlias, NewType
 
 from hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
     FvpSessionSetPort
@@ -44,6 +46,6 @@ class WhichTaskQuery(WhichTaskQueryContract):
 
 
 class WhichTask:
-    Query = WhichTaskQuery
     class Port:
         Todolist = TodolistPort
+

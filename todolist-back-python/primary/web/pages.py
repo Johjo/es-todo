@@ -6,7 +6,7 @@ from bottle import template, Bottle, view, response, request  # type: ignore
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
-from primary.controller.read.todolist import TodolistReadController
+from primary.controller.read.todolist import TodolistReadController, Task
 from primary.controller.write.dependencies import Dependencies
 from primary.controller.write.todolist import TodolistWriteController
 
@@ -74,7 +74,7 @@ def show_todolist_when_one_task(todolist_name: str, do_the_task: DoTheTask):
         "urlencode": urllib.parse.quote}, )
 
 
-def show_todolist_when_two_tasks(todolist_name:str, choose_the_task: ChooseTheTask):
+def show_todolist_when_two_tasks(todolist_name: str, choose_the_task: ChooseTheTask):
     return template("choose_the_task", {
         "name_1": choose_the_task.name_1,
         "index_1": choose_the_task.id_1,
@@ -93,6 +93,17 @@ def open_task(todolist_name: str):
     task_name = get_string_from_request_post("task_name")
     TodolistWriteController(bottle_config.dependencies).open_task(todolist_name, task_name)
     return show_todolist(todolist_name)
+
+
+@bottle_app.get("/todo/<todolist_name>/item/<task_key>/reword")
+def display_reword_task(todolist_name: str, task_key: int):
+    pass
+    task: Task = TodolistReadController(bottle_config.dependencies).task_by(todolist_name=todolist_name, task_key=int(task_key))
+    return template("reword", {
+        "todolist_name": todolist_name,
+        "task_id": task_key,
+        "query_string": "xxxx_query_string",
+        "task_name": task.name})
 
 
 def get_string_from_request_post(field_name):
