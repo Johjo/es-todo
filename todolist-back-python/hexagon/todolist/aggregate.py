@@ -81,5 +81,6 @@ class TodolistSetPort(ABC):
     def by(self, todolist_name: str) -> Option[TodolistSnapshot]:
         pass
 
+    @abstractmethod
     def save_snapshot(self, snapshot: TodolistSnapshot) -> None:
         pass
