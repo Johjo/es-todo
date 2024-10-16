@@ -13,7 +13,7 @@ from hexagon.todolist.write.reword_task import RewordTask
 
 def inject_use_cases(dependencies: Dependencies) -> Dependencies:
     factories = {
-        TodolistCreate: todolist_create_factory,
+        TodolistCreate: TodolistCreate.factory,
         OpenTaskUseCase: open_task_use_case_factory,
         CloseTask: close_task_use_case_factory,
         RewordTask: reword_task_use_case_factory,

@@ -42,9 +42,13 @@ class TodoList:
         }
 
 
-class TodolistPort(ABC):
+class TodolistSetReadPort(ABC):
     @abstractmethod
     def task_by(self, todolist_name: str, task_key: int) -> Task:
+        pass
+
+    @abstractmethod
+    def all_by_name(self) -> list[str]:
         pass
 
 
@@ -87,13 +91,13 @@ class TodolistReadController:
         self.dependencies = dependencies
 
     def all_todolist_by_name(self) -> list[str]:
-        todolist_set = self.dependencies.get_adapter(TodolistSetPort)
+        todolist_set : TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
         return todolist_set.all_by_name()
 
     def task_by(self, todolist_name: str, task_key: int) -> Task:
-        the_todolist : TodolistPort = self.dependencies.get_adapter(TodolistPort) #todo renommer en todolist
-        return the_todolist.task_by(todolist_name=todolist_name, task_key=task_key)
+        todolist_set : TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
+        return todolist_set.task_by(todolist_name=todolist_name, task_key=task_key)
 
 class TodolistRead:
     class Port:
-        Todolist = TodolistPort
+        Todolist = TodolistSetReadPort

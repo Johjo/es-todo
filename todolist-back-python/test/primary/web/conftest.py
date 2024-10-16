@@ -11,6 +11,7 @@ from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, 
     TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
 from primary.controller.dependencies import inject_use_cases
 from dependencies import Dependencies
+from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_app, bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest
@@ -66,6 +67,7 @@ def todolist(todolist_set: Todolist_Port_TodolistSet) -> WhichTask_Port_Todolist
 def test_dependencies(todolist_set: TodolistSetForTest, task_key_generator: OpenTask_Port_TaskKeyGenerator, todolist: WhichTask_Port_Todolist) -> Dependencies:
     dependencies = inject_use_cases(bottle_config.dependencies)
     dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, lambda _: todolist_set)
+    dependencies = dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist_set)
     dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
     dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, lambda _: todolist)
     dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: FvpSessionSetForTest())

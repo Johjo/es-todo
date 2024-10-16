@@ -3,13 +3,17 @@ from faker import Faker
 
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskKey, TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort
+from primary.controller.read.todolist import TodolistSetReadPort, Task
 
 
 def a_todolist_snapshot(name: str) -> TodolistSnapshot:
     return TodolistSnapshot(name=name, tasks=[])
 
 
-class TodolistSetForTest(TodolistSetPort):
+class TodolistSetForTest(TodolistSetPort, TodolistSetReadPort):
+    def task_by(self, todolist_name: str, task_key: int) -> Task:
+        raise Exception("Not implemented")
+
     def __init__(self) -> None:
         self._all_snapshot: dict[str, TodolistSnapshot] = {}
 

@@ -1,13 +1,16 @@
 from abc import ABC
 from dataclasses import dataclass
 
-from primary.controller.read.todolist import TodolistReadController, TodolistPort, Task
+from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort, Task
 from dependencies import Dependencies
 from test.hexagon.todolist.fixture import TodolistFaker
 
 
 # todo move in a shared single file
-class TodolistForTest(TodolistPort):
+class TodolistForTest(TodolistSetReadPort):
+    def all_by_name(self):
+        raise Exception("not implemented")
+
     def __init__(self) -> None:
         self._tasks: dict[(str, int,), Task] = {}
 
@@ -24,7 +27,7 @@ class TodolistForTest(TodolistPort):
 
 def test_query_one_task(dependencies: Dependencies, fake: TodolistFaker):
     todolist = TodolistForTest()
-    dependencies = dependencies.feed_adapter(TodolistPort, lambda _: todolist)
+    dependencies = dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist)
 
     expected_task = Task(id=1, name="buy milk")
     todolist.feed(todolist_name="my todolist", task_key=1, task=expected_task)

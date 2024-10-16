@@ -34,7 +34,8 @@ class Dependencies:
         return self.get_use_case(query)
 
     def get_adapter(self, port) -> Any:
-        return self._get_resource(resource_type=ResourceType.adapter, resource=port)
+        resource = self._get_resource(resource_type=ResourceType.adapter, resource=port)
+        return resource
 
     def get_path(self, path_name: str) -> Any:
         return self._get_resource(resource_type=ResourceType.path, resource=path_name)
