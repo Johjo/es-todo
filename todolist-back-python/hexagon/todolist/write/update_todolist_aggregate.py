@@ -1,6 +1,7 @@
 from expression import Result, pipe
 
-from hexagon.todolist.aggregate import TodolistSetPort, TodolistAggregate
+from hexagon.todolist.aggregate import TodolistAggregate
+from hexagon.todolist.port import TodolistSetPort
 
 
 class UpdateTodolistAggregate:

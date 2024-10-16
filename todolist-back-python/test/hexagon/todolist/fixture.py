@@ -1,7 +1,8 @@
 from expression import Option, Nothing, Some
 from faker import Faker
 
-from hexagon.todolist.aggregate import TodolistSnapshot, TodolistSetPort, TaskKey, TaskSnapshot
+from hexagon.todolist.aggregate import TodolistSnapshot, TaskKey, TaskSnapshot
+from hexagon.todolist.port import TodolistSetPort
 
 
 def a_todolist_snapshot(name: str) -> TodolistSnapshot:

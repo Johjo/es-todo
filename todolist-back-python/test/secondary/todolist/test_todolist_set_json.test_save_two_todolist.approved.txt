@@ -1,0 +1,1 @@
+{"todolist_1": {"name": "todolist_1", "tasks": [{"key": 1, "name": "buy milk", "is_open": true}, {"key": 2, "name": "buy water", "is_open": false}]}, "todolist_2": {"name": "todolist_2", "tasks": [{"key": 1, "name": "buy eggs", "is_open": false}, {"key": 5, "name": "buy bread", "is_open": true}]}}

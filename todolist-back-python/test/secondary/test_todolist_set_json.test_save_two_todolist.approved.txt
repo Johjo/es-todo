@@ -1,1 +1,0 @@
-{"todolist_1": {"name": "todolist_1", "tasks": []}, "todolist_2": {"name": "todolist_2", "tasks": []}}

@@ -2,8 +2,8 @@ import os
 
 from hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
 from hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
-from hexagon.todolist.aggregate import TodolistSetPort as Todolist_Port_TodolistSet
-from hexagon.todolist.write.open_task import TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
+from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, \
+    TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
 from hexagon.todolist.aggregate import TaskKey
 
 from primary.controller.write.dependencies import inject_use_cases, Dependencies

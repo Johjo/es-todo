@@ -1,6 +1,6 @@
 from dataclasses import replace
 
-from hexagon.todolist.aggregate import TodolistSetPort
+from hexagon.todolist.port import TodolistSetPort
 from primary.controller.write.dependencies import Dependencies
 from primary.controller.write.todolist import TodolistWriteController
 from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker

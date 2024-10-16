@@ -1,4 +1,4 @@
-from hexagon.todolist.aggregate import TodolistSetPort
+from hexagon.todolist.port import TodolistSetPort
 from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
 
 

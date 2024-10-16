@@ -6,7 +6,7 @@ from domain.todo.todoapp import TodoApp
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import WhichTaskQuery
 from hexagon.query.context_query import TodoContextQuery
-from hexagon.todolist.aggregate import TodolistSetPort
+from hexagon.todolist.port import TodolistSetPort
 from primary.controller.dependency_list import DependencyList
 from primary.controller.read.current_contexts import OpenTaskReaderApp
 from primary.controller.write.dependencies import Dependencies

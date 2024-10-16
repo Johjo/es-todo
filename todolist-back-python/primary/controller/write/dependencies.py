@@ -4,11 +4,11 @@ from typing import Any
 
 from hexagon.fvp.aggregate import FvpSessionSetPort
 from hexagon.fvp.read.which_task import WhichTaskQuery, TodolistPort
-from hexagon.todolist.aggregate import TodolistSetPort
+from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
 from hexagon.todolist.write.import_many_task import ImportManyTask
-from hexagon.todolist.write.open_task import OpenTaskUseCase, TaskKeyGeneratorPort
+from hexagon.todolist.write.open_task import OpenTaskUseCase
 from hexagon.todolist.write.reword_task import RewordTask
 
 

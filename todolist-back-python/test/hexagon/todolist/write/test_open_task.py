@@ -3,8 +3,9 @@ from dataclasses import replace
 import pytest
 from expression import Ok, Error
 
-from hexagon.todolist.aggregate import TaskSnapshot, TodolistSetPort, TaskKey
-from hexagon.todolist.write.open_task import OpenTaskUseCase, TaskKeyGeneratorPort
+from hexagon.todolist.aggregate import TaskSnapshot, TaskKey
+from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from hexagon.todolist.write.open_task import OpenTaskUseCase
 from test.hexagon.todolist.conftest import todolist_set
 from test.hexagon.todolist.fixture import TodolistSetForTest, a_todolist_snapshot, a_task_key, a_task, TodolistFaker
 

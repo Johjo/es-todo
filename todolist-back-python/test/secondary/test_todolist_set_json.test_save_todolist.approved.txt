@@ -1,1 +1,0 @@
-{"my_todolist": {"name": "my_todolist", "tasks": [{"key": 1, "name": "buy milk", "is_open": true}]}}

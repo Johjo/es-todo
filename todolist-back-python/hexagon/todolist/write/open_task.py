@@ -1,15 +1,8 @@
-from abc import ABC, abstractmethod
-
 from expression import Result
 
-from hexagon.todolist.aggregate import TaskKey, Task, TodolistSetPort
+from hexagon.todolist.aggregate import Task
+from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
-
-
-class TaskKeyGeneratorPort(ABC):
-    @abstractmethod
-    def generate(self) -> TaskKey:
-        pass
 
 
 class OpenTaskUseCase:

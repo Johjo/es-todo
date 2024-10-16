@@ -1,8 +1,6 @@
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, replace
-from typing import Self
 
-from expression import Option, Result, Error, Ok
+from expression import Result, Error, Ok
 
 
 @dataclass(frozen=True)
@@ -76,11 +74,3 @@ class TodolistAggregate:
     def import_tasks(self, task_snapshots: list[TaskSnapshot]) -> Result['TodolistAggregate', str]:
         return Ok(replace(self, tasks=self.tasks + (*[Task.from_snapshot(snapshot) for snapshot in task_snapshots],)))
 
-class TodolistSetPort(ABC):
-    @abstractmethod
-    def by(self, todolist_name: str) -> Option[TodolistSnapshot]:
-        pass
-
-    @abstractmethod
-    def save_snapshot(self, snapshot: TodolistSnapshot) -> None:
-        pass

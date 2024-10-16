@@ -1,6 +1,7 @@
 from expression import Result, Nothing, Error, Ok
 
-from hexagon.todolist.aggregate import TodolistAggregate, TodolistSetPort
+from hexagon.todolist.aggregate import TodolistAggregate
+from hexagon.todolist.port import TodolistSetPort
 
 
 class TodolistCreate:

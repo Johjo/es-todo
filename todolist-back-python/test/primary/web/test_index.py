@@ -5,7 +5,7 @@ from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter
 from webtest import TestApp, TestResponse  # type: ignore
 
-from hexagon.todolist.aggregate import TodolistSetPort
+from hexagon.todolist.port import TodolistSetPort
 from primary.controller.write.dependencies import Dependencies
 from primary.web.pages import bottle_config
 from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
