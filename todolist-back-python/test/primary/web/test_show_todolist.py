@@ -16,7 +16,6 @@ def test_show_when_no_task(todolist_set: TodolistSetForTest, test_dependencies: 
 
     response = app.get('/todo/my_todolist')
 
-    print(response.body)
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
 
@@ -29,7 +28,6 @@ def test_show_when_one_task(todolist_set: TodolistSetForTest, test_dependencies:
 
     response = app.get('/todo/my_todolist')
 
-    print(response.body)
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
 
@@ -43,6 +41,5 @@ def test_show_when_two_tasks(todolist_set: TodolistSetForTest, test_dependencies
 
     response = app.get('/todo/my_todolist')
 
-    print(response.body)
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())

@@ -1,7 +1,7 @@
-import bottle
+import bottle  # type: ignore
 import pytest
 from faker import Faker
-from webtest import TestApp
+from webtest import TestApp  # type: ignore
 
 from hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
 from hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
@@ -53,7 +53,6 @@ class TodolistForTest(WhichTask_Port_Todolist):
         self._todolist_set = todolist_set
 
     def all_open_tasks(self, task_filter: TaskFilter) -> list[Task]:
-        print("----", self._todolist_set.by(task_filter.todolist_name))
         return [Task(id=task.key.value, name=task.name) for task in self._todolist_set.by(task_filter.todolist_name).value.tasks]
 
 

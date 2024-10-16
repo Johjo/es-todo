@@ -32,7 +32,6 @@ def test_rest_which_task(app, which_task_query):
     try:
         response: TestResponse = app.get('/rest/todo/anytodolist/which_task')
     except Exception as e:
-        print(e)
         raise
 
     assert response.status == '200 OK'

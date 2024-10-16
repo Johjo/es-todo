@@ -49,7 +49,6 @@ def show_todolist(todolist_name):
             return show_todolist_when_one_task(todolist_name=todolist_name, do_the_task=which_task)
 
         case ChooseTheTask():
-            print(which_task)
             return show_todolist_when_two_tasks(todolist_name=todolist_name, choose_the_task=which_task)
 
 

@@ -5,11 +5,10 @@ from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter
 from webtest import TestApp, TestResponse  # type: ignore
 
-from hexagon.todolist.port import TodolistSetPort
 from primary.controller.dependencies import Dependencies
 from primary.web.pages import bottle_config
-from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
-from test.primary.web.conftest import app, fake, app_dependencies
+from test.hexagon.todolist.fixture import TodolistFaker
+from test.primary.web.conftest import app, fake
 
 
 def test_index(todolist_set, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
@@ -19,6 +18,5 @@ def test_index(todolist_set, test_dependencies: Dependencies, app: TestApp, fake
 
     response = app.get('/')
 
-    print(response.body)
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
