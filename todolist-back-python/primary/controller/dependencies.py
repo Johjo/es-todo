@@ -1,4 +1,6 @@
-from dependencies import Dependencies
+from functools import reduce
+
+from dependencies import Dependencies, ResourceType
 from hexagon.fvp.aggregate import FvpSessionSetPort
 from hexagon.fvp.read.which_task import WhichTaskQuery, TodolistPort
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
@@ -19,9 +21,11 @@ def inject_use_cases(dependencies: Dependencies) -> Dependencies:
         WhichTaskQuery: which_task_query_factory
     }
 
-    for use_case, factory in factories.items():
-        dependencies = dependencies.feed_use_case(use_case, factory)
-    return dependencies
+    def feed_use_case(dep: Dependencies, resource_and_factory) -> Dependencies:
+        use_case, factory = resource_and_factory
+        return dep.feed_use_case(use_case=use_case, use_case_factory=factory)
+
+    return reduce(feed_use_case, factories.items(), dependencies)
 
 
 def todolist_create_factory(dependencies: Dependencies):

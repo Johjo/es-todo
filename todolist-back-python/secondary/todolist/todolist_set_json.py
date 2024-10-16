@@ -1,13 +1,16 @@
+from pathlib import Path
+
 from expression import Option, Some
 
+from dependencies import Dependencies
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot, TaskKey
 from hexagon.todolist.port import TodolistSetPort
 from infra.json_file import JsonFile
 
 
 class TodolistSetJson(TodolistSetPort):
-    def __init__(self, json_file: JsonFile):
-        self._json_file = json_file
+    def __init__(self, json_path: Path):
+        self._json_file = JsonFile(json_path)
 
     def save_snapshot(self, todolist: TodolistSnapshot) -> None:
         self._json_file.insert(todolist.name, self._to_todolist_dict(todolist))
@@ -29,3 +32,8 @@ class TodolistSetJson(TodolistSetPort):
     @staticmethod
     def _task_from_dict(d):
         return TaskSnapshot(key=TaskKey(d["key"]), name=d["name"], is_open=d["is_open"])
+
+    @classmethod
+    def factory(cls, dependencies: Dependencies):
+        return TodolistSetJson(dependencies.get_path("todolist_json_path"))
+

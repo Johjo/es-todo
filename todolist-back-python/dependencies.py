@@ -1,30 +1,51 @@
-from abc import ABC
 from dataclasses import dataclass, field, replace
+from enum import Enum
 from typing import Any
+
+class ResourceType(str, Enum):
+    use_case = "use_case"
+    adapter = "adapter"
+    path = "path"
 
 
 @dataclass(frozen=True)
-class Dependencies(ABC):
-    use_case_factory: dict[Any, Any] = field(default_factory=dict)
-    adapter_factory: dict[Any, Any] = field(default_factory=dict)
+class Dependencies:
+    factory: dict[Any, Any] = field(default_factory=dict)
+
+    def feed(self, resource_type: ResourceType, resource: Any, factory: Any) -> 'Dependencies':
+        return self._feed(resource_type=resource_type, resource=resource, factory=factory)
 
     def feed_use_case(self, use_case: Any, use_case_factory: Any) -> 'Dependencies':
-        return replace(self, use_case_factory={**self.use_case_factory, use_case: use_case_factory})
+        return self._feed(resource_type=ResourceType.use_case, resource=use_case, factory=use_case_factory)
 
     def feed_adapter(self, port: Any, adapter_factory: Any) -> 'Dependencies':
-        return replace(self, adapter_factory={**self.adapter_factory, port: adapter_factory})
+        return self._feed(resource_type=ResourceType.adapter, resource=port, factory=adapter_factory)
+
+    def feed_path(self, path: str, factory) -> 'Dependencies':
+        return self._feed(resource_type=ResourceType.path, resource=path, factory=factory)
+
+    def _feed(self, resource_type: ResourceType, resource: Any, factory: Any) -> 'Dependencies':
+        return replace(self, factory={**self.factory, (resource_type, resource): factory})
 
     def get_use_case(self, use_case: Any) -> Any:
-        assert use_case in self.use_case_factory, f"use_case for {use_case} must be injected first"
-        return self.use_case_factory[use_case](self)
+        return self._get_resource(resource_type=ResourceType.use_case, resource=use_case)
 
     def get_query(self, query: Any) -> Any:
         return self.get_use_case(query)
 
     def get_adapter(self, port) -> Any:
-        assert port in self.adapter_factory, f"adapter for {port} must be injected first"
-        return self.adapter_factory[port](self)
+        return self._get_resource(resource_type=ResourceType.adapter, resource=port)
+
+    def get_path(self, path_name: str) -> Any:
+        return self._get_resource(resource_type=ResourceType.path, resource=path_name)
+
+    def _get_resource(self, resource_type: ResourceType, resource) -> Any:
+        assert (resource_type, resource) in self.factory, f"{resource_type.value} for {resource} must be injected first"
+        return self.factory[(resource_type, resource)](self)
+
+
 
     @classmethod
     def create_empty(cls) -> 'Dependencies':
         return Dependencies()
+
