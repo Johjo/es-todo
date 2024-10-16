@@ -9,6 +9,7 @@ from hexagon.todolist.aggregate import TaskKey
 
 from primary.controller.dependencies import inject_use_cases
 from dependencies import Dependencies
+from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_config, bottle_app
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from secondary.todolist.todolist_set_json import TodolistSetJson
@@ -37,6 +38,8 @@ def inject_adapter(dependencies: Dependencies):
 
     fvp_session_set = FvpSessionSetForTest()
     dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: fvp_session_set)
+
+    dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadJson.factory)
 
     return dependencies
 

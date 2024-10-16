@@ -20,3 +20,7 @@ class JsonFile:
     def read(self, key: str) -> dict:
         values = self._load_json()
         return values[key]
+
+    def all_keys(self) -> list[str]:
+        values = self._load_json()
+        return list(values.keys())
