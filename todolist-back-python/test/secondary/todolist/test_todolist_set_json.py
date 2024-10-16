@@ -8,6 +8,7 @@ from expression import Some
 from faker import Faker
 
 from infra.json_file import JsonFile
+from dependencies import Dependencies
 from secondary.todolist.todolist_set_json import TodolistSetJson
 from test.hexagon.todolist.fixture import TodolistFaker
 
@@ -18,7 +19,7 @@ def json_path(tmp_path) -> Path:
 
 
 @pytest.fixture
-def sut(json_path) -> TodolistSetJson:
+def sut(json_path: Path) -> TodolistSetJson:
     return TodolistSetJson(JsonFile(json_path))
 
 

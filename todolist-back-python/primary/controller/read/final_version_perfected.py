@@ -1,6 +1,6 @@
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter, WhichTaskQuery
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 
 
 class FinalVersionPerfectedReadController:

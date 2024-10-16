@@ -9,7 +9,7 @@ from hexagon.query.context_query import TodoContextQuery
 from hexagon.todolist.port import TodolistSetPort
 from primary.controller.dependency_list import DependencyList
 from primary.controller.read.current_contexts import OpenTaskReaderApp
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 
 
 # todo : use a task key instead of an id

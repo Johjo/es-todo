@@ -1,6 +1,6 @@
 from hexagon.todolist.port import TodolistSetPort
 from primary.controller.read.todolist import TodolistReadController
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
 from test.primary.controller.conftest import dependencies
 

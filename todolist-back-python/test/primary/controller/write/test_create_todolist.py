@@ -1,7 +1,7 @@
 import pytest
 
 from hexagon.todolist.port import TodolistSetPort
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 from primary.controller.write.todolist import TodolistWriteController
 from test.hexagon.todolist.fixture import TodolistSetForTest
 

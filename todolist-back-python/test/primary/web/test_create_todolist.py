@@ -2,7 +2,7 @@ from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp  # type: ignore
 
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 from primary.web.pages import bottle_config
 
 

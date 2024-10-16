@@ -5,7 +5,7 @@ from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter
 from webtest import TestApp, TestResponse  # type: ignore
 
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 from primary.web.pages import bottle_config
 from test.hexagon.todolist.fixture import TodolistFaker
 from test.primary.web.conftest import app, fake

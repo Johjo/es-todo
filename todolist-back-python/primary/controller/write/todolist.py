@@ -5,7 +5,7 @@ from hexagon.todolist.write.create_todolist import TodolistCreate
 from hexagon.todolist.write.import_many_task import ImportManyTask
 from hexagon.todolist.write.open_task import OpenTaskUseCase
 from hexagon.todolist.write.reword_task import RewordTask
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 
 
 def create_todolist(name):

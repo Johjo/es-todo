@@ -5,7 +5,7 @@ from approvaltests.reporters import PythonNativeReporter
 from webtest import TestApp
 
 from hexagon.todolist.aggregate import TaskSnapshot
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 from primary.web.pages import bottle_config
 from test.hexagon.todolist.fixture import TodolistFaker, a_task_key, TodolistSetForTest
 from test.hexagon.todolist.write.test_open_task import TaskKeyGeneratorForTest

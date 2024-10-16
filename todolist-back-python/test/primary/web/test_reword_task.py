@@ -6,7 +6,7 @@ from webtest import TestApp  # type: ignore
 
 from primary.controller.read.todolist import Task
 from primary.controller.read.todolist import TodolistPort as TodolistRead_Port_Todolist
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 from primary.web.pages import bottle_config
 from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest
 from test.hexagon.todolist.write.test_open_task import TaskKeyGeneratorForTest

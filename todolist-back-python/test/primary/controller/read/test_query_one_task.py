@@ -2,7 +2,7 @@ from abc import ABC
 from dataclasses import dataclass
 
 from primary.controller.read.todolist import TodolistReadController, TodolistPort, Task
-from primary.controller.dependencies import Dependencies
+from dependencies import Dependencies
 from test.hexagon.todolist.fixture import TodolistFaker
 
 
