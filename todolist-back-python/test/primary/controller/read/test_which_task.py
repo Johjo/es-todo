@@ -8,7 +8,7 @@ from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask, FvpSnap
 from hexagon.fvp.read.which_task import WhichTaskQueryContract, TodolistPort
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.which_task import DependencyList, which_task
-from primary.controller.write.dependencies import Dependencies
+from primary.controller.dependencies import Dependencies
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.hexagon.fvp.read.test_which_task import TodolistForTest, FvpFaker
 from test.primary.controller.conftest import dependencies

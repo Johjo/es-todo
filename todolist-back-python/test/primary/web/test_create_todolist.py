@@ -2,9 +2,8 @@ from approvaltests import verify
 from approvaltests.reporters import PythonNativeReporter
 from webtest import TestApp
 
-from primary.controller.write.dependencies import Dependencies
+from primary.controller.dependencies import Dependencies
 from primary.web.pages import bottle_config
-from test.hexagon.todolist.fixture import TodolistFaker
 
 
 def test_create_todolist(test_dependencies: Dependencies, app: TestApp):

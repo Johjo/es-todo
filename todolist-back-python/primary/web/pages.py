@@ -7,7 +7,7 @@ from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, Task
-from primary.controller.write.dependencies import Dependencies
+from primary.controller.dependencies import Dependencies
 from primary.controller.write.todolist import TodolistWriteController
 
 bottle_app = Bottle()

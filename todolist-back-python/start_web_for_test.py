@@ -6,7 +6,7 @@ from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, 
     TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
 from hexagon.todolist.aggregate import TaskKey
 
-from primary.controller.write.dependencies import inject_use_cases, Dependencies
+from primary.controller.dependencies import inject_use_cases, Dependencies
 from primary.web.pages import bottle_config, bottle_app
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.hexagon.todolist.fixture import TodolistSetForTest

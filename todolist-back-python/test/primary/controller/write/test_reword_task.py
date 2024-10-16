@@ -3,7 +3,7 @@ from dataclasses import replace
 from hexagon.todolist.aggregate import TaskKey
 from hexagon.todolist.port import TodolistSetPort
 from hexagon.todolist.write.reword_task import RewordTask
-from primary.controller.write.dependencies import Dependencies, reword_task_use_case_factory
+from primary.controller.dependencies import Dependencies, reword_task_use_case_factory
 from primary.controller.write.todolist import TodolistWriteController
 from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
 

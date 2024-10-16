@@ -1,7 +1,7 @@
 import pytest
 from faker import Faker
 
-from primary.controller.write.dependencies import Dependencies, inject_use_cases
+from primary.controller.dependencies import Dependencies, inject_use_cases
 from test.hexagon.todolist.fixture import TodolistFaker
 
 
