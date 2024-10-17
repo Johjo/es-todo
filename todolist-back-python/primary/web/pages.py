@@ -36,6 +36,17 @@ def create_todolist():
     return {"todolist_name_set": TodolistReadController(bottle_config.dependencies).all_todolist_by_name()}
 
 
+@bottle_app.route("/todo/<todolist_name>/import")
+@view("import")
+def show_import(todolist_name):
+    return {"todolist_name": todolist_name,
+            "query_string": "xxxxquery_string",
+            "number_of_items": "xxxx_number_of_items",
+            "counts_by_context": {"xxxx1": "xxxx2"},
+            "urlencode": urllib.parse.quote,
+            }
+
+
 @bottle_app.route("/todo/<todolist_name>")
 def show_todolist(todolist_name):
     task_filter = TaskFilter(todolist_name=todolist_name)  # todo mutate this
@@ -93,10 +104,12 @@ def open_task(todolist_name: str):
     TodolistWriteController(bottle_config.dependencies).open_task(todolist_name, task_name)
     return show_todolist(todolist_name)
 
+
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/close")
 def close_task(todolist_name: str, task_key: int):
     TodolistWriteController(bottle_config.dependencies).close_task(todolist_name, task_key=int(task_key))
     return show_todolist(todolist_name)
+
 
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/reword")
 def reword_task(todolist_name: str, task_key: int):
@@ -110,7 +123,8 @@ def reword_task(todolist_name: str, task_key: int):
 
 @bottle_app.get("/todo/<todolist_name>/item/<task_key>/reword")
 def display_reword_task(todolist_name: str, task_key: int):
-    task: Task = TodolistReadController(bottle_config.dependencies).task_by(todolist_name=todolist_name, task_key=int(task_key))
+    task: Task = TodolistReadController(bottle_config.dependencies).task_by(todolist_name=todolist_name,
+                                                                            task_key=int(task_key))
     return template("reword", {
         "todolist_name": todolist_name,
         "task_id": task_key,
@@ -118,10 +132,10 @@ def display_reword_task(todolist_name: str, task_key: int):
         "task_name": task.name})
 
 
-
 @bottle_app.post('/todo/<name>/item/choose/<chosen_task>/ignore/<ignored_task>')
 def choose_and_ignore_task(name, chosen_task, ignored_task):
-    TodolistWriteController(bottle_config.dependencies).choose_and_ignore_task(chosen_task=chosen_task, ignored_task=ignored_task)
+    TodolistWriteController(bottle_config.dependencies).choose_and_ignore_task(chosen_task=chosen_task,
+                                                                               ignored_task=ignored_task)
     return show_todolist(name)
 
 

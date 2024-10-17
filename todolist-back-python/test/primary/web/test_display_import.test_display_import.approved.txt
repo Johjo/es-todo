@@ -1,0 +1,95 @@
+b'<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Todo</title>
+
+</head>
+
+<body>
+
+
+
+<p>
+
+<h2> Importer une t\xc3\xa2che</h2>
+
+    <form action="/todo/my_todolist/import" method="post">
+
+        <textarea rows="10" cols="80" name="markdown_import"></textarea>
+
+        <input type="submit" value="Importer">
+
+    </form>
+
+
+
+</p>
+
+
+
+<div>
+
+Ajouter une t\xc3\xa2che
+
+<form action="/todo/my_todolist/item?xxxxquery_string" method="post">
+
+    <input type="text" name="task_name">
+
+    <input type="submit" value="Add item">
+
+</form>
+
+</div>
+
+
+
+Red\xc3\xa9marrer l\'algo
+
+<form action="/todo/my_todolist/reset?xxxxquery_string" method="post">
+
+    <input type="submit" value="Reset">
+
+</form>
+
+
+
+Il y a xxxx_number_of_items t\xc3\xa2ches en attente.
+
+
+
+
+
+<h2> Contexte </h2>
+
+<ul>
+
+<li> <a href="/todo/my_todolist?only_inbox=1">Inbox</a></li>
+
+<li> <a href="/todo/my_todolist?context=xxxx1">xxxx1</a> : xxxx2 </li>
+
+</ul>
+
+
+
+
+
+<ul>
+
+<li><a href="/todo/my_todolist/export">Exporter les t\xc3\xa2ches</a></li>
+
+<li><a href="/todo/my_todolist/import">Importer des t\xc3\xa2ches</a></li>
+
+</ul>
+
+
+
+
+
+
+
+</body>
+
+</html>'
