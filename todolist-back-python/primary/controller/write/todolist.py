@@ -1,4 +1,5 @@
 from domain.todo.todoapp import TodoApp
+from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from hexagon.todolist.aggregate import TaskKey, TaskSnapshot
 from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
@@ -36,3 +37,8 @@ class TodolistWriteController:
     def import_many_tasks(self, tasks: list[TaskSnapshot], todolist_name: str):
         use_case: ImportManyTask = self.dependencies.get_use_case(ImportManyTask)
         use_case.execute(todolist_name, tasks)
+
+    def choose_and_ignore_task(self, chosen_task: int, ignored_task: int):
+        use_case : ChooseAndIgnoreTaskFvp = self.dependencies.get_use_case(ChooseAndIgnoreTaskFvp)
+        use_case.execute(chosen_task_id=chosen_task, ignored_task_id=ignored_task)
+

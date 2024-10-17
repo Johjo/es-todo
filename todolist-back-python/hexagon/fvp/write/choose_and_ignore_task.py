@@ -1,3 +1,4 @@
+from dependencies import Dependencies
 from hexagon.fvp.aggregate import FinalVersionPerfectedSession, FvpSessionSetPort
 
 
@@ -23,3 +24,7 @@ class ChooseAndIgnoreTaskFvp:
         else:
             session = FinalVersionPerfectedSession.create()
         return session
+
+    @classmethod
+    def factory(cls, dependencies : Dependencies) -> 'ChooseAndIgnoreTaskFvp':
+        return ChooseAndIgnoreTaskFvp(set_of_fvp_sessions=dependencies.get_adapter(FvpSessionSetPort))

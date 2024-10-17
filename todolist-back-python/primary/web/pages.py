@@ -105,5 +105,11 @@ def display_reword_task(todolist_name: str, task_key: int):
         "task_name": task.name})
 
 
+@bottle_app.post('/todo/<name>/item/choose/<chosen_task>/ignore/<ignored_task>')
+def choose_and_ignore_task(name, chosen_task, ignored_task):
+    TodolistWriteController(bottle_config.dependencies).choose_and_ignore_task(chosen_task=chosen_task, ignored_task=ignored_task)
+    return show_todolist(name)
+
+
 def get_string_from_request_post(field_name):
     return request.forms.getunicode(field_name)
