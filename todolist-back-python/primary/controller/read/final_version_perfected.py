@@ -8,6 +8,6 @@ class FinalVersionPerfectedReadController:
         self._dependencies = dependencies
 
     def which_task(self, task_filter: TaskFilter) -> NothingToDo | DoTheTask | ChooseTheTask:
-        query = self._dependencies.get_query(WhichTaskQuery)
+        query : WhichTaskQuery = self._dependencies.get_query(WhichTaskQuery)
         actual = query.which_task(task_filter)
         return actual

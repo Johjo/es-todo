@@ -167,7 +167,7 @@ def rest_todolist(name):
 
 class DependencyListForWeb(DependencyList):
     def fvp_session_repository_for_which_task_query(self) -> FvpSessionSetPort:
-        return JsonSessionRepository("session_fvp.json")
+        return JsonSessionRepository()
 
     def task_reader_for_which_task_query(self, todolist_name: str, only_inbox: bool, context: str) -> TodolistPort:
         return TaskReaderTodolist(todolist_name=todolist_name, only_inbox=only_inbox, context=context)

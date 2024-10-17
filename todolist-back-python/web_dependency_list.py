@@ -14,7 +14,7 @@ class DependencyListWeb(DependencyList, SharedInstanceBuiltIn):
         return TaskReaderTodolist(todolist_name=todolist_name, only_inbox=only_inbox, context=context)
 
     def fvp_session_repository_for_fvp(self):
-        return JsonSessionRepository("session_fvp.json")
+        return JsonSessionRepository()
 
     def todo_reader_for_todo_markdown_exporter(self, name):
         return TodoReaderApp(name)

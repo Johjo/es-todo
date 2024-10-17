@@ -31,12 +31,12 @@ class WhichTaskQuery(WhichTaskQueryContract):
         self._todolist = todolist
 
     def which_task(self, task_filter: TaskFilter) -> NothingToDo | DoTheTask | ChooseTheTask:
-        session = self._get_or_create_session()
+        session : FinalVersionPerfectedSession= self._get_or_create_session()
         open_tasks = self._todolist.all_open_tasks(task_filter)
         return session.which_task(open_tasks)
 
     # todo: rendre ça plus fonctionnel
-    def _get_or_create_session(self):
+    def _get_or_create_session(self) -> FinalVersionPerfectedSession:
         snapshot = self._fvp_sessions_set.by()
         if snapshot:
             session = FinalVersionPerfectedSession.from_snapshot(snapshot)

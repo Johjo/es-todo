@@ -11,6 +11,7 @@ from primary.controller.dependencies import inject_use_cases
 from dependencies import Dependencies
 from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_config, bottle_app
+from secondary.fvp.json_session_repository import JsonSessionRepository
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from secondary.todolist.todolist_set_json import TodolistSetJson
 from secondary.todolist.todolist_set_read_json import TodolistSetReadJson
@@ -33,12 +34,8 @@ def inject_adapter(dependencies: Dependencies):
 
     task_key_generator = TaskKeyGeneratorIncremental()
     dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
-
     dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, WhichTask_Port_Todolist_Json.factory)
-
-    fvp_session_set = FvpSessionSetForTest()
-    dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: fvp_session_set)
-
+    dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, JsonSessionRepository.factory)
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadJson.factory)
 
     return dependencies
@@ -46,6 +43,7 @@ def inject_adapter(dependencies: Dependencies):
 
 def inject_path(dependencies: Dependencies) -> Dependencies:
     dependencies = dependencies.feed_path("todolist_json_path", lambda _: Path("./test_todolist.json"))
+    dependencies = dependencies.feed_path("session_fvp_json_path", lambda _: Path("./test_fvp.json"))
     return dependencies
 
 

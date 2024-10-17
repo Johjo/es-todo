@@ -43,6 +43,7 @@ class FvpSnapshot:
 
     @classmethod
     def from_primitive_dict(cls, data: dict[int, int]) -> 'FvpSnapshot':
+
         return FvpSnapshot(OrderedDict[int, int](data))
 
 
@@ -53,6 +54,9 @@ class FinalVersionPerfectedSession:
     def which_task(self, open_tasks: list[Task]) -> NothingToDo | DoTheTask | ChooseTheTask:
         ids = [task.id for task in open_tasks]
         tasks = [task for task in open_tasks if self.task_priorities.get(task.id, None) not in ids]
+        print(ids)
+        print(open_tasks)
+        print(self.task_priorities)
         match tasks:
             case [task]:
                 return task.to_do_the_task()

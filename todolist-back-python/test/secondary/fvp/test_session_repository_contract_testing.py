@@ -20,7 +20,7 @@ class TestSessionRepositoryContractTesting(ABC):
 
 
     def test_save_one_element(self, sut: FvpSessionSetPort) -> None:
-        expected = FvpSnapshot(OrderedDict[int, int]({an_id(1): 1, an_id(2): 0, an_id(3): 0}))
+        expected = FvpSnapshot(OrderedDict[int, int]({1: 1, 2: 0, 3: 0}))
         sut.save(expected)
         assert sut.by() == expected
 
