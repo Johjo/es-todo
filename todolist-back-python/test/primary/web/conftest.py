@@ -55,7 +55,7 @@ class TodolistForTest(WhichTask_Port_Todolist):
         self._todolist_set = todolist_set
 
     def all_open_tasks(self, task_filter: TaskFilter) -> list[Task]:
-        return [Task(id=task.key.value, name=task.name) for task in self._todolist_set.by(task_filter.todolist_name).value.tasks]
+        return [Task(id=task.key.value, name=task.name) for task in self._todolist_set.by(task_filter.todolist_name).value.tasks if task.is_open]
 
 
 
