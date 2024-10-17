@@ -7,3 +7,4 @@ __pycache__
 session_fvp.json
 /test/data_test/*
 /test_todolist.json
+/test_fvp.json
