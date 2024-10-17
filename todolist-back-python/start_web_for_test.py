@@ -16,6 +16,7 @@ from secondary.todolist.todolist_set_json import TodolistSetJson
 from secondary.todolist.todolist_set_read_json import TodolistSetReadJson
 from test.hexagon.todolist.fixture import TodolistSetForTest
 from test.primary.web.conftest import TodolistForTest
+from test.secondary.fvp.read.which_task.test_todolist_json import TodolistJson as WhichTask_Port_Todolist_Json
 
 
 class TaskKeyGeneratorIncremental(OpenTask_Port_TaskKeyGenerator):
@@ -28,15 +29,12 @@ class TaskKeyGeneratorIncremental(OpenTask_Port_TaskKeyGenerator):
 
 
 def inject_adapter(dependencies: Dependencies):
-    todolist_set = TodolistSetForTest()
     dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, TodolistSetJson.factory)
 
     task_key_generator = TaskKeyGeneratorIncremental()
     dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
 
-    # todo: finish there
-    which_task_todolist = TodolistForTest(todolist_set)
-    dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, lambda _: which_task_todolist)
+    dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, WhichTask_Port_Todolist_Json.factory)
 
     fvp_session_set = FvpSessionSetForTest()
     dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: fvp_session_set)
