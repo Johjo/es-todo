@@ -4,12 +4,11 @@ from pathlib import Path
 import pytest
 from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter  # type: ignore
-from expression import Some
+from expression import Some, Nothing
 from faker import Faker
 
-from hexagon.todolist.port import TodolistSetPort
-from infra.json_file import JsonFile
 from dependencies import Dependencies
+from hexagon.todolist.port import TodolistSetPort
 from secondary.todolist.todolist_set_json import TodolistSetJson
 from test.hexagon.todolist.fixture import TodolistFaker
 
@@ -56,3 +55,7 @@ def test_read_todolist(fake: TodolistFaker, json_path: Path, sut: TodolistSetJso
     sut.save_snapshot(expected_todolist)
 
     assert sut.by(expected_todolist.name) == Some(expected_todolist)
+
+def test_return_nothing_when_todolist_does_not_exist(fake: TodolistFaker, json_path: Path, sut: TodolistSetJson) -> None:
+    unknown_todolist = fake.a_todolist()
+    assert sut.by(unknown_todolist.name) == Nothing

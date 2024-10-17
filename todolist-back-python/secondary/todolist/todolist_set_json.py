@@ -17,7 +17,7 @@ class TodolistSetJson(TodolistSetPort):
 
     def by(self, todolist_name: str) -> Option[TodolistSnapshot]:
         todolist_as_dict = self._json_file.read(todolist_name)
-        return Some(self._todolist_from_dict(todolist_as_dict))
+        return todolist_as_dict.map(self._todolist_from_dict)
 
     def _to_todolist_dict(self, todolist: TodolistSnapshot):
         return {"name": todolist.name, "tasks": [self._to_task_dict(task) for task in todolist.tasks]}

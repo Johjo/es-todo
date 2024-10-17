@@ -2,6 +2,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from expression import Option, Some, Nothing
+
 
 class JsonFile:
     def __init__(self, path: Path):
@@ -17,9 +19,11 @@ class JsonFile:
         except FileNotFoundError:
             return {}
 
-    def read(self, key: str) -> dict:
+    def read(self, key: str) -> Option[dict]:
         values = self._load_json()
-        return values[key]
+        if key not in values:
+            return Nothing
+        return Some(values[key])
 
     def all_keys(self) -> list[str]:
         values = self._load_json()
