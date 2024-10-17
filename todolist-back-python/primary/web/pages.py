@@ -98,6 +98,15 @@ def close_task(todolist_name: str, task_key: int):
     TodolistWriteController(bottle_config.dependencies).close_task(todolist_name, task_key=int(task_key))
     return show_todolist(todolist_name)
 
+@bottle_app.post("/todo/<todolist_name>/item/<task_key>/reword")
+def reword_task(todolist_name: str, task_key: int):
+    controller = TodolistWriteController(bottle_config.dependencies)
+    controller.reword_task(todolist_name=todolist_name,
+                           task_key=int(task_key),
+                           new_name=get_string_from_request_post("new_name"))
+
+    return show_todolist(todolist_name)
+
 
 @bottle_app.get("/todo/<todolist_name>/item/<task_key>/reword")
 def display_reword_task(todolist_name: str, task_key: int):
