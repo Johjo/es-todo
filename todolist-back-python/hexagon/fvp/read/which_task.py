@@ -1,7 +1,5 @@
-import typing
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import TypeAlias, NewType
 
 from hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
     FvpSessionSetPort
@@ -18,14 +16,7 @@ class TodolistPort(ABC):
         pass
 
 
-# todo: faire disparaître ce contrat
-class WhichTaskQueryContract(ABC):
-    @abstractmethod
-    def which_task(self, task_filter: TaskFilter) -> NothingToDo | DoTheTask | ChooseTheTask:
-        pass
-
-
-class WhichTaskQuery(WhichTaskQueryContract):
+class WhichTaskQuery:
     def __init__(self, todolist: TodolistPort, fvp_sessions_set: FvpSessionSetPort):
         self._fvp_sessions_set = fvp_sessions_set
         self._todolist = todolist

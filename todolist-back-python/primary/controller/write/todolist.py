@@ -1,4 +1,3 @@
-from domain.todo.todoapp import TodoApp
 from hexagon.fvp.type import TaskKey
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from hexagon.todolist.aggregate import TaskSnapshot
@@ -8,11 +7,6 @@ from hexagon.todolist.write.import_many_task import ImportManyTask
 from hexagon.todolist.write.open_task import OpenTaskUseCase
 from hexagon.todolist.write.reword_task import RewordTask
 from dependencies import Dependencies
-
-
-def create_todolist(name):
-    app = TodoApp()
-    app.start_todolist(name)
 
 
 class TodolistWriteController:
