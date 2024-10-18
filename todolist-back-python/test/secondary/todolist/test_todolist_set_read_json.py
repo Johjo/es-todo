@@ -36,7 +36,7 @@ def test_read_task_by(sut: TodolistSetReadJson, json_path: Path, fake: TodolistF
     todolist = fake.a_todolist()
     TodolistSetJson(json_path).save_snapshot(replace(todolist, tasks=[fake.a_task(), expected_task, fake.a_task()]))
 
-    assert sut.task_by(todolist_name=todolist.name, task_key=expected_task.key.value) == Task(id=expected_task.key.value, name=expected_task.name)
+    assert sut.task_by(todolist_name=todolist.name, task_key=expected_task.key) == Task(id=expected_task.key, name=expected_task.name)
 
 
 def test_read_all_by_name(sut: TodolistSetReadJson, json_path: Path, fake: TodolistFaker):

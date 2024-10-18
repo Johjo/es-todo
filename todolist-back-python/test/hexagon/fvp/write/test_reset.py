@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from uuid import uuid4
 
-from test.fixture import an_id
+from test.fixture import a_task_key
 from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 
 
@@ -11,7 +11,7 @@ from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 
 def test_reset_session():
     set_of_fvp_sessions = FvpSessionSetForTest()
-    set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[uuid4, int]({an_id(1): 1, an_id(2): 0})))
+    set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[uuid4, int]({a_task_key(1): 1, a_task_key(2): 0})))
     sut = ResetFvpSession(set_of_fvp_sessions)
     sut.execute()
 

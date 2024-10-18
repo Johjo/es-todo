@@ -23,7 +23,8 @@ def dependencies(json_path: Path) -> Dependencies:
 class TestJsonSessionRepository(TestSessionRepositoryContractTesting):
     def feed(self, snapshot: FvpSnapshot) -> None:
         self._json_file = JsonFile(self.path)
-        self._json_file.insert("all", snapshot.to_primitive_dict())
+        items_ = {str(key): str(value) for key, value in snapshot.to_primitive_dict().items()}
+        self._json_file.insert("all", items_)
 
     @pytest.fixture(autouse=True)
     def setup(self, json_path: Path, dependencies: Dependencies) -> None:

@@ -10,7 +10,7 @@ def test_reword_task(todolist_set: TodolistSetForTest, sut: TodolistWriteControl
     todolist = replace(fake.a_todolist(), tasks=[task])
     todolist_set.feed(todolist)
 
-    sut.reword_task(todolist.name, task.key.value,"buy the milk")
+    sut.reword_task(todolist.name, task.key, "buy the milk")
 
     actual = todolist_set.by(todolist.name).value
     assert actual == replace(todolist, tasks=[(replace(task, name="buy the milk"))])

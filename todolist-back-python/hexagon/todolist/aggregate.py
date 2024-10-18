@@ -2,10 +2,7 @@ from dataclasses import dataclass, replace
 
 from expression import Result, Error, Ok
 
-
-@dataclass(frozen=True)
-class TaskKey:
-    value: int
+from hexagon.fvp.type import TaskKey
 
 
 @dataclass
@@ -28,7 +25,7 @@ class Task:
     is_open: bool
 
     def to_snapshot(self) -> TaskSnapshot:
-        return TaskSnapshot(key=self.key, name=self.name, is_open=self.is_open)
+        return TaskSnapshot(name=self.name, is_open=self.is_open, key=self.key)
 
     @classmethod
     def from_snapshot(cls, snapshot: TaskSnapshot) -> 'Task':
@@ -73,4 +70,3 @@ class TodolistAggregate:
 
     def import_tasks(self, task_snapshots: list[TaskSnapshot]) -> Result['TodolistAggregate', str]:
         return Ok(replace(self, tasks=self.tasks + (*[Task.from_snapshot(snapshot) for snapshot in task_snapshots],)))
-

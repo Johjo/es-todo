@@ -1,10 +1,12 @@
 import urllib
 from dataclasses import dataclass
+from uuid import UUID
 
 from bottle import template, Bottle, view, response, request  # type: ignore
 
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter
+from hexagon.fvp.type import TaskKey
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, Task
 from dependencies import Dependencies
@@ -106,25 +108,25 @@ def open_task(todolist_name: str):
 
 
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/close")
-def close_task(todolist_name: str, task_key: int):
-    TodolistWriteController(bottle_config.dependencies).close_task(todolist_name, task_key=int(task_key))
+def close_task(todolist_name: str, task_key: str):
+    TodolistWriteController(bottle_config.dependencies).close_task(todolist_name, task_key=TaskKey(UUID(task_key)))
     return show_todolist(todolist_name)
 
 
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/reword")
-def reword_task(todolist_name: str, task_key: int):
+def reword_task(todolist_name: str, task_key: str):
     controller = TodolistWriteController(bottle_config.dependencies)
     controller.reword_task(todolist_name=todolist_name,
-                           task_key=int(task_key),
+                           task_key=TaskKey(UUID(task_key)),
                            new_name=get_string_from_request_post("new_name"))
 
     return show_todolist(todolist_name)
 
 
 @bottle_app.get("/todo/<todolist_name>/item/<task_key>/reword")
-def display_reword_task(todolist_name: str, task_key: int):
+def display_reword_task(todolist_name: str, task_key: str):
     task: Task = TodolistReadController(bottle_config.dependencies).task_by(todolist_name=todolist_name,
-                                                                            task_key=int(task_key))
+                                                                            task_key=TaskKey(UUID(task_key)))
     return template("reword", {
         "todolist_name": todolist_name,
         "task_id": task_key,

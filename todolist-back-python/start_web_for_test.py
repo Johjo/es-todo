@@ -1,38 +1,32 @@
 import os
 from pathlib import Path
+from uuid import uuid4
 
+from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
 from hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
+from hexagon.fvp.type import TaskKey
 from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, \
     TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
-from hexagon.todolist.aggregate import TaskKey
-
 from primary.controller.dependencies import inject_use_cases
-from dependencies import Dependencies
 from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_config, bottle_app
 from secondary.fvp.json_session_repository import JsonSessionRepository
-from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from secondary.todolist.todolist_set_json import TodolistSetJson
 from secondary.todolist.todolist_set_read_json import TodolistSetReadJson
-from test.hexagon.todolist.fixture import TodolistSetForTest
-from test.primary.web.conftest import TodolistForTest
 from test.secondary.fvp.read.which_task.test_todolist_json import TodolistJson as WhichTask_Port_Todolist_Json
 
 
-class TaskKeyGeneratorIncremental(OpenTask_Port_TaskKeyGenerator):
-    def __init__(self):
-        self.current = 0
+class TaskKeyGeneratorRandom(OpenTask_Port_TaskKeyGenerator):
 
     def generate(self) -> TaskKey:
-        self.current += 1
-        return TaskKey(self.current)
+        return TaskKey(uuid4())
 
 
 def inject_adapter(dependencies: Dependencies):
     dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, TodolistSetJson.factory)
 
-    task_key_generator = TaskKeyGeneratorIncremental()
+    task_key_generator = TaskKeyGeneratorRandom()
     dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
     dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, WhichTask_Port_Todolist_Json.factory)
     dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, JsonSessionRepository.factory)

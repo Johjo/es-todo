@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 
 from expression import Option
 
-from hexagon.todolist.aggregate import TodolistSnapshot, TaskKey
+from hexagon.fvp.type import TaskKey
+from hexagon.todolist.aggregate import TodolistSnapshot
 
 
 class TodolistSetPort(ABC):

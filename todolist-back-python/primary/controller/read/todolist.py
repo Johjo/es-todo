@@ -5,6 +5,7 @@ from uuid import UUID, uuid4
 from domain.todo.todoapp import TodoApp
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import WhichTaskQuery
+from hexagon.fvp.type import TaskKey
 from hexagon.query.context_query import TodoContextQuery
 from hexagon.todolist.port import TodolistSetPort
 from primary.controller.dependency_list import DependencyList
@@ -15,7 +16,7 @@ from dependencies import Dependencies
 # todo : use a task key instead of an id
 @dataclass
 class Task:
-    id: UUID
+    id: TaskKey
     name: str
 
     def to_dict(self):
@@ -44,7 +45,7 @@ class TodoList:
 
 class TodolistSetReadPort(ABC):
     @abstractmethod
-    def task_by(self, todolist_name: str, task_key: int) -> Task:
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
         pass
 
     @abstractmethod
@@ -94,7 +95,7 @@ class TodolistReadController:
         todolist_set : TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
         return todolist_set.all_by_name()
 
-    def task_by(self, todolist_name: str, task_key: int) -> Task:
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
         todolist_set : TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
         return todolist_set.task_by(todolist_name=todolist_name, task_key=task_key)
 

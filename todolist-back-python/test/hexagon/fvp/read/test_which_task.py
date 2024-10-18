@@ -8,7 +8,7 @@ from faker import Faker
 from hexagon.fvp.aggregate import Task, NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot
 from hexagon.fvp.read.which_task import TodolistPort, WhichTaskQuery, TaskFilter
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
-from test.fixture import an_id
+from test.fixture import a_task_key
 
 
 class TodolistForTest(TodolistPort):
@@ -45,7 +45,7 @@ class FvpFaker:
     def a_task(self, key: None | int = None) -> Task:
         if key is None:
             key = self._fake.random_int()
-        return Task(id=an_id(key), name=self._fake.sentence())
+        return Task(id=a_task_key(key), name=self._fake.sentence())
 
     def a_task_filter(self):
         return TaskFilter(todolist_name=self._fake.word())

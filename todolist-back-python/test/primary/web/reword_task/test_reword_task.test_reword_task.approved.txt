@@ -16,11 +16,11 @@ b'<html>
 
     <div>
 
-    <h2> reworded </h2> <a href="/todo/todolist/item/1/reword?xxxx_query_string">Renommer</a>
+    <h2> reworded </h2> <a href="/todo/todolist/item/00000000-0000-0000-0000-000000000001/reword?xxxx_query_string">Renommer</a>
 
     </div>
 
-    <form action="/todo/todolist/item/1/close?xxxx_query_string" method="post">
+    <form action="/todo/todolist/item/00000000-0000-0000-0000-000000000001/close?xxxx_query_string" method="post">
 
     <input type="submit" value="C\'est fait">
 

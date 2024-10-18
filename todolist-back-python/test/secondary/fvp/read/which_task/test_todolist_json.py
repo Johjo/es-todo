@@ -1,6 +1,7 @@
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
+from uuid import UUID
 
 import pytest
 from expression import Nothing
@@ -9,6 +10,7 @@ from faker import Faker
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task
 from hexagon.fvp.read.which_task import TodolistPort, TaskFilter
+from hexagon.fvp.type import TaskKey
 from infra.json_file import JsonFile
 from secondary.todolist.todolist_set_json import TodolistSetJson
 from test.hexagon.todolist.fixture import TodolistFaker
@@ -31,7 +33,7 @@ class TodolistJson(TodolistPort):
 
     @staticmethod
     def _to_task_list(todolist: dict[Any, Any]) -> list[Task]:
-        return [Task(id=task["key"], name=task["name"]) for task in todolist["tasks"] if task["is_open"] == True]
+        return [Task(id=TaskKey(UUID(task["key"])), name=task["name"]) for task in todolist["tasks"] if task["is_open"] == True]
 
     @classmethod
     def factory(cls, dependencies: Dependencies):
@@ -66,7 +68,7 @@ def test_should_list_open_tasks(sut: TodolistJson, json_path: Path, fake: Todoli
     TodolistSetJson(json_path).save_snapshot(another_todolist)
 
     assert sut.all_open_tasks(TaskFilter(todolist_name=expected_todolist.name)) == [
-        Task(id=task.key.value, name=task.name) for task in expected_tasks]
+        Task(id=task.key, name=task.name) for task in expected_tasks]
 
 
 def test_should_no_task_when_todolist_does_not_exist(json_path: Path, fake: TodolistFaker):

@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from domain.todo.item_status import ItemStatus
+from hexagon.fvp.type import TaskKey
 
 
 @dataclass
@@ -10,21 +11,21 @@ class NothingToDo:
 
 @dataclass
 class DoTheTask:
-    index: int
+    index: TaskKey
     name: str
 
 
 @dataclass
 class ChooseTheTask:
-    index_1: int
+    index_1: TaskKey
     name_1: str
-    index_2: int
+    index_2: TaskKey
     name_2: str
 
 
 @dataclass
 class ItemPresentation:
-    index: int
+    index: TaskKey
     name: str
     done: bool
 

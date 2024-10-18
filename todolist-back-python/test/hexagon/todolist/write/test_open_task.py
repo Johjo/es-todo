@@ -3,16 +3,16 @@ from dataclasses import replace
 import pytest
 from expression import Ok, Error
 
-from hexagon.todolist.aggregate import TaskSnapshot, TaskKey
-from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from hexagon.fvp.type import TaskKey
+from hexagon.todolist.port import TaskKeyGeneratorPort
 from hexagon.todolist.write.open_task import OpenTaskUseCase
 from test.hexagon.todolist.conftest import todolist_set
-from test.hexagon.todolist.fixture import TodolistSetForTest, a_todolist_snapshot, a_task_key, a_task, TodolistFaker
+from test.hexagon.todolist.fixture import TodolistSetForTest, a_todolist_snapshot, TodolistFaker
 
 
 class TaskKeyGeneratorForTest(TaskKeyGeneratorPort):
     def __init__(self) -> None:
-        self.key :TaskKey | None= None
+        self.key : TaskKey | None= None
 
     def feed(self, key: TaskKey) -> None:
         self.key = key

@@ -23,9 +23,9 @@ def test_display_reword_task(todolist_set: TodolistSetForTest, task_key_generato
 
     a_todolist = replace(fake.a_todolist(), name="todolist", tasks=[reworded_task])
     todolist_set.feed(a_todolist)
-    todolist.feed(a_todolist.name, 1, Task(id=1, name="initial name"))
+    todolist.feed(a_todolist.name, reworded_task.key, Task(id=reworded_task.key, name=reworded_task.name))
 
-    response = app.get(f'/todo/{a_todolist.name}/item/{1}/reword')
+    response = app.get(f'/todo/{a_todolist.name}/item/{reworded_task.key}/reword')
 
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())

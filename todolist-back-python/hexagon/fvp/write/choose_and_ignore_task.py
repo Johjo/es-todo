@@ -1,12 +1,13 @@
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FinalVersionPerfectedSession, FvpSessionSetPort
+from hexagon.fvp.type import TaskKey
 
 
 class ChooseAndIgnoreTaskFvp:
     def __init__(self, set_of_fvp_sessions: FvpSessionSetPort):
         self.set_of_fvp_sessions = set_of_fvp_sessions
 
-    def execute(self, chosen_task_id, ignored_task_id):
+    def execute(self, chosen_task_id: TaskKey, ignored_task_id: TaskKey):
         session = self._get_or_create_session()
 
         session.choose_and_ignore_task(chosen_task_id, ignored_task_id)
