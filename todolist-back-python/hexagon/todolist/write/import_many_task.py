@@ -1,13 +1,20 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 
 from hexagon.todolist.aggregate import TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort
 from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
 
 
+@dataclass(frozen=True)
+class TaskImported:
+    name: str
+    is_open: bool
+
+
 class ExternalTodoListPort(ABC):
     @abstractmethod
-    def all_tasks(self) -> list[TaskSnapshot]:
+    def all_tasks(self) -> list[TaskImported]:
         pass
 
 
