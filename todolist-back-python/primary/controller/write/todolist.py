@@ -7,6 +7,7 @@ from hexagon.todolist.write.import_many_task import ImportManyTask
 from hexagon.todolist.write.open_task import OpenTaskUseCase
 from hexagon.todolist.write.reword_task import RewordTask
 from dependencies import Dependencies
+from test.hexagon.todolist.write.test_import_many_task import ExternalTodolistForTest
 
 
 class TodolistWriteController:
@@ -31,7 +32,9 @@ class TodolistWriteController:
 
     def import_many_tasks(self, tasks: list[TaskSnapshot], todolist_name: str):
         use_case: ImportManyTask = self.dependencies.get_use_case(ImportManyTask)
-        use_case.execute(todolist_name, tasks)
+        external_todolist = ExternalTodolistForTest()
+        external_todolist.feed(*tasks) # todo rework this controller and the test (must import from markdown)
+        use_case.execute(todolist_name, external_todolist)
 
     def choose_and_ignore_task(self, chosen_task: TaskKey, ignored_task: TaskKey):
         use_case : ChooseAndIgnoreTaskFvp = self.dependencies.get_use_case(ChooseAndIgnoreTaskFvp)
