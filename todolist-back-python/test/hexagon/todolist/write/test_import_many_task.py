@@ -4,25 +4,30 @@ import pytest
 from expression import Ok, Error
 
 from hexagon.todolist.aggregate import TaskSnapshot
-from hexagon.todolist.write.import_many_task import ImportManyTask, ExternalTodoListPort
+from hexagon.todolist.write.import_many_task import ImportManyTask, ExternalTodoListPort, TaskImported
 from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
+from test.hexagon.todolist.write.test_open_task import TaskKeyGeneratorForTest
 
 
 @pytest.fixture
-def sut(todolist_set: TodolistSetForTest):
-    return ImportManyTask(todolist_set)
+def task_key_generator() -> TaskKeyGeneratorForTest:
+    return TaskKeyGeneratorForTest()
+
+@pytest.fixture
+def sut(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest) -> ImportManyTask:
+    return ImportManyTask(todolist_set, task_key_generator)
 
 
 class ExternalTodolistForTest(ExternalTodoListPort):
     def __init__(self) -> None:
-        self._tasks: list[TaskSnapshot] | None = None
+        self._tasks: list[TaskImported] | None = None
 
-    def all_tasks(self) -> list[TaskSnapshot]:
+    def all_tasks(self) -> list[TaskImported]:
         if self._tasks is None:
             raise Exception("fed task before")
         return self._tasks
 
-    def feed(self, *tasks: TaskSnapshot):
+    def feed(self, *tasks: TaskImported):
         self._tasks = tasks
 
 
@@ -32,10 +37,10 @@ def external_todolist() -> ExternalTodolistForTest:
 
 
 def test_import_many_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
-                          external_todolist: ExternalTodolistForTest, fake: TodolistFaker):
+                          external_todolist: ExternalTodolistForTest, fake: TodolistFaker, task_key_generator: TaskKeyGeneratorForTest):
     expected_tasks = [fake.a_task(1), fake.a_task(2)]
-    external_todolist.feed(*expected_tasks)
-
+    external_todolist.feed(*to_imported_task_list(expected_tasks))
+    task_key_generator.feed(*[task.key for task in expected_tasks])
     todolist = replace(fake.a_todolist(), tasks=[])
     todolist_set.feed(todolist)
 
@@ -46,10 +51,11 @@ def test_import_many_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
 
 
 def test_import_many_task_when_existing_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
-                                             external_todolist: ExternalTodolistForTest, fake: TodolistFaker):
+                                             external_todolist: ExternalTodolistForTest, fake: TodolistFaker, task_key_generator: TaskKeyGeneratorForTest):
     first_task = fake.a_task(key=1)
     expected_task = fake.a_task(key=2)
-    external_todolist.feed(expected_task)
+    external_todolist.feed(to_imported_task(expected_task))
+    task_key_generator.feed(expected_task.key)
     todolist = replace(fake.a_todolist(), tasks=[first_task])
     todolist_set.feed(todolist)
 
@@ -62,7 +68,7 @@ def test_import_many_task_when_existing_task(sut: ImportManyTask, todolist_set: 
 def test_tell_ok_when_import_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
                                   external_todolist: ExternalTodolistForTest, fake: TodolistFaker):
     imported_tasks = [fake.a_task(1), fake.a_task(2)]
-    external_todolist.feed(*imported_tasks)
+    external_todolist.feed(*to_imported_task_list(imported_tasks))
     todolist = fake.a_todolist()
     todolist_set.feed(todolist)
 
@@ -73,7 +79,15 @@ def test_tell_ok_when_import_task(sut: ImportManyTask, todolist_set: TodolistSet
 
 def test_tell_error_when_todolist_doest_not_exist(sut: ImportManyTask, todolist_set: TodolistSetForTest,
                                                   external_todolist: ExternalTodolistForTest, fake: TodolistFaker):
-    external_todolist.feed(fake.a_task(1))
+    external_todolist.feed(to_imported_task(fake.a_task(1)))
     response = sut.execute("unknown_todolist", external_todolist)
 
     assert response == Error("todolist not found")
+
+
+def to_imported_task_list(expected_tasks):
+    return [to_imported_task(task) for task in expected_tasks]
+
+
+def to_imported_task(task: TaskSnapshot) -> TaskImported:
+    return TaskImported(name=task.name, is_open=task.is_open)

@@ -49,7 +49,7 @@ def reword_task_use_case_factory(dependencies: Dependencies) -> RewordTask:
 
 
 def import_many_task_use_case_factory(dependencies: Dependencies) -> ImportManyTask:
-    return ImportManyTask(dependencies.get_adapter(TodolistSetPort))
+    return ImportManyTask(dependencies.get_adapter(TodolistSetPort), dependencies.get_adapter(TaskKeyGeneratorPort))
 
 def which_task_query_factory(dependencies: Dependencies) -> WhichTaskQuery:
     return WhichTaskQuery(dependencies.get_adapter(TodolistPort), dependencies.get_adapter(FvpSessionSetPort))

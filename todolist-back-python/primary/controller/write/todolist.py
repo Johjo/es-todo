@@ -30,7 +30,7 @@ class TodolistWriteController:
         use_case: RewordTask = self.dependencies.get_use_case(RewordTask)
         use_case.execute(todolist_name, task_key, new_name)
 
-    def import_many_tasks_from_markdown(self, tasks: list[TaskSnapshot], todolist_name: str, markdown: str):
+    def import_many_tasks_from_markdown(self, todolist_name: str, markdown: str):
         use_case: ImportManyTask = self.dependencies.get_use_case(ImportManyTask)
         external_todolist = MarkdownTodolist(markdown)
         use_case.execute(todolist_name, external_todolist)

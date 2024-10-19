@@ -1,4 +1,5 @@
 from dataclasses import replace
+from uuid import UUID
 
 import pytest
 from expression import Ok, Error
@@ -12,14 +13,17 @@ from test.hexagon.todolist.fixture import TodolistSetForTest, a_todolist_snapsho
 
 class TaskKeyGeneratorForTest(TaskKeyGeneratorPort):
     def __init__(self) -> None:
-        self.key : TaskKey | None= None
+        self.keys : list[TaskKey] | None= None
 
-    def feed(self, key: TaskKey) -> None:
-        self.key = key
+    def feed(self, *keys: TaskKey) -> None:
+        self.keys = [key for key in keys]
 
     def generate(self) -> TaskKey:
-        assert self.key, f"key must be fed before generating"
-        return self.key
+        if not self.keys:
+            self.keys = [TaskKey(UUID(int=1))]
+        if not self.keys:
+            raise Exception("key must be fed before generating")
+        return self.keys.pop(0)
 
 
 @pytest.fixture
