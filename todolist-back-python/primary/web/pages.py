@@ -2,7 +2,7 @@ import urllib
 from dataclasses import dataclass
 from uuid import UUID
 
-from bottle import template, Bottle, view, response, request  # type: ignore
+from bottle import template, Bottle, view, response, request, redirect  # type: ignore
 
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter
@@ -47,6 +47,13 @@ def show_import(todolist_name):
             "counts_by_context": {"xxxx1": "xxxx2"},
             "urlencode": urllib.parse.quote,
             }
+
+
+@bottle_app.post("/todo/<todolist_name>/import")
+def import_task(todolist_name):
+    markdown_import = get_string_from_request_post("markdown_import")
+    TodolistWriteController(bottle_config.dependencies).import_many_tasks_from_markdown(todolist_name, markdown_import)
+    return redirect(f"/todo/{todolist_name}")
 
 
 @bottle_app.route("/todo/<todolist_name>")
