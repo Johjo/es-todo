@@ -39,9 +39,11 @@ def app_dependencies() -> Dependencies:
     bottle_config.dependencies = inject_use_cases(bottle_config.dependencies)
     return inject_use_cases(Dependencies.create_empty())
 
+
 @pytest.fixture
 def todolist_set():
     return TodolistSetForTest()
+
 
 @pytest.fixture
 def task_key_generator():
@@ -54,20 +56,27 @@ class TodolistForTest(WhichTask_Port_Todolist):
         self._todolist_set = todolist_set
 
     def all_open_tasks(self, task_filter: TaskFilter) -> list[Task]:
-        return [Task(id=task.key, name=task.name) for task in self._todolist_set.by(task_filter.todolist_name).value.tasks if task.is_open]
-
+        return [Task(id=task.key, name=task.name) for task in
+                self._todolist_set.by(task_filter.todolist_name).value.tasks if task.is_open]
 
 
 @pytest.fixture
 def todolist(todolist_set: Todolist_Port_TodolistSet) -> WhichTask_Port_Todolist:
     return TodolistForTest(todolist_set)
 
+
 @pytest.fixture
-def test_dependencies(todolist_set: TodolistSetForTest, task_key_generator: OpenTask_Port_TaskKeyGenerator, todolist: WhichTask_Port_Todolist) -> Dependencies:
+def fvp_session_set() -> FvpSessionSetForTest:
+    return FvpSessionSetForTest()
+
+
+@pytest.fixture
+def test_dependencies(todolist_set: TodolistSetForTest, task_key_generator: OpenTask_Port_TaskKeyGenerator,
+                      todolist: WhichTask_Port_Todolist, fvp_session_set: FvpSessionSetForTest) -> Dependencies:
     dependencies = inject_use_cases(bottle_config.dependencies)
     dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, lambda _: todolist_set)
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist_set)
     dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
     dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, lambda _: todolist)
-    dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: FvpSessionSetForTest())
+    dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: fvp_session_set)
     return dependencies

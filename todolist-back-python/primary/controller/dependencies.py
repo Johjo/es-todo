@@ -3,6 +3,7 @@ from functools import reduce
 from dependencies import Dependencies, ResourceType
 from hexagon.fvp.aggregate import FvpSessionSetPort
 from hexagon.fvp.read.which_task import WhichTaskQuery, TodolistPort
+from hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from hexagon.todolist.write.close_task import CloseTask
@@ -20,7 +21,8 @@ def inject_use_cases(dependencies: Dependencies) -> Dependencies:
         RewordTask: reword_task_use_case_factory,
         ImportManyTask: import_many_task_use_case_factory,
         WhichTaskQuery: which_task_query_factory,
-        ChooseAndIgnoreTaskFvp: ChooseAndIgnoreTaskFvp.factory
+        ChooseAndIgnoreTaskFvp: ChooseAndIgnoreTaskFvp.factory,
+        Fvp_CancelPriority: Fvp_CancelPriority.factory
     }
 
     def feed_use_case(dep: Dependencies, resource_and_factory) -> Dependencies:

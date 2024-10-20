@@ -1,12 +1,12 @@
+from dependencies import Dependencies
 from hexagon.fvp.type import TaskKey
+from hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
-from hexagon.todolist.aggregate import TaskSnapshot
 from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
 from hexagon.todolist.write.import_many_task import ImportManyTask
 from hexagon.todolist.write.open_task import OpenTaskUseCase
 from hexagon.todolist.write.reword_task import RewordTask
-from dependencies import Dependencies
 from test.secondary.todolist.test_external_todolist_markdown import MarkdownTodolist
 
 
@@ -38,4 +38,8 @@ class TodolistWriteController:
     def choose_and_ignore_task(self, chosen_task: TaskKey, ignored_task: TaskKey):
         use_case : ChooseAndIgnoreTaskFvp = self.dependencies.get_use_case(ChooseAndIgnoreTaskFvp)
         use_case.execute(chosen_task_id=chosen_task, ignored_task_id=ignored_task)
+
+    def cancel_priority(self, task_key: TaskKey):
+        use_case : Fvp_CancelPriority = self.dependencies.get_use_case(Fvp_CancelPriority)
+        use_case.execute(task_key)
 

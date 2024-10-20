@@ -146,6 +146,12 @@ def choose_and_ignore_task(todolist_name, chosen_task, ignored_task):
                                                                                ignored_task=ignored_task)
     return redirect(f"/todo/{todolist_name}")
 
+@bottle_app.post('/todo/<todolist_name>/item/<task_key>/cancel_priority')
+def cancel_priority(todolist_name, task_key):
+    controller = TodolistWriteController(bottle_config.dependencies)
+    controller.cancel_priority(task_key=TaskKey(UUID(task_key)))
+    return redirect(f"/todo/{todolist_name}")
+
 
 def get_string_from_request_post(field_name):
     return request.forms.getunicode(field_name)
