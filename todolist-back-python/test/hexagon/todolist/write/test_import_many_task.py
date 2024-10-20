@@ -65,11 +65,13 @@ def test_import_many_task_when_existing_task(sut: ImportManyTask, todolist_set: 
 
 
 def test_tell_ok_when_import_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
-                                  external_todolist: ExternalTodolistForTest, fake: TodolistFaker):
+                                  external_todolist: ExternalTodolistForTest, fake: TodolistFaker, task_key_generator: TaskKeyGeneratorForTest):
     imported_tasks = [fake.a_task(1), fake.a_task(2)]
     external_todolist.feed(*to_imported_task_list(imported_tasks))
+    task_key_generator.feed(*imported_tasks)
     todolist = fake.a_todolist()
     todolist_set.feed(todolist)
+
 
     response = sut.execute(todolist.name, external_todolist)
 

@@ -63,8 +63,6 @@ class TaskKeyGeneratorForTest(TaskKeyGeneratorPort):
 
     def generate(self) -> TaskKey:
         if not self.keys:
-            self.keys = [TaskKey(UUID(int=1))]
-        if not self.keys:
             raise Exception("key must be fed before generating")
         return self.keys.pop(0)
 
