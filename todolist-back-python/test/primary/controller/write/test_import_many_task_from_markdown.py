@@ -2,8 +2,7 @@ from dataclasses import replace
 
 from hexagon.todolist.aggregate import TaskSnapshot
 from primary.controller.write.todolist import TodolistWriteController
-from test.hexagon.todolist.fixture import TodolistFaker
-from test.hexagon.todolist.write.test_open_task import TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistFaker, TaskKeyGeneratorForTest
 from test.primary.controller.write.conftest import TodolistSetForTest
 
 

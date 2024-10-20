@@ -6,8 +6,7 @@ from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
 from primary.web.pages import bottle_config
-from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest
-from test.hexagon.todolist.write.test_open_task import TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest, TaskKeyGeneratorForTest
 
 
 def test_reword_task(todolist_set: TodolistSetForTest, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):

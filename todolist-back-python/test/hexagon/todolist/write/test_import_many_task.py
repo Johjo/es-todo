@@ -5,8 +5,7 @@ from expression import Ok, Error
 
 from hexagon.todolist.aggregate import TaskSnapshot
 from hexagon.todolist.write.import_many_task import ImportManyTask, ExternalTodoListPort, TaskImported
-from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
-from test.hexagon.todolist.write.test_open_task import TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker, TaskKeyGeneratorForTest
 
 
 @pytest.fixture
@@ -40,7 +39,7 @@ def test_import_many_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
                           external_todolist: ExternalTodolistForTest, fake: TodolistFaker, task_key_generator: TaskKeyGeneratorForTest):
     expected_tasks = [fake.a_task(1), fake.a_task(2)]
     external_todolist.feed(*to_imported_task_list(expected_tasks))
-    task_key_generator.feed(*[task.key for task in expected_tasks])
+    task_key_generator.feed(*[task for task in expected_tasks])
     todolist = replace(fake.a_todolist(), tasks=[])
     todolist_set.feed(todolist)
 
@@ -55,7 +54,7 @@ def test_import_many_task_when_existing_task(sut: ImportManyTask, todolist_set: 
     first_task = fake.a_task(key=1)
     expected_task = fake.a_task(key=2)
     external_todolist.feed(to_imported_task(expected_task))
-    task_key_generator.feed(expected_task.key)
+    task_key_generator.feed(expected_task)
     todolist = replace(fake.a_todolist(), tasks=[first_task])
     todolist_set.feed(todolist)
 

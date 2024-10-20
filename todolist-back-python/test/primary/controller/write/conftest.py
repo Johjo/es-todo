@@ -6,7 +6,7 @@ from hexagon.todolist.aggregate import TodolistSnapshot
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from primary.controller.dependencies import inject_use_cases
 from primary.controller.write.todolist import TodolistWriteController
-from test.hexagon.todolist.write.test_open_task import TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 
 
 class TodolistSetForTest(TodolistSetPort):

@@ -1,29 +1,12 @@
 from dataclasses import replace
-from uuid import UUID
 
 import pytest
 from expression import Ok, Error
 
-from hexagon.fvp.type import TaskKey
-from hexagon.todolist.port import TaskKeyGeneratorPort
 from hexagon.todolist.write.open_task import OpenTaskUseCase
 from test.hexagon.todolist.conftest import todolist_set
-from test.hexagon.todolist.fixture import TodolistSetForTest, a_todolist_snapshot, TodolistFaker
-
-
-class TaskKeyGeneratorForTest(TaskKeyGeneratorPort):
-    def __init__(self) -> None:
-        self.keys : list[TaskKey] | None= None
-
-    def feed(self, *keys: TaskKey) -> None:
-        self.keys = [key for key in keys]
-
-    def generate(self) -> TaskKey:
-        if not self.keys:
-            self.keys = [TaskKey(UUID(int=1))]
-        if not self.keys:
-            raise Exception("key must be fed before generating")
-        return self.keys.pop(0)
+from test.hexagon.todolist.fixture import TodolistSetForTest, a_todolist_snapshot, TodolistFaker, \
+    TaskKeyGeneratorForTest
 
 
 @pytest.fixture

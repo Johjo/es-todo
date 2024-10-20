@@ -8,8 +8,7 @@ from primary.controller.read.todolist import Task
 from primary.controller.read.todolist import TodolistSetReadPort as TodolistRead_Port_Todolist
 from dependencies import Dependencies
 from primary.web.pages import bottle_config
-from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest
-from test.hexagon.todolist.write.test_open_task import TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest, TaskKeyGeneratorForTest
 from test.primary.controller.read.test_query_one_task import TodolistForTest
 
 

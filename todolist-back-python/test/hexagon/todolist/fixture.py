@@ -5,7 +5,7 @@ from faker import Faker
 
 from hexagon.fvp.type import TaskKey
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
-from hexagon.todolist.port import TodolistSetPort
+from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from primary.controller.read.todolist import TodolistSetReadPort, Task
 
 
@@ -52,3 +52,24 @@ class TodolistFaker:
 
     def a_todolist(self) -> TodolistSnapshot:
         return TodolistSnapshot(name=self.fake.word(), tasks=[])
+
+
+class TaskKeyGeneratorForTest(TaskKeyGeneratorPort):
+    def __init__(self) -> None:
+        self.keys : list[TaskKey] | None= None
+
+    def feed(self, *items: TaskKey | TaskSnapshot) -> None:
+        self.keys = [self._key_from(item) for item in items]
+
+    def generate(self) -> TaskKey:
+        if not self.keys:
+            self.keys = [TaskKey(UUID(int=1))]
+        if not self.keys:
+            raise Exception("key must be fed before generating")
+        return self.keys.pop(0)
+
+    @staticmethod
+    def _key_from(item: TaskKey | TaskSnapshot):
+        if isinstance(item, TaskSnapshot):
+            return item.key
+        return item
