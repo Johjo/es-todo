@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 from dependencies import Dependencies
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 
 
 # todo : use a task key instead of an id
@@ -18,7 +18,6 @@ class Task:
         }
 
 
-
 class TodolistSetReadPort(ABC):
     @abstractmethod
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
@@ -28,6 +27,9 @@ class TodolistSetReadPort(ABC):
     def all_by_name(self) -> list[str]:
         pass
 
+    @abstractmethod
+    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
+        pass
 
 
 class TodolistReadController:
@@ -35,13 +37,13 @@ class TodolistReadController:
         self.dependencies = dependencies
 
     def all_todolist_by_name(self) -> list[str]:
-        todolist_set : TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
+        todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
         return todolist_set.all_by_name()
 
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
-        todolist_set : TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
+        todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
         return todolist_set.task_by(todolist_name=todolist_name, task_key=task_key)
 
-class TodolistRead:
-    class Port:
-        Todolist = TodolistSetReadPort
+    def counts_by_context(self, todolist_name: TodolistName):
+        todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
+        return todolist_set.counts_by_context(todolist_name=todolist_name)

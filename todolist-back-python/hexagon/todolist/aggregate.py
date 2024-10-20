@@ -2,7 +2,7 @@ from dataclasses import dataclass, replace
 
 from expression import Result, Error, Ok
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey, TodolistName
 
 
 @dataclass
@@ -14,7 +14,7 @@ class TaskSnapshot:
 
 @dataclass
 class TodolistSnapshot:
-    name: str
+    name: TodolistName
     tasks: list[TaskSnapshot]
 
 

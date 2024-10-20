@@ -7,7 +7,7 @@ from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSnapshot
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from primary.web.pages import bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.fixture import a_task_key

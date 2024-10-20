@@ -7,7 +7,7 @@ from expression import Nothing
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from infra.json_file import JsonFile
 
 

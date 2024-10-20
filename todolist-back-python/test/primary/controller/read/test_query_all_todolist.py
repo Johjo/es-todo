@@ -1,3 +1,4 @@
+from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort, Task
 from dependencies import Dependencies
 from test.hexagon.todolist.fixture import TodolistFaker
@@ -8,15 +9,17 @@ class TodolistSetReadForTest(TodolistSetReadPort):
     def __init__(self) -> None:
         self._all_todolist: list[str] = []
 
+    def feed(self, *names: str):
+        self._all_todolist = [n for n in names]
+
     def all_by_name(self) -> list[str]:
         return self._all_todolist
 
-
-    def task_by(self, todolist_name: str, task_key: int) -> Task:
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
         raise Exception("not implemented")
 
-    def feed(self, *names: str):
-        self._all_todolist = [n for n in names]
+    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
+        raise NotImplementedError()
 
 
 def test_query_all_todolist(dependencies: Dependencies, fake: TodolistFaker):

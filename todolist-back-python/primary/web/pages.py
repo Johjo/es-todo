@@ -6,7 +6,7 @@ from bottle import template, Bottle, view, response, request, redirect  # type: 
 
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, Task
 from dependencies import Dependencies

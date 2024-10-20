@@ -3,7 +3,7 @@ from typing import OrderedDict
 import pytest
 
 from dependencies import Dependencies
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from primary.controller.write.todolist import TodolistWriteController
 from test.fixture import a_task_key
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort

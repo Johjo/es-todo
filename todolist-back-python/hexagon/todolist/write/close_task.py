@@ -1,6 +1,6 @@
 from expression import Result
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from hexagon.todolist.port import TodolistSetPort
 from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
 

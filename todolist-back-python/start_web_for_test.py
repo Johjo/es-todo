@@ -5,7 +5,7 @@ from uuid import uuid4
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
 from hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, \
     TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
 from primary.controller.dependencies import inject_use_cases

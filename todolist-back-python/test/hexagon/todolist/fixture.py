@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 from expression import Option, Nothing, Some
 from faker import Faker
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from primary.controller.read.todolist import TodolistSetReadPort, Task
@@ -14,6 +14,9 @@ def a_todolist_snapshot(name: str) -> TodolistSnapshot:
 
 
 class TodolistSetForTest(TodolistSetPort, TodolistSetReadPort):
+    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
+        raise NotImplementedError()
+
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
         raise Exception("Not implemented")
 

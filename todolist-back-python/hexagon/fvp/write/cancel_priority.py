@@ -1,6 +1,6 @@
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FinalVersionPerfectedSession, FvpSessionSetPort
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 
 
 class CancelPriority:

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from collections import OrderedDict
 from dataclasses import dataclass
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 
 
 @dataclass

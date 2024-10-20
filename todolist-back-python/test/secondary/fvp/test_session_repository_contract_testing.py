@@ -4,7 +4,7 @@ from uuid import uuid4, UUID
 
 import pytest
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from test.fixture import a_task_key
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 

@@ -4,7 +4,7 @@ from uuid import UUID
 
 from expression import Result
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from hexagon.todolist.aggregate import TodolistAggregate, TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate

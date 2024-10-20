@@ -1,6 +1,6 @@
 from uuid import UUID, uuid4
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 
 
 def a_task_key(index: TaskKey | UUID | int | None = None) -> TaskKey:

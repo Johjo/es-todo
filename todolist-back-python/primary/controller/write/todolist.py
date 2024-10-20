@@ -1,5 +1,5 @@
 from dependencies import Dependencies
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from hexagon.todolist.write.close_task import CloseTask

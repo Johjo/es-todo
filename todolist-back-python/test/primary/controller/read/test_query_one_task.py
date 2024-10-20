@@ -1,4 +1,4 @@
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort, Task
 from dependencies import Dependencies
 from test.fixture import a_task_key
@@ -22,6 +22,9 @@ class TodolistForTest(TodolistSetReadPort):
 
     def already_fed(self, task_key, todolist_name):
         return (todolist_name, task_key) in self._tasks
+
+    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
+        raise NotImplementedError()
 
 
 def test_query_one_task(dependencies: Dependencies, fake: TodolistFaker):

@@ -10,7 +10,7 @@ from faker import Faker
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task
 from hexagon.fvp.read.which_task import TodolistPort, TaskFilter
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from infra.json_file import JsonFile
 from secondary.todolist.todolist_set_json import TodolistSetJson
 from test.hexagon.todolist.fixture import TodolistFaker

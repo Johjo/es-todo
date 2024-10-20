@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from primary.controller.dependency_list import DependencyList
 

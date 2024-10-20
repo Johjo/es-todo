@@ -2,7 +2,7 @@ from typing import OrderedDict
 
 import pytest
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from test.fixture import a_task_key
 from hexagon.fvp.aggregate import FvpSnapshot
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp

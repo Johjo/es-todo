@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from expression import Option
 
-from hexagon.fvp.type import TaskKey
+from hexagon.shared.type import TaskKey
 from hexagon.todolist.aggregate import TodolistSnapshot
 
 
