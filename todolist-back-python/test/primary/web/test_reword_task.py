@@ -7,6 +7,7 @@ from webtest import TestApp  # type: ignore
 from dependencies import Dependencies
 from primary.web.pages import bottle_config
 from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest, TaskKeyGeneratorForTest
+from test.primary.web.fixture import CleanResponse
 
 
 def test_reword_task(todolist_set: TodolistSetForTest, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
@@ -18,8 +19,7 @@ def test_reword_task(todolist_set: TodolistSetForTest, task_key_generator : Task
     todolist_set.feed(todolist)
 
     response = app.post(f'/todo/{todolist.name}/item/{expected_task.key}/reword', {"new_name": expected_task.name})
-
-    assert response.status == '200 OK'
+    assert CleanResponse(response).location() == f"/todo/{todolist.name}"
+    assert response.status_code == 302
     assert expected_task in todolist_set.by(todolist.name).value.tasks
-    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
 

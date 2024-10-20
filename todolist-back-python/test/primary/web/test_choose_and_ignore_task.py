@@ -7,6 +7,7 @@ from webtest import TestApp  # type: ignore
 from dependencies import Dependencies
 from primary.web.pages import bottle_config
 from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest, TaskKeyGeneratorForTest
+from test.primary.web.fixture import CleanResponse
 
 
 def test_choose_and_ignore_task(todolist_set: TodolistSetForTest, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
@@ -19,6 +20,6 @@ def test_choose_and_ignore_task(todolist_set: TodolistSetForTest, task_key_gener
 
 
     response = app.post(f'/todo/{todolist.name}/item/choose/{task_1.key}/ignore/{task_2.key}')
+    assert CleanResponse(response).location() == f"/todo/{todolist.name}"
+    assert response.status_code == 302
 
-    assert response.status == '200 OK'
-    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())

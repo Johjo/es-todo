@@ -4,6 +4,7 @@ from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
 from primary.web.pages import bottle_config
+from test.primary.web.fixture import CleanResponse
 
 
 def test_create_todolist(test_dependencies: Dependencies, app: TestApp):
@@ -11,5 +12,5 @@ def test_create_todolist(test_dependencies: Dependencies, app: TestApp):
 
     response = app.post('/todo', params={'name': "my_created_todolist"})
 
-    assert response.status == '200 OK'
-    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
+    assert CleanResponse(response).location() == f"/todo/my_created_todolist"
+    assert response.status_code == 302

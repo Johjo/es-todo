@@ -31,11 +31,10 @@ def index():
 
 
 @bottle_app.post("/todo")
-@view("index")
 def create_todolist():
     todolist_name = get_string_from_request_post("name")
     TodolistWriteController(bottle_config.dependencies).create_todolist(todolist_name)
-    return {"todolist_name_set": TodolistReadController(bottle_config.dependencies).all_todolist_by_name()}
+    redirect(f"/todo/{todolist_name}")
 
 
 @bottle_app.route("/todo/<todolist_name>/import")
@@ -111,13 +110,13 @@ def show_todolist_when_two_tasks(todolist_name: str, choose_the_task: ChooseTheT
 def open_task(todolist_name: str):
     task_name = get_string_from_request_post("task_name")
     TodolistWriteController(bottle_config.dependencies).open_task(todolist_name, task_name)
-    return show_todolist(todolist_name)
+    return redirect(f"/todo/{todolist_name}")
 
 
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/close")
 def close_task(todolist_name: str, task_key: str):
     TodolistWriteController(bottle_config.dependencies).close_task(todolist_name, task_key=TaskKey(UUID(task_key)))
-    return show_todolist(todolist_name)
+    return redirect(f"/todo/{todolist_name}")
 
 
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/reword")
@@ -127,7 +126,7 @@ def reword_task(todolist_name: str, task_key: str):
                            task_key=TaskKey(UUID(task_key)),
                            new_name=get_string_from_request_post("new_name"))
 
-    return show_todolist(todolist_name)
+    return redirect(f"/todo/{todolist_name}")
 
 
 @bottle_app.get("/todo/<todolist_name>/item/<task_key>/reword")
@@ -141,11 +140,11 @@ def display_reword_task(todolist_name: str, task_key: str):
         "task_name": task.name})
 
 
-@bottle_app.post('/todo/<name>/item/choose/<chosen_task>/ignore/<ignored_task>')
-def choose_and_ignore_task(name, chosen_task, ignored_task):
+@bottle_app.post('/todo/<todolist_name>/item/choose/<chosen_task>/ignore/<ignored_task>')
+def choose_and_ignore_task(todolist_name, chosen_task, ignored_task):
     TodolistWriteController(bottle_config.dependencies).choose_and_ignore_task(chosen_task=chosen_task,
                                                                                ignored_task=ignored_task)
-    return show_todolist(name)
+    return redirect(f"/todo/{todolist_name}")
 
 
 def get_string_from_request_post(field_name):
