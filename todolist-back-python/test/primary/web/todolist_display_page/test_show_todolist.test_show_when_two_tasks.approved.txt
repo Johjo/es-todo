@@ -28,6 +28,14 @@ b'<html>
 
 
 
+<form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/cancel_priority" method="post">
+
+    <input type="submit" value="Cette t\xc3\xa2che n\'est plus prioritaire">
+
+</form>
+
+
+
 <form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/close?xxxx_query_string" method="post">
 
     <input type="submit" value="C\'est fait">

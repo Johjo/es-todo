@@ -5,6 +5,8 @@
     <input type="submit" value="Choisir cette tâche">
 </form>
 
+% include('cancel_priority_button', task_key=index_1)
+
 <form action="/todo/{{todolist_name}}/item/{{index_1}}/close?{{query_string}}" method="post">
     <input type="submit" value="C'est fait">
 </form>
