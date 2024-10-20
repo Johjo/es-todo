@@ -24,7 +24,7 @@ class TodolistSetReadPort(ABC):
         pass
 
     @abstractmethod
-    def all_by_name(self) -> list[str]:
+    def all_by_name(self) -> list[TodolistName]:
         pass
 
     @abstractmethod
