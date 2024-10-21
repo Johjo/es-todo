@@ -13,9 +13,12 @@ from secondary.todolist.table import Task as DbTask, Todolist as DbTodolist
 
 class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
 
+    def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
+        raise NotImplementedError()
+
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
         task = DbTask.get(DbTask.todolist_name == todolist_name, DbTask.key == task_key)
-        return Task(id=task.key, name=task.name)
+        return Task(id=task.key, name=task.name, is_open=task.is_open)
 
     def all_by_name(self) -> list[TodolistName]:
         query = DbTodolist.select(DbTodolist.name).execute()

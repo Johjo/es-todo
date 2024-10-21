@@ -3,9 +3,10 @@ from primary.controller.read.todolist import TodolistReadController, TodolistSet
 from dependencies import Dependencies
 from test.fixture import TodolistFaker
 from test.primary.controller.conftest import dependencies
+from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented
 
 
-class TodolistSetReadForTest(TodolistSetReadPort):
+class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
     def __init__(self) -> None:
         self._all_todolist: list[str] = []
 
@@ -15,11 +16,6 @@ class TodolistSetReadForTest(TodolistSetReadPort):
     def all_by_name(self) -> list[str]:
         return self._all_todolist
 
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
-        raise Exception("not implemented")
-
-    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        raise NotImplementedError()
 
 
 def test_query_all_todolist(dependencies: Dependencies, fake: TodolistFaker):

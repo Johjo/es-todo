@@ -3,8 +3,9 @@ from uuid import UUID, uuid4
 
 from faker import Faker
 
-from hexagon.shared.type import TaskKey, TaskName, TodolistName
+from hexagon.shared.type import TaskKey, TaskName, TodolistName, TaskOpen
 from hexagon.todolist.aggregate import TaskSnapshot, TodolistSnapshot
+from primary.controller.read.todolist import Task
 
 
 def a_task_key(index: TaskKey | UUID | int | None = None) -> TaskKey:
@@ -17,9 +18,9 @@ def a_task_key(index: TaskKey | UUID | int | None = None) -> TaskKey:
 
 @dataclass(frozen=True)
 class TaskBuilder:
-    key: UUID | None = None
-    name: str | None = None
-    is_open: bool | None = None
+    key: TaskKey = None
+    name: TaskName = None
+    is_open: TaskOpen = None
 
     def to_snapshot(self) -> TaskSnapshot:
         if self.name is None:
@@ -34,11 +35,14 @@ class TaskBuilder:
     def having(self, **kwargs) -> 'TaskBuilder':
         return replace(self, **kwargs)
 
+    def to_task(self) -> Task:
+        return Task(id=self.key, name=self.name, is_open=self.is_open)
+
 
 @dataclass(frozen=True)
 class TodolistBuilder:
-    name: str | None = None
-    tasks: list[TaskBuilder] | None = None
+    name: TodolistName = None
+    tasks: list[TaskBuilder] = None
 
     def having(self, **kwargs) -> 'TodolistBuilder':
         return replace(self, **kwargs)
@@ -56,11 +60,29 @@ class TodolistFaker:
         self.fake = fake
 
     def a_task_old(self, key: None | int | UUID = None) -> TaskSnapshot:
-        if key is None:
-            key = uuid4()
-        if isinstance(key, int):
-            key = UUID(int=key)
-        return TaskBuilder(key=key, name=self.fake.sentence(), is_open=True).to_snapshot()
+        return self.a_task(key).to_snapshot()
+
+    def a_task(self, key: None | int | UUID = None) -> TaskBuilder:
+        return TaskBuilder(key=self.task_key(key), name=self.task_name(), is_open=True)
 
     def a_todolist_old(self) -> TodolistSnapshot:
-        return TodolistBuilder(name=self.fake.word(), tasks=[]).to_snapshot()
+        return self.a_todolist().to_snapshot()
+
+    def a_todolist(self, name: str | None = None) -> TodolistBuilder:
+        if name is None:
+            name = self.fake.word()
+        return TodolistBuilder(name=name, tasks=[])
+
+    @staticmethod
+    def task_key(key: None | int | UUID | TaskKey = None) -> TaskKey:
+        if key is None:
+            return TaskKey(uuid4())
+        if isinstance(key, int):
+            return TaskKey(UUID(int=key))
+        return TaskKey(key)
+
+    def task_name(self) -> TaskName:
+        return TaskName(self.fake.sentence())
+
+
+

@@ -11,6 +11,9 @@ def a_todolist_snapshot_old(name: str) -> TodolistSnapshot:
 
 
 class TodolistSetForTest(TodolistSetPort, TodolistSetReadPort):
+    def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
+        raise NotImplementedError()
+
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
         raise NotImplementedError()
 

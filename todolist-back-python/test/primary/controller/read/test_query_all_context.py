@@ -2,9 +2,10 @@ from dependencies import Dependencies
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from primary.controller.read.todolist import TodolistSetReadPort, Task, TodolistReadController
 from test.fixture import TodolistFaker
+from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented
 
 
-class TodolistSetReadForTest(TodolistSetReadPort):
+class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
     def __init__(self) -> None:
         self._all_contexts: dict[TodolistName, list[tuple[TodolistContext, TodolistContextCount]]] = {}
 
@@ -16,11 +17,6 @@ class TodolistSetReadForTest(TodolistSetReadPort):
             raise Exception(f"feed todolist {todolist_name} with context")
         return self._all_contexts[todolist_name]
 
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
-        raise NotImplementedError()
-
-    def all_by_name(self) -> list[str]:
-        raise NotImplementedError()
 
 
 def test_query_all_context(dependencies: Dependencies, fake: TodolistFaker):

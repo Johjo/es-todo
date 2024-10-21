@@ -15,7 +15,7 @@ def sut() -> TodolistSetPeewee:
 def test_read_task_by(fake: TodolistFaker):
     task_snapshot = fake.a_task_old()
     todolist = replace(fake.a_todolist_old(), tasks=[task_snapshot])
-    expected_task = Task(id=task_snapshot.key, name=task_snapshot.name)
+    expected_task = Task(id=task_snapshot.key, name=task_snapshot.name, is_open=task_snapshot.is_open)
     feed_todolist(todolist)
 
     sut = TodolistSetPeewee()
