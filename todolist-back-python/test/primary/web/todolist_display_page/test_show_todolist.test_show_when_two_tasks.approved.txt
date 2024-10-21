@@ -16,11 +16,11 @@ b'<html>
 
     <div>
 
-    <h2> buy the milk </h2> <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/reword?xxxx_query_string">Renommer</a>
+    <h2> buy the milk </h2> <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/reword?">Renommer</a>
 
     </div>
 
-<form action="/todo/my_todolist/item/choose/00000000-0000-0000-0000-000000000001/ignore/00000000-0000-0000-0000-000000000002?xxxx_query_string" method="post">
+<form action="/todo/my_todolist/item/choose/00000000-0000-0000-0000-000000000001/ignore/00000000-0000-0000-0000-000000000002?" method="post">
 
     <input type="submit" value="Choisir cette t\xc3\xa2che">
 
@@ -28,7 +28,7 @@ b'<html>
 
 
 
-<form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/cancel_priority" method="post">
+<form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/cancel_priority?" method="post">
 
     <input type="submit" value="Cette t\xc3\xa2che n\'est plus prioritaire">
 
@@ -36,7 +36,7 @@ b'<html>
 
 
 
-<form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/close?xxxx_query_string" method="post">
+<form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/close?" method="post">
 
     <input type="submit" value="C\'est fait">
 
@@ -50,11 +50,11 @@ b'<html>
 
     <div>
 
-    <h2> buy the water </h2> <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/reword?xxxx_query_string">Renommer</a>
+    <h2> buy the water </h2> <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/reword?">Renommer</a>
 
     </div>
 
-<form action="/todo/my_todolist/item/choose/00000000-0000-0000-0000-000000000002/ignore/00000000-0000-0000-0000-000000000001?xxxx_query_string" method="post">
+<form action="/todo/my_todolist/item/choose/00000000-0000-0000-0000-000000000002/ignore/00000000-0000-0000-0000-000000000001?" method="post">
 
     <input type="submit" value="Choisir cette t\xc3\xa2che">
 
@@ -62,7 +62,7 @@ b'<html>
 
 
 
-<form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/close?xxxx_query_string" method="post">
+<form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/close?" method="post">
 
     <input type="submit" value="C\'est fait">
 
@@ -82,7 +82,7 @@ b'<html>
 
 Ajouter une t\xc3\xa2che
 
-<form action="/todo/my_todolist/item?xxxx_query_string" method="post">
+<form action="/todo/my_todolist/item?" method="post">
 
     <input type="text" name="task_name">
 
@@ -96,7 +96,7 @@ Ajouter une t\xc3\xa2che
 
 Red\xc3\xa9marrer l\'algo
 
-<form action="/todo/my_todolist/reset?xxxx_query_string" method="post">
+<form action="/todo/my_todolist/reset?" method="post">
 
     <input type="submit" value="Reset">
 

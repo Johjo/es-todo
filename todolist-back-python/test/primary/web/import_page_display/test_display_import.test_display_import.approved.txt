@@ -16,7 +16,7 @@ b'<html>
 
 <h2> Importer une t\xc3\xa2che</h2>
 
-    <form action="/todo/my_todolist/import" method="post">
+    <form action="/todo/my_todolist/import?" method="post">
 
         <textarea rows="10" cols="80" name="markdown_import"></textarea>
 
@@ -34,7 +34,7 @@ b'<html>
 
 Ajouter une t\xc3\xa2che
 
-<form action="/todo/my_todolist/item?xxxx_query_string" method="post">
+<form action="/todo/my_todolist/item?" method="post">
 
     <input type="text" name="task_name">
 
@@ -48,7 +48,7 @@ Ajouter une t\xc3\xa2che
 
 Red\xc3\xa9marrer l\'algo
 
-<form action="/todo/my_todolist/reset?xxxx_query_string" method="post">
+<form action="/todo/my_todolist/reset?" method="post">
 
     <input type="submit" value="Reset">
 

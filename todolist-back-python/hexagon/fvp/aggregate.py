@@ -81,14 +81,11 @@ class FinalVersionPerfectedSession:
         return FinalVersionPerfectedSession(OrderedDict())
 
     def cancel_priority(self, task_key: TaskKey):
-        print(self.task_priorities)
         keys = list()
         for (key, value) in self.task_priorities.items():
-            print(key, "---",value, "==", task_key)
             if value == task_key:
                 keys.append(key)
 
-        print(keys)
         for key in keys:
             del self.task_priorities[key]
 
