@@ -112,17 +112,29 @@ Il y a xxxx_number_of_items t\xc3\xa2ches en attente.
 
 <h2> Contexte </h2>
 
+<form action="/todo/my_todolist" method="get">
+
 <ul>
 
 <li> <a href="/todo/my_todolist?only_inbox=1">Inbox</a></li>
 
-<li> <a href="/todo/my_todolist?context=%23context_1">#context_1</a> : 5 </li>
+<li> #context_1 : 5 </li>
 
-<li> <a href="/todo/my_todolist?context=%23context_2">#context_2</a> : 10 </li>
+    <input type="checkbox" name="include_context" value="#context_1"> Inclure
+
+    <input type="checkbox" name="exclude_context" value="#context_1"> Exclure
+
+<li> #context_2 : 10 </li>
+
+    <input type="checkbox" name="include_context" value="#context_2"> Inclure
+
+    <input type="checkbox" name="exclude_context" value="#context_2"> Exclure
 
 </ul>
 
+    <input type="submit" value="Filtrer">
 
+</form>
 
 
 
