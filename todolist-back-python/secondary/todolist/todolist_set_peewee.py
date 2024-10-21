@@ -66,7 +66,7 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
 
     def save_snapshot(self, snapshot: TodolistSnapshot) -> None:
         with self._database.bind_ctx([DbTodolist, DbTask]):
-            self.delete_previous_tasks(snapshot)
+            self.delete_previous_todolist(snapshot)
             self.save_todolist(snapshot)
 
     @staticmethod
@@ -76,7 +76,8 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
             DbTask.create(todolist_name=snapshot.name, key=task.key, name=task.name, is_open=task.is_open)
 
     @staticmethod
-    def delete_previous_tasks(snapshot):
+    def delete_previous_todolist(snapshot):
+        DbTodolist.delete().where(DbTodolist.name == snapshot.name).execute()
         DbTask.delete().where(DbTask.todolist_name == snapshot.name).execute()
 
     @classmethod
