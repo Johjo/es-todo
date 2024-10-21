@@ -1,7 +1,7 @@
 import re
 
 from expression import Option, Nothing, Some
-from peewee import DoesNotExist
+from peewee import DoesNotExist, Database
 
 from dependencies import Dependencies
 from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey
@@ -13,25 +13,33 @@ from secondary.todolist.table import Task as DbTask, Todolist as DbTodolist
 
 class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
 
+    def __init__(self, database: Database):
+        self._database: Database= database
+
     def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
-        raise NotImplementedError()
+        with self._database.bind_ctx([DbTask]):
+            all_tasks = DbTask.select().where(DbTask.todolist_name == todolist_name)
+            return [Task(id=task.key, name=task.name, is_open=task.is_open) for task in all_tasks]
 
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
-        task = DbTask.get(DbTask.todolist_name == todolist_name, DbTask.key == task_key)
-        return Task(id=task.key, name=task.name, is_open=task.is_open)
+        with self._database.bind_ctx([DbTask]):
+            task = DbTask.get(DbTask.todolist_name == todolist_name, DbTask.key == task_key)
+            return Task(id=task.key, name=task.name, is_open=task.is_open)
 
     def all_by_name(self) -> list[TodolistName]:
-        query = DbTodolist.select(DbTodolist.name).execute()
-        return [TodolistName(todolist.name) for todolist in query]
+        with self._database.bind_ctx([DbTodolist, DbTask]):
+            query = DbTodolist.select(DbTodolist.name).execute()
+            return [TodolistName(todolist.name) for todolist in query]
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        tasks = DbTask.select(DbTask.name).where(DbTask.todolist_name == todolist_name)
-        counts_by_context = {}
-        for task in tasks:
-            contexts = self._extract_context_from_name(task)
-            for context in contexts:
-                counts_by_context[context] = counts_by_context.get(context, 0) + 1
-        return [(context, count) for context, count in counts_by_context.items()]
+        with self._database.bind_ctx([DbTask]):
+            tasks = DbTask.select(DbTask.name).where(DbTask.todolist_name == todolist_name)
+            counts_by_context: dict[str: int]= {}
+            for task in tasks:
+                contexts = self._extract_context_from_name(task)
+                for context in contexts:
+                    counts_by_context[context] = counts_by_context.get(context, 0) + 1
+            return [(context, count) for context, count in counts_by_context.items()]
 
     @staticmethod
     def _extract_context_from_name(task):
@@ -40,12 +48,14 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
         return [TodolistContext(context.lower()) for context in contexts]
 
     def by(self, todolist_name: TodolistName) -> Option[TodolistSnapshot]:
-        try:
-            todolist = DbTodolist.get(DbTodolist.name == todolist_name)
-        except DoesNotExist:
-            return Nothing
-        tasks = DbTask.select().where(DbTask.todolist_name == todolist_name)
-        return Some(self._to_todolist_snapshot(todolist, tasks))
+        with self._database.bind_ctx([DbTodolist, DbTask]):
+            try:
+                todolist = DbTodolist.get(DbTodolist.name == todolist_name)
+            except DoesNotExist:
+                return Nothing
+            tasks = DbTask.select().where(DbTask.todolist_name == todolist_name)
+            return Some(self._to_todolist_snapshot(todolist, tasks))
+
 
     def _to_todolist_snapshot(self, todolist, tasks):
         return TodolistSnapshot(name=todolist.name, tasks=[self._to_task_snapshot(task) for task in tasks])
@@ -55,8 +65,9 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
         return TaskSnapshot(key=task.key, name=task.name, is_open=task.is_open)
 
     def save_snapshot(self, snapshot: TodolistSnapshot) -> None:
-        self.delete_previous_tasks(snapshot)
-        self.save_todolist(snapshot)
+        with self._database.bind_ctx([DbTodolist, DbTask]):
+            self.delete_previous_tasks(snapshot)
+            self.save_todolist(snapshot)
 
     @staticmethod
     def save_todolist(snapshot):
@@ -70,6 +81,6 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetPeewee':
-        return TodolistSetPeewee()
+        return TodolistSetPeewee(dependencies.get_infrastructure(Database))
 
 

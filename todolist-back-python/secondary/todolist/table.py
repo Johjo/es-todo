@@ -1,20 +1,14 @@
+from enum import unique
+
 from peewee import CharField, UUIDField, BooleanField, DatabaseProxy, Model  # type: ignore
 
-database_proxy = DatabaseProxy()  # Create a proxy for our db.
 
-class BaseModel(Model):
-    class Meta:
-        database = database_proxy
-
-
-class Task(BaseModel):
+class Task(Model):
     todolist_name = CharField()
-    key = UUIDField()
+    key = UUIDField(primary_key=True)
     name = CharField()
     is_open = BooleanField()
 
 
-
-
-class Todolist(BaseModel):
-    name = CharField()
+class Todolist(Model):
+    name = CharField(primary_key=True)

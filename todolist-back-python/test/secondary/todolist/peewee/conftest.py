@@ -1,22 +1,20 @@
 import pytest
 from faker import Faker
-from peewee import SqliteDatabase
+from peewee import SqliteDatabase  # type: ignore
 
-from secondary.todolist.table import Task, database_proxy, Todolist
+from secondary.todolist.table import Task, Todolist
 from test.fixture import TodolistFaker
 
 
+# todo: delete this autouse
 @pytest.fixture(autouse=True)
-def database():
+def peewee_database():
     database = SqliteDatabase(':memory:')
-    database_proxy.initialize(database)
-    return database
-
-
-@pytest.fixture(autouse=True)
-def create_tables(database):
     database.connect()
-    database.create_tables([Todolist, Task])
+    created_table = [Todolist, Task]
+    with database.bind_ctx(created_table):
+        database.create_tables(created_table)
+    return database
 
 
 @pytest.fixture
