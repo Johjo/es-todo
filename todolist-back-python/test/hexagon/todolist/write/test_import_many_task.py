@@ -5,7 +5,8 @@ from expression import Ok, Error
 
 from hexagon.todolist.aggregate import TaskSnapshot
 from hexagon.todolist.write.import_many_task import ImportManyTask, ExternalTodoListPort, TaskImported
-from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker, TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
+from test.fixture import TodolistFaker
 
 
 @pytest.fixture
@@ -37,10 +38,10 @@ def external_todolist() -> ExternalTodolistForTest:
 
 def test_import_many_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
                           external_todolist: ExternalTodolistForTest, fake: TodolistFaker, task_key_generator: TaskKeyGeneratorForTest):
-    expected_tasks = [fake.a_task(1), fake.a_task(2)]
+    expected_tasks = [fake.a_task_old(1), fake.a_task_old(2)]
     external_todolist.feed(*to_imported_task_list(expected_tasks))
     task_key_generator.feed(*[task for task in expected_tasks])
-    todolist = replace(fake.a_todolist(), tasks=[])
+    todolist = replace(fake.a_todolist_old(), tasks=[])
     todolist_set.feed(todolist)
 
     sut.execute(todolist.name, external_todolist)
@@ -51,11 +52,11 @@ def test_import_many_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
 
 def test_import_many_task_when_existing_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
                                              external_todolist: ExternalTodolistForTest, fake: TodolistFaker, task_key_generator: TaskKeyGeneratorForTest):
-    first_task = fake.a_task(key=1)
-    expected_task = fake.a_task(key=2)
+    first_task = fake.a_task_old(key=1)
+    expected_task = fake.a_task_old(key=2)
     external_todolist.feed(to_imported_task(expected_task))
     task_key_generator.feed(expected_task)
-    todolist = replace(fake.a_todolist(), tasks=[first_task])
+    todolist = replace(fake.a_todolist_old(), tasks=[first_task])
     todolist_set.feed(todolist)
 
     sut.execute(todolist.name, external_todolist)
@@ -66,10 +67,10 @@ def test_import_many_task_when_existing_task(sut: ImportManyTask, todolist_set: 
 
 def test_tell_ok_when_import_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
                                   external_todolist: ExternalTodolistForTest, fake: TodolistFaker, task_key_generator: TaskKeyGeneratorForTest):
-    imported_tasks = [fake.a_task(1), fake.a_task(2)]
+    imported_tasks = [fake.a_task_old(1), fake.a_task_old(2)]
     external_todolist.feed(*to_imported_task_list(imported_tasks))
     task_key_generator.feed(*imported_tasks)
-    todolist = fake.a_todolist()
+    todolist = fake.a_todolist_old()
     todolist_set.feed(todolist)
 
 
@@ -80,7 +81,7 @@ def test_tell_ok_when_import_task(sut: ImportManyTask, todolist_set: TodolistSet
 
 def test_tell_error_when_todolist_doest_not_exist(sut: ImportManyTask, todolist_set: TodolistSetForTest,
                                                   external_todolist: ExternalTodolistForTest, fake: TodolistFaker):
-    external_todolist.feed(to_imported_task(fake.a_task(1)))
+    external_todolist.feed(to_imported_task(fake.a_task_old(1)))
     response = sut.execute("unknown_todolist", external_todolist)
 
     assert response == Error("todolist not found")

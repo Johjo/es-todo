@@ -1,8 +1,7 @@
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort, Task
 from dependencies import Dependencies
-from test.fixture import a_task_key
-from test.hexagon.todolist.fixture import TodolistFaker
+from test.fixture import a_task_key, TodolistFaker
 
 
 # todo move in a shared single file

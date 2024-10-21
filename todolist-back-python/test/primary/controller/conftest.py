@@ -3,7 +3,7 @@ from faker import Faker
 
 from primary.controller.dependencies import inject_use_cases
 from dependencies import Dependencies
-from test.hexagon.todolist.fixture import TodolistFaker
+from test.fixture import TodolistFaker
 
 
 @pytest.fixture

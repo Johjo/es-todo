@@ -13,7 +13,7 @@ from hexagon.fvp.read.which_task import TodolistPort, TaskFilter
 from hexagon.shared.type import TaskKey
 from infra.json_file import JsonFile
 from secondary.todolist.todolist_set_json import TodolistSetJson
-from test.hexagon.todolist.fixture import TodolistFaker
+from test.fixture import TodolistFaker
 
 
 @pytest.fixture
@@ -60,9 +60,9 @@ def sut(json_path: Path, dependencies: Dependencies) -> TodolistJson:
 
 
 def test_should_list_open_tasks(sut: TodolistJson, json_path: Path, fake: TodolistFaker):
-    expected_tasks = [fake.a_task(), fake.a_task()]
-    expected_todolist = replace(fake.a_todolist(), tasks=[*expected_tasks, replace(fake.a_task(), is_open=False)])
-    another_todolist = replace(fake.a_todolist(), tasks=[fake.a_task(), fake.a_task()])
+    expected_tasks = [fake.a_task_old(), fake.a_task_old()]
+    expected_todolist = replace(fake.a_todolist_old(), tasks=[*expected_tasks, replace(fake.a_task_old(), is_open=False)])
+    another_todolist = replace(fake.a_todolist_old(), tasks=[fake.a_task_old(), fake.a_task_old()])
 
     TodolistSetJson(json_path).save_snapshot(expected_todolist)
     TodolistSetJson(json_path).save_snapshot(another_todolist)
@@ -72,8 +72,8 @@ def test_should_list_open_tasks(sut: TodolistJson, json_path: Path, fake: Todoli
 
 
 def test_should_no_task_when_todolist_does_not_exist(json_path: Path, fake: TodolistFaker):
-    unknown_todolist = fake.a_todolist()
-    another_todolist = replace(fake.a_todolist(), tasks=[fake.a_task(), fake.a_task()])
+    unknown_todolist = fake.a_todolist_old()
+    another_todolist = replace(fake.a_todolist_old(), tasks=[fake.a_task_old(), fake.a_task_old()])
 
     TodolistSetJson(json_path).save_snapshot(another_todolist)
 
@@ -83,7 +83,7 @@ def test_should_no_task_when_todolist_does_not_exist(json_path: Path, fake: Todo
 
 
 def test_should_no_task_when_todolist_file_does_not_exist(json_path: Path, fake: TodolistFaker):
-    unknown_todolist = fake.a_todolist()
+    unknown_todolist = fake.a_todolist_old()
 
     sut = TodolistJson(json_path)
 

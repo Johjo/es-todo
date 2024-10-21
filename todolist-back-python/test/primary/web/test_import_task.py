@@ -7,16 +7,17 @@ from webtest import TestApp  # type: ignore
 from hexagon.todolist.aggregate import TaskSnapshot
 from dependencies import Dependencies
 from primary.web.pages import bottle_config
-from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest, TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
+from test.fixture import TodolistFaker
 from test.primary.web.fixture import CleanResponse
 
 
 def test_import_task(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest,
                      test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
     bottle_config.dependencies = test_dependencies
-    expected_task = replace(fake.a_task(1), name="the imported task", is_open=True)
+    expected_task = replace(fake.a_task_old(1), name="the imported task", is_open=True)
 
-    todolist = replace(fake.a_todolist(), name="todolist")
+    todolist = replace(fake.a_todolist_old(), name="todolist")
     todolist_set.feed(todolist)
     task_key_generator.feed(expected_task.key)
 

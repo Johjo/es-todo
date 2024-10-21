@@ -1,7 +1,7 @@
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort, Task
 from dependencies import Dependencies
-from test.hexagon.todolist.fixture import TodolistFaker
+from test.fixture import TodolistFaker
 from test.primary.controller.conftest import dependencies
 
 
@@ -24,8 +24,8 @@ class TodolistSetReadForTest(TodolistSetReadPort):
 
 def test_query_all_todolist(dependencies: Dependencies, fake: TodolistFaker):
     todolist_set = TodolistSetReadForTest()
-    first_todolist = fake.a_todolist()
-    second_todolist = fake.a_todolist()
+    first_todolist = fake.a_todolist_old()
+    second_todolist = fake.a_todolist_old()
 
     todolist_set.feed(first_todolist.name, second_todolist.name)
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist_set)

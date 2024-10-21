@@ -6,7 +6,7 @@ from faker import Faker
 
 from hexagon.todolist.aggregate import TaskSnapshot
 from hexagon.todolist.write.import_many_task import ExternalTodoListPort, TaskImported
-from test.hexagon.todolist.fixture import TodolistFaker
+from test.fixture import TodolistFaker
 
 
 class MarkdownTodolist(ExternalTodoListPort):
@@ -25,7 +25,7 @@ def test_read_no_task_from_markdown():
 
 
 def test_read_one_task_from_markdown(fake: TodolistFaker):
-    expected_task = imported_task_from(fake.a_task(1))
+    expected_task = imported_task_from(fake.a_task_old(1))
 
     markdown = markdown_from_tasks(expected_task)
     sut = MarkdownTodolist(markdown)
@@ -34,7 +34,7 @@ def test_read_one_task_from_markdown(fake: TodolistFaker):
 
 
 def test_read_many_task_from_markdown(fake: TodolistFaker):
-    expected_tasks = [imported_task_from(fake.a_task(1)), imported_task_from(fake.a_task(2))]
+    expected_tasks = [imported_task_from(fake.a_task_old(1)), imported_task_from(fake.a_task_old(2))]
 
     markdown = markdown_from_tasks(*expected_tasks)
     sut = MarkdownTodolist(markdown)
@@ -43,7 +43,7 @@ def test_read_many_task_from_markdown(fake: TodolistFaker):
 
 
 def test_read_closed_task(fake: TodolistFaker):
-    expected_tasks = [imported_task_from(replace(fake.a_task(1), is_open=False))]
+    expected_tasks = [imported_task_from(replace(fake.a_task_old(1), is_open=False))]
 
     markdown = markdown_from_tasks(*expected_tasks)
     sut = MarkdownTodolist(markdown)

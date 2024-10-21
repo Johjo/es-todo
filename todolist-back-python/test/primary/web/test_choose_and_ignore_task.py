@@ -6,16 +6,17 @@ from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
 from primary.web.pages import bottle_config
-from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest, TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
+from test.fixture import TodolistFaker
 from test.primary.web.fixture import CleanResponse
 
 
 def test_choose_and_ignore_task(todolist_set: TodolistSetForTest, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
     bottle_config.dependencies = test_dependencies
-    task_1 = replace(fake.a_task(1), name="buy the milk")
-    task_2 = replace(fake.a_task(2), name="buy the water")
+    task_1 = replace(fake.a_task_old(1), name="buy the milk")
+    task_2 = replace(fake.a_task_old(2), name="buy the water")
 
-    todolist = replace(fake.a_todolist(), name="todolist", tasks=[task_1, task_2])
+    todolist = replace(fake.a_todolist_old(), name="todolist", tasks=[task_1, task_2])
     todolist_set.feed(todolist)
 
 

@@ -8,7 +8,7 @@ from dependencies import Dependencies
 from primary.controller.read.todolist import Task, TodolistSetReadPort
 from secondary.todolist.todolist_set_json import TodolistSetJson
 from secondary.todolist.todolist_set_read_json import TodolistSetReadJson
-from test.hexagon.todolist.fixture import TodolistFaker
+from test.fixture import TodolistFaker
 
 
 @pytest.fixture
@@ -32,17 +32,17 @@ def sut(json_path: Path, dependencies: Dependencies) -> TodolistSetReadJson:
 
 
 def test_read_task_by(sut: TodolistSetReadJson, json_path: Path, fake: TodolistFaker):
-    expected_task = fake.a_task()
-    todolist = fake.a_todolist()
-    TodolistSetJson(json_path).save_snapshot(replace(todolist, tasks=[fake.a_task(), expected_task, fake.a_task()]))
+    expected_task = fake.a_task_old()
+    todolist = fake.a_todolist_old()
+    TodolistSetJson(json_path).save_snapshot(replace(todolist, tasks=[fake.a_task_old(), expected_task, fake.a_task_old()]))
 
     assert sut.task_by(todolist_name=todolist.name, task_key=expected_task.key) == Task(id=expected_task.key, name=expected_task.name)
 
 
 def test_read_all_by_name(sut: TodolistSetReadJson, json_path: Path, fake: TodolistFaker):
-    todolist_1 = fake.a_todolist()
-    todolist_2 = fake.a_todolist()
-    todolist_3 = fake.a_todolist()
+    todolist_1 = fake.a_todolist_old()
+    todolist_2 = fake.a_todolist_old()
+    todolist_3 = fake.a_todolist_old()
     TodolistSetJson(json_path).save_snapshot(todolist_1)
     TodolistSetJson(json_path).save_snapshot(todolist_2)
     TodolistSetJson(json_path).save_snapshot(todolist_3)

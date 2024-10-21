@@ -4,7 +4,7 @@ import pytest
 
 from primary.controller.read.todolist import Task
 from secondary.todolist.todolist_set_peewee import TodolistSetPeewee
-from test.hexagon.todolist.fixture import TodolistFaker
+from test.fixture import TodolistFaker
 from test.secondary.todolist.peewee.fixture import feed_todolist
 
 
@@ -13,8 +13,8 @@ def sut() -> TodolistSetPeewee:
     return TodolistSetPeewee()
 
 def test_read_task_by(fake: TodolistFaker):
-    task_snapshot = fake.a_task()
-    todolist = replace(fake.a_todolist(), tasks=[task_snapshot])
+    task_snapshot = fake.a_task_old()
+    todolist = replace(fake.a_todolist_old(), tasks=[task_snapshot])
     expected_task = Task(id=task_snapshot.key, name=task_snapshot.name)
     feed_todolist(todolist)
 
@@ -23,9 +23,9 @@ def test_read_task_by(fake: TodolistFaker):
 
 
 def test_read_all_by_name(sut: TodolistSetPeewee, fake: TodolistFaker):
-    todolist_1 = fake.a_todolist()
-    todolist_2 = fake.a_todolist()
-    todolist_3 = fake.a_todolist()
+    todolist_1 = fake.a_todolist_old()
+    todolist_2 = fake.a_todolist_old()
+    todolist_3 = fake.a_todolist_old()
     feed_todolist(todolist_1)
     feed_todolist(todolist_2)
     feed_todolist(todolist_3)
@@ -33,11 +33,11 @@ def test_read_all_by_name(sut: TodolistSetPeewee, fake: TodolistFaker):
     assert sut.all_by_name() == [todolist_1.name, todolist_2.name, todolist_3.name]
 
 def test_read_counts_by_context(sut: TodolistSetPeewee, fake: TodolistFaker):
-    todolist = replace(fake.a_todolist(),
-                tasks=[replace(fake.a_task(), name="title #context1 #context2"),
-                       replace(fake.a_task(), name="#Con_Text3 title #context2"),
-                       replace(fake.a_task(), name="@ConText4 title"),
-                       replace(fake.a_task(), name="@Con-Text5 title #context2"),
+    todolist = replace(fake.a_todolist_old(),
+                       tasks=[replace(fake.a_task_old(), name="title #context1 #context2"),
+                       replace(fake.a_task_old(), name="#Con_Text3 title #context2"),
+                       replace(fake.a_task_old(), name="@ConText4 title"),
+                       replace(fake.a_task_old(), name="@Con-Text5 title #context2"),
                        ])
     feed_todolist(todolist)
 

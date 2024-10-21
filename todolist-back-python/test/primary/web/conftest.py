@@ -14,7 +14,8 @@ from dependencies import Dependencies
 from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_app, bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
-from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest, TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
+from test.fixture import TodolistFaker
 
 
 @pytest.fixture

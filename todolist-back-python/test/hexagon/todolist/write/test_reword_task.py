@@ -4,7 +4,8 @@ import pytest
 from expression import Ok, Error
 
 from hexagon.todolist.write.reword_task import RewordTask
-from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
+from test.hexagon.todolist.fixture import TodolistSetForTest
+from test.fixture import TodolistFaker
 
 
 @pytest.fixture
@@ -13,8 +14,8 @@ def sut(todolist_set: TodolistSetForTest):
 
 
 def test_reword_task(sut: RewordTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
-    task = fake.a_task()
-    todolist = replace(fake.a_todolist(), tasks=[task])
+    task = fake.a_task_old()
+    todolist = replace(fake.a_todolist_old(), tasks=[task])
     todolist_set.feed(todolist)
 
     sut.execute(todolist.name, task.key, "buy the milk")
@@ -24,9 +25,9 @@ def test_reword_task(sut: RewordTask, todolist_set: TodolistSetForTest, fake: To
 
 
 def test_reword_when_two_task(sut: RewordTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
-    first_task = fake.a_task(key=1)
-    reworded_task = fake.a_task(key=2)
-    todolist = replace(fake.a_todolist(), tasks=[first_task, reworded_task])
+    first_task = fake.a_task_old(key=1)
+    reworded_task = fake.a_task_old(key=2)
+    todolist = replace(fake.a_todolist_old(), tasks=[first_task, reworded_task])
     todolist_set.feed(todolist)
 
     sut.execute(todolist.name, reworded_task.key, "buy the milk")
@@ -36,8 +37,8 @@ def test_reword_when_two_task(sut: RewordTask, todolist_set: TodolistSetForTest,
 
 
 def test_tell_ok_when_reword_task(sut: RewordTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
-    task = fake.a_task()
-    todolist = replace(fake.a_todolist(), tasks=[task])
+    task = fake.a_task_old()
+    todolist = replace(fake.a_todolist_old(), tasks=[task])
     todolist_set.feed(todolist)
 
     response = sut.execute(todolist.name, task.key, "buy the milk")
@@ -46,10 +47,10 @@ def test_tell_ok_when_reword_task(sut: RewordTask, todolist_set: TodolistSetForT
 
 
 def test_tell_error_if_task_does_not_exist(sut: RewordTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
-    todolist = fake.a_todolist()
+    todolist = fake.a_todolist_old()
     todolist_set.feed(todolist)
 
-    task = fake.a_task()
+    task = fake.a_task_old()
     response = sut.execute(todolist.name, task.key, "buy the milk")
 
     assert response == Error(f"The task '{task.key}' does not exist")

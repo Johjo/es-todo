@@ -10,8 +10,8 @@ from hexagon.fvp.aggregate import FvpSnapshot
 from hexagon.shared.type import TaskKey
 from primary.web.pages import bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
-from test.fixture import a_task_key
-from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest, TaskKeyGeneratorForTest
+from test.fixture import a_task_key, TodolistFaker
+from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
 from test.primary.web.fixture import CleanResponse
 
 
@@ -20,14 +20,14 @@ def test_choose_and_ignore_task(todolist_set: TodolistSetForTest, task_key_gener
                                 fake: TodolistFaker):
 
     bottle_config.dependencies = test_dependencies
-    task_1 = replace(fake.a_task(1), name="buy the milk")
-    task_2 = replace(fake.a_task(2), name="buy the water")
-    task_3 = replace(fake.a_task(3), name="buy the water")
+    task_1 = replace(fake.a_task_old(1), name="buy the milk")
+    task_2 = replace(fake.a_task_old(2), name="buy the water")
+    task_3 = replace(fake.a_task_old(3), name="buy the water")
 
     fvp_session_set.feed(
         FvpSnapshot(OrderedDict[TaskKey, TaskKey]({a_task_key(2): a_task_key(1), a_task_key(1): a_task_key(3)})))
 
-    todolist = replace(fake.a_todolist(), name="todolist", tasks=[task_1, task_2, task_3])
+    todolist = replace(fake.a_todolist_old(), name="todolist", tasks=[task_1, task_2, task_3])
     todolist_set.feed(todolist)
 
     response = app.post(f'/todo/{todolist.name}/item/{task_3.key}/cancel_priority')

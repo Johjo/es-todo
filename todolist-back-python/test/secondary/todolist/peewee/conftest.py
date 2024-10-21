@@ -3,7 +3,7 @@ from faker import Faker
 from peewee import SqliteDatabase
 
 from secondary.todolist.table import Task, database_proxy, Todolist
-from test.hexagon.todolist.fixture import TodolistFaker
+from test.fixture import TodolistFaker
 
 
 @pytest.fixture(autouse=True)

@@ -1,7 +1,8 @@
 import pytest
 from faker import Faker
 
-from test.hexagon.todolist.fixture import TodolistSetForTest, TodolistFaker
+from test.hexagon.todolist.fixture import TodolistSetForTest
+from test.fixture import TodolistFaker
 
 
 @pytest.fixture

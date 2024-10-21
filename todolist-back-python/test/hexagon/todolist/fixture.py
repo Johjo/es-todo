@@ -1,7 +1,4 @@
-from uuid import UUID, uuid4
-
 from expression import Option, Nothing, Some
-from faker import Faker
 
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
@@ -9,7 +6,7 @@ from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from primary.controller.read.todolist import TodolistSetReadPort, Task
 
 
-def a_todolist_snapshot(name: str) -> TodolistSnapshot:
+def a_todolist_snapshot_old(name: str) -> TodolistSnapshot:
     return TodolistSnapshot(name=name, tasks=[])
 
 
@@ -42,24 +39,9 @@ class TodolistSetForTest(TodolistSetPort, TodolistSetReadPort):
         return [snapshot.name for snapshot in self._all_snapshot.values()]
 
 
-class TodolistFaker:
-    def __init__(self, fake: Faker):
-        self.fake = fake
-
-    def a_task(self, key: None | int | UUID = None) -> TaskSnapshot:
-        if key is None:
-            key = uuid4()
-        if isinstance(key, int):
-            key = UUID(int=key)
-        return TaskSnapshot(name=self.fake.sentence(), is_open=True, key=TaskKey(key))
-
-    def a_todolist(self) -> TodolistSnapshot:
-        return TodolistSnapshot(name=self.fake.word(), tasks=[])
-
-
 class TaskKeyGeneratorForTest(TaskKeyGeneratorPort):
     def __init__(self) -> None:
-        self.keys : list[TaskKey] | None= None
+        self.keys: list[TaskKey] | None = None
 
     def feed(self, *items: TaskKey | TaskSnapshot) -> None:
         self.keys = [self._key_from(item) for item in items]

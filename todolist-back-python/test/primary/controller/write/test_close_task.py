@@ -1,13 +1,13 @@
 from dataclasses import replace
 
 from primary.controller.write.todolist import TodolistWriteController
-from test.hexagon.todolist.fixture import TodolistFaker
+from test.fixture import TodolistFaker
 from test.primary.controller.write.conftest import TodolistSetForTest
 
 
 def test_close_task(todolist_set: TodolistSetForTest, sut: TodolistWriteController, fake: TodolistFaker):
-    task = fake.a_task()
-    todolist = replace(fake.a_todolist(), tasks=[task])
+    task = fake.a_task_old()
+    todolist = replace(fake.a_todolist_old(), tasks=[task])
     todolist_set.feed(todolist)
 
     sut.close_task(todolist_name=todolist.name, task_key=task.key)

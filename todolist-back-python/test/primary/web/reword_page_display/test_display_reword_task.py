@@ -8,7 +8,8 @@ from primary.controller.read.todolist import Task
 from primary.controller.read.todolist import TodolistSetReadPort as TodolistRead_Port_Todolist
 from dependencies import Dependencies
 from primary.web.pages import bottle_config
-from test.hexagon.todolist.fixture import TodolistFaker, TodolistSetForTest, TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
+from test.fixture import TodolistFaker
 from test.primary.controller.read.test_query_one_task import TodolistForTest
 
 
@@ -18,9 +19,9 @@ def test_display_reword_task(todolist_set: TodolistSetForTest, task_key_generato
     dependencies = test_dependencies.feed_adapter(TodolistRead_Port_Todolist, lambda _: todolist)
     bottle_config.dependencies = dependencies
 
-    reworded_task = replace(fake.a_task(1), name="initial name")
+    reworded_task = replace(fake.a_task_old(1), name="initial name")
 
-    a_todolist = replace(fake.a_todolist(), name="todolist", tasks=[reworded_task])
+    a_todolist = replace(fake.a_todolist_old(), name="todolist", tasks=[reworded_task])
     todolist_set.feed(a_todolist)
     todolist.feed(a_todolist.name, reworded_task.key, Task(id=reworded_task.key, name=reworded_task.name))
 

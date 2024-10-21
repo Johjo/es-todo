@@ -2,13 +2,13 @@ from dataclasses import dataclass, replace
 
 from expression import Result, Error, Ok
 
-from hexagon.shared.type import TaskKey, TodolistName
+from hexagon.shared.type import TaskKey, TodolistName, TaskName
 
 
 @dataclass
 class TaskSnapshot:
     key: TaskKey
-    name: str
+    name: TaskName
     is_open: bool
 
 
