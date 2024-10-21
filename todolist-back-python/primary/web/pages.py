@@ -1,5 +1,6 @@
 import urllib
 from dataclasses import dataclass
+from typing import Any
 from uuid import UUID
 
 from bottle import template, Bottle, view, response, request, redirect  # type: ignore
@@ -40,12 +41,7 @@ def create_todolist():
 @bottle_app.route("/todo/<todolist_name>/import")
 @view("import")
 def show_import(todolist_name):
-    return {"todolist_name": todolist_name,
-            "query_string": "xxxxquery_string",
-            "number_of_items": "xxxx_number_of_items",
-            "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
-            "urlencode": urllib.parse.quote,
-            }
+    return base_value(todolist_name)
 
 
 @bottle_app.post("/todo/<todolist_name>/import")
@@ -72,38 +68,26 @@ def show_todolist(todolist_name):
 
 
 def show_todolist_when_no_task(todolist_name):
-    return template("nothing", {
-        "todolist_name": todolist_name,
-        "query_string": "xxxx_query_string",
-        "number_of_items": "xxxx_number_of_items",
-        "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
-        "urlencode": urllib.parse.quote,
-    })
+    return template("nothing", base_value(todolist_name))
 
 
 def show_todolist_when_one_task(todolist_name: str, do_the_task: DoTheTask):
-    return template("do_the_task", {
-        "task_name": do_the_task.name,
-        "task_id": do_the_task.id,
-        "todolist_name": todolist_name,
-        "query_string": "xxxx_query_string",
-        "number_of_items": "xxxx_number_of_items",
-        "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
-        "urlencode": urllib.parse.quote}, )
+    return template("do_the_task",
+                    {**base_value(todolist_name),
+                     "task_name": do_the_task.name,
+                     "task_id": do_the_task.id,
+                     }, )
 
 
 def show_todolist_when_two_tasks(todolist_name: str, choose_the_task: ChooseTheTask):
-    return template("choose_the_task", {
-        "name_1": choose_the_task.name_1,
-        "index_1": choose_the_task.id_1,
-        "todolist_name": todolist_name,
-        "index_2": choose_the_task.id_2,
-        "name_2": choose_the_task.name_2,
-        "query_string": "xxxx_query_string",
-        "number_of_items": "xxxx_number_of_items",
-        "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
-        "urlencode": urllib.parse.quote,
-    })
+    return template("choose_the_task",
+                    {**base_value(todolist_name),
+                     "name_1": choose_the_task.name_1,
+                     "index_1": choose_the_task.id_1,
+                     "todolist_name": todolist_name,
+                     "index_2": choose_the_task.id_2,
+                     "name_2": choose_the_task.name_2,
+                     })
 
 
 @bottle_app.post("/todo/<todolist_name>/item")
@@ -143,13 +127,15 @@ def display_reword_task(todolist_name: str, task_key: str):
 @bottle_app.get("/todo/<todolist_name>/export")
 @view("export")
 def display_export_as_markdown(todolist_name: str):
-    return {"markdown_export": TodolistReadController(dependencies=bottle_config.dependencies).to_markdown(todolist_name=todolist_name),
-            "todolist_name": todolist_name,
-            "query_string": "xxx",
-            "number_of_items": "xxx",
-            "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
-            "urlencode": urllib.parse.quote,
-            }
+    return {"markdown_export": TodolistReadController(dependencies=bottle_config.dependencies).to_markdown(
+        todolist_name=todolist_name),
+        "todolist_name": todolist_name,
+        "query_string": "xxx",
+        "number_of_items": "xxx",
+        "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
+        "urlencode": urllib.parse.quote,
+    }
+
 
 @bottle_app.post('/todo/<todolist_name>/item/choose/<chosen_task>/ignore/<ignored_task>')
 def choose_and_ignore_task(todolist_name, chosen_task, ignored_task):
@@ -157,11 +143,23 @@ def choose_and_ignore_task(todolist_name, chosen_task, ignored_task):
                                                                                ignored_task=ignored_task)
     return redirect(f"/todo/{todolist_name}")
 
+
 @bottle_app.post('/todo/<todolist_name>/item/<task_key>/cancel_priority')
 def cancel_priority(todolist_name, task_key):
     controller = TodolistWriteController(bottle_config.dependencies)
     controller.cancel_priority(task_key=TaskKey(UUID(task_key)))
     return redirect(f"/todo/{todolist_name}")
 
+
 def get_string_from_request_post(field_name):
     return request.forms.getunicode(field_name)
+
+
+def base_value(todolist_name: str) -> dict[str, Any]:
+    return {
+        "todolist_name": todolist_name,
+        "query_string": "xxxx_query_string",
+        "number_of_items": "xxxx_number_of_items",
+        "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
+        "urlencode": urllib.parse.quote,
+    }

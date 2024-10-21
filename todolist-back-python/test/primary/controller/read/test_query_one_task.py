@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from hexagon.shared.type import TaskKey, TaskOpen, TodolistName, TaskName
 from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort, Task
 from dependencies import Dependencies
@@ -7,12 +9,12 @@ from test.primary.controller.read.fixture import TodolistSetReadPortNotImplement
 
 class TodolistForTest(TodolistSetReadPortNotImplemented):
     def __init__(self) -> None:
-        self._tasks: dict[(str, TaskKey,), Task] = {}
+        self._tasks: dict[Tuple[str, TaskKey,], Task] = {}
 
     def feed(self, todolist_name: str, task_key: TaskKey, task: Task):
         self._tasks[(todolist_name, task_key)] = task
 
-    def task_by(self, todolist_name: str, task_key: int):
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
         assert self.already_fed(task_key, todolist_name), "task must be fed before being read"
         return self._tasks[(todolist_name, task_key)]
 
