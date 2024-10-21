@@ -33,8 +33,8 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
         with self._database.bind_ctx([DbTask]):
-            tasks = DbTask.select(DbTask.name).where(DbTask.todolist_name == todolist_name)
-            counts_by_context: dict[str: int]= {}
+            tasks = DbTask.select(DbTask.name).where(DbTask.todolist_name == todolist_name, DbTask.is_open == True)
+            counts_by_context: dict[str, int]= {}
             for task in tasks:
                 contexts = self._extract_context_from_name(task)
                 for context in contexts:
@@ -44,7 +44,6 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
     @staticmethod
     def _extract_context_from_name(task):
         contexts = re.findall(r"([#@][_A-Za-z0-9-]+)", task.name)
-        print(task.name, contexts)
         return [TodolistContext(context.lower()) for context in contexts]
 
     def by(self, todolist_name: TodolistName) -> Option[TodolistSnapshot]:

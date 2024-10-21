@@ -58,7 +58,9 @@ Il y a xxxx_number_of_items t\xc3\xa2ches en attente.
 
 <li> <a href="/todo/my_todolist?only_inbox=1">Inbox</a></li>
 
-<li> <a href="/todo/my_todolist?context=xxxx1">xxxx1</a> : xxxx2 </li>
+<li> <a href="/todo/my_todolist?context=%23context_1">#context_1</a> : 5 </li>
+
+<li> <a href="/todo/my_todolist?context=%23context_2">#context_2</a> : 10 </li>
 
 </ul>
 

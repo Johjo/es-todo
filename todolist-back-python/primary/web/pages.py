@@ -43,7 +43,7 @@ def show_import(todolist_name):
     return {"todolist_name": todolist_name,
             "query_string": "xxxxquery_string",
             "number_of_items": "xxxx_number_of_items",
-            "counts_by_context": {"xxxx1": "xxxx2"},
+            "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
             "urlencode": urllib.parse.quote,
             }
 
@@ -76,7 +76,7 @@ def show_todolist_when_no_task(todolist_name):
         "todolist_name": todolist_name,
         "query_string": "xxxx_query_string",
         "number_of_items": "xxxx_number_of_items",
-        "counts_by_context": {"xxxx1": "xxxx2"},
+        "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
         "urlencode": urllib.parse.quote,
     })
 
@@ -88,7 +88,7 @@ def show_todolist_when_one_task(todolist_name: str, do_the_task: DoTheTask):
         "todolist_name": todolist_name,
         "query_string": "xxxx_query_string",
         "number_of_items": "xxxx_number_of_items",
-        "counts_by_context": {"xxxx1": "xxxx2"},
+        "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
         "urlencode": urllib.parse.quote}, )
 
 
@@ -101,7 +101,7 @@ def show_todolist_when_two_tasks(todolist_name: str, choose_the_task: ChooseTheT
         "name_2": choose_the_task.name_2,
         "query_string": "xxxx_query_string",
         "number_of_items": "xxxx_number_of_items",
-        "counts_by_context": {"xxxx1": "xxxx2"},
+        "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
         "urlencode": urllib.parse.quote,
     })
 
@@ -147,7 +147,7 @@ def display_export_as_markdown(todolist_name: str):
             "todolist_name": todolist_name,
             "query_string": "xxx",
             "number_of_items": "xxx",
-            "counts_by_context": {"xxx": "xxx"},
+            "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
             "urlencode": urllib.parse.quote,
             }
 

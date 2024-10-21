@@ -23,7 +23,7 @@ def test_query_all_context(dependencies: Dependencies, fake: TodolistFaker):
     expected_count_by_contexts = [("#context1", 5), ("#context2", 10)]
     todolist_set = TodolistSetReadForTest()
     todolist = fake.a_todolist_old()
-    todolist_set.feed(todolist.name, *expected_count_by_contexts)
+    todolist_set.feed(todolist.name, expected_count_by_contexts[1], expected_count_by_contexts[0])
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist_set)
 
     sut = TodolistReadController(dependencies)

@@ -37,13 +37,13 @@ def test_read_all_by_name(sut: TodolistSetPeewee, peewee_database: Database, fak
 
 
 def test_read_counts_by_context(sut: TodolistSetPeewee, peewee_database: Database, fake: TodolistFaker):
-    todolist = replace(fake.a_todolist_old(),
-                       tasks=[replace(fake.a_task_old(), name="title #context1 #context2"),
-                              replace(fake.a_task_old(), name="#Con_Text3 title #context2"),
-                              replace(fake.a_task_old(), name="@ConText4 title"),
-                              replace(fake.a_task_old(), name="@Con-Text5 title #context2"),
-                              ])
-    feed_todolist(todolist, peewee_database)
+    todolist = fake.a_todolist().having(tasks=[fake.a_task().having(name="title #context1 #context2"),
+                                               fake.a_task().having(name="#Con_Text3 title #context2"),
+                                               fake.a_task().having(name="@ConText4 title"),
+                                               fake.a_task().having(name="@Con-Text5 title #context2"),
+                                               fake.a_task().having(name="#context1 title #context2", is_open=False),
+                                               ])
+    feed_todolist(todolist.to_snapshot(), peewee_database)
 
     assert sut.counts_by_context(todolist.name) == [("#context1", 1), ("#context2", 3), ("#con_text3", 1),
                                                     ("@context4", 1), ("@con-text5", 1)]
