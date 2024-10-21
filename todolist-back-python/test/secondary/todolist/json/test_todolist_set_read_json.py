@@ -48,3 +48,15 @@ def test_read_all_by_name(sut: TodolistSetReadJson, json_path: Path, fake: Todol
     TodolistSetJson(json_path).save_snapshot(todolist_3)
 
     assert sut.all_by_name() == [todolist_1.name, todolist_2.name, todolist_3.name]
+
+def test_read_all_tasks(sut: TodolistSetReadJson, json_path: Path, fake: TodolistFaker):
+    expected_tasks = [fake.a_task(), fake.a_task()]
+    todolist_1 = fake.a_todolist()
+    todolist_2 = fake.a_todolist().having(tasks=expected_tasks)
+    todolist_3 = fake.a_todolist()
+    TodolistSetJson(json_path).save_snapshot(todolist_1.to_snapshot())
+    TodolistSetJson(json_path).save_snapshot(todolist_2.to_snapshot())
+    TodolistSetJson(json_path).save_snapshot(todolist_3.to_snapshot())
+
+    actual = sut.all_tasks(todolist_2.name)
+    assert actual == [task.to_task() for task in expected_tasks]

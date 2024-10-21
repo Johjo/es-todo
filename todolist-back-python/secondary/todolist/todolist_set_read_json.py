@@ -9,7 +9,8 @@ from primary.controller.read.todolist import TodolistSetReadPort, Task
 
 class TodolistSetReadJson(TodolistSetReadPort):
     def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
-        raise NotImplementedError()
+        todolist = self._json_file.read(todolist_name).value
+        return [self._to_task(task) for task in todolist["tasks"]]
 
     def __init__(self, json_path: Path):
         self._json_file = JsonFile(json_path)
@@ -17,7 +18,10 @@ class TodolistSetReadJson(TodolistSetReadPort):
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
         todolist = self._json_file.read(todolist_name).value
         tasks = {UUID(task["key"]): task for task in todolist["tasks"]}
-        task = tasks[task_key]
+        task_data = tasks[task_key]
+        return self._to_task(task_data)
+
+    def _to_task(self, task):
         return Task(id=TaskKey(UUID(task["key"])), name=task["name"], is_open=task["is_open"])
 
     def all_by_name(self) -> list[str]:

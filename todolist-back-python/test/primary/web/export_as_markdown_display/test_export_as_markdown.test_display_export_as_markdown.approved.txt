@@ -1,0 +1,87 @@
+b'<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Todo</title>
+
+</head>
+
+<body>
+
+
+
+<p>
+
+<textarea rows="10" cols="80" readonly>- [ ] buy milk\n- [ ] buy water</textarea>
+
+
+
+</p>
+
+
+
+<div>
+
+Ajouter une t\xc3\xa2che
+
+<form action="/todo/todolist/item?xxx" method="post">
+
+    <input type="text" name="task_name">
+
+    <input type="submit" value="Add item">
+
+</form>
+
+</div>
+
+
+
+Red\xc3\xa9marrer l\'algo
+
+<form action="/todo/todolist/reset?xxx" method="post">
+
+    <input type="submit" value="Reset">
+
+</form>
+
+
+
+Il y a xxx t\xc3\xa2ches en attente.
+
+
+
+
+
+<h2> Contexte </h2>
+
+<ul>
+
+<li> <a href="/todo/todolist?only_inbox=1">Inbox</a></li>
+
+<li> <a href="/todo/todolist?context=xxx">xxx</a> : xxx </li>
+
+</ul>
+
+
+
+
+
+<ul>
+
+<li><a href="/todo/todolist/export">Exporter les t\xc3\xa2ches</a></li>
+
+<li><a href="/todo/todolist/import">Importer des t\xc3\xa2ches</a></li>
+
+</ul>
+
+
+
+
+
+
+
+</body>
+
+</html>'

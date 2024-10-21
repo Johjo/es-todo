@@ -53,12 +53,9 @@ class TodolistReadController:
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
         return todolist_set.counts_by_context(todolist_name=todolist_name)
 
-    def export_to_markdown(self):
-        return ""
-
-    def to_markdown(self, todolist_name: TodolistName):
+    def to_markdown(self, todolist_name: str):
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
-        return to_markdown(todolist_set.all_tasks(todolist_name))
+        return to_markdown(todolist_set.all_tasks(TodolistName(todolist_name)))
 
 
 def to_markdown(tasks: list[Task]) -> str:

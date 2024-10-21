@@ -6,7 +6,7 @@ from bottle import template, Bottle, view, response, request, redirect  # type: 
 
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter
-from hexagon.shared.type import TaskKey
+from hexagon.shared.type import TaskKey, TodolistName
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, Task
 from dependencies import Dependencies
@@ -140,6 +140,17 @@ def display_reword_task(todolist_name: str, task_key: str):
         "task_name": task.name})
 
 
+@bottle_app.get("/todo/<todolist_name>/export")
+@view("export")
+def display_export_as_markdown(todolist_name: str):
+    return {"markdown_export": TodolistReadController(dependencies=bottle_config.dependencies).to_markdown(todolist_name=todolist_name),
+            "todolist_name": todolist_name,
+            "query_string": "xxx",
+            "number_of_items": "xxx",
+            "counts_by_context": {"xxx": "xxx"},
+            "urlencode": urllib.parse.quote,
+            }
+
 @bottle_app.post('/todo/<todolist_name>/item/choose/<chosen_task>/ignore/<ignored_task>')
 def choose_and_ignore_task(todolist_name, chosen_task, ignored_task):
     TodolistWriteController(bottle_config.dependencies).choose_and_ignore_task(chosen_task=chosen_task,
@@ -151,7 +162,6 @@ def cancel_priority(todolist_name, task_key):
     controller = TodolistWriteController(bottle_config.dependencies)
     controller.cancel_priority(task_key=TaskKey(UUID(task_key)))
     return redirect(f"/todo/{todolist_name}")
-
 
 def get_string_from_request_post(field_name):
     return request.forms.getunicode(field_name)
