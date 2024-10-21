@@ -40,7 +40,7 @@ def fvp_session_set():
 
 class FvpFaker:
     def __init__(self, fake: Faker):
-        self._fake : Faker = fake
+        self._fake: Faker = fake
 
     def a_task(self, key: None | int = None) -> Task:
         if key is None:
@@ -48,7 +48,9 @@ class FvpFaker:
         return Task(id=a_task_key(key), name=self._fake.sentence())
 
     def a_task_filter(self):
-        return TaskFilter(todolist_name=self._fake.word())
+        return TaskFilter(todolist_name=self._fake.word(),
+                          include_context=(self._fake.word(),),
+                          exclude_context=(self._fake.word(),))
 
 
 @pytest.fixture

@@ -53,7 +53,9 @@ def import_task(todolist_name):
 
 @bottle_app.route("/todo/<todolist_name>")
 def show_todolist(todolist_name):
-    task_filter = TaskFilter(todolist_name=todolist_name)  # todo mutate this
+    task_filter = TaskFilter(todolist_name=todolist_name,
+                             include_context=tuple(request.query.getall('include_context')),
+                             exclude_context=tuple(request.query.getall('exclude_context')))
 
     which_task = FinalVersionPerfectedReadController(bottle_config.dependencies).which_task(task_filter=task_filter)
     match which_task:

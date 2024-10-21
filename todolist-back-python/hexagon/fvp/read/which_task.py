@@ -5,9 +5,12 @@ from hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToD
     FvpSessionSetPort
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=True)
 class TaskFilter:
     todolist_name: str
+    include_context: tuple[str, ...] = ()
+    exclude_context: tuple[str, ...] = ()
+
 
 
 class TodolistPort(ABC):
