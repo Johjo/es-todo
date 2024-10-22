@@ -1,11 +1,9 @@
 from collections import OrderedDict
-from uuid import UUID
 
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from utils import SharedInstanceBuiltIn
 
 
-class FvpSessionSetForTest(FvpSessionSetPort, SharedInstanceBuiltIn):
+class FvpSessionSetForTest(FvpSessionSetPort):
     def __init__(self) -> None:
         self.snapshot: FvpSnapshot | None = None
 
