@@ -29,8 +29,8 @@ Il y a {{number_of_items}} tâches en attente.
 <li> <a href="/todo/{{todolist_name}}?only_inbox=1">Inbox</a></li>
 % for (context, count) in counts_by_context:
 <li> {{context}} : {{count}} </li>
-    <input type="checkbox" name="include_context" value="{{context}}"> Inclure
-    <input type="checkbox" name="exclude_context" value="{{context}}"> Exclure
+    <input type="checkbox" name="include_context" value="{{context}}" {{'checked' if context in included_context else ''}}> Inclure
+    <input type="checkbox" name="exclude_context" value="{{context}}" {{'checked' if context in excluded_context else ''}}> Exclure
 % end
 </ul>
     <input type="submit" value="Filtrer">

@@ -133,14 +133,11 @@ def display_reword_task(todolist_name: str, task_key: str):
 @bottle_app.get("/todo/<todolist_name>/export")
 @view("export")
 def display_export_as_markdown(todolist_name: str):
-    return {"markdown_export": TodolistReadController(dependencies=bottle_config.dependencies).to_markdown(
-        todolist_name=todolist_name),
-        "todolist_name": todolist_name,
-        "query_string": request.query_string,
-        "number_of_items": "xxx",
-        "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
-        "urlencode": urllib.parse.quote,
-    }
+    markdown = TodolistReadController(dependencies=bottle_config.dependencies).to_markdown(todolist_name=todolist_name)
+
+    return {**base_value(todolist_name),
+            "markdown_export": markdown,
+            }
 
 
 @bottle_app.post('/todo/<todolist_name>/item/choose/<chosen_task>/ignore/<ignored_task>')
@@ -167,5 +164,7 @@ def base_value(todolist_name: str) -> dict[str, Any]:
         "query_string": request.query_string,
         "number_of_items": "xxxx_number_of_items",
         "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
+        "included_context": request.query.getall("include_context"),
+        "excluded_context": request.query.getall("exclude_context"),
         "urlencode": urllib.parse.quote,
     }

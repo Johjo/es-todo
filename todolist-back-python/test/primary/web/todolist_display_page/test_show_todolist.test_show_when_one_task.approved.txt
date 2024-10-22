@@ -84,15 +84,15 @@ Il y a xxxx_number_of_items t\xc3\xa2ches en attente.
 
 <li> #context_1 : 5 </li>
 
-    <input type="checkbox" name="include_context" value="#context_1"> Inclure
+    <input type="checkbox" name="include_context" value="#context_1" > Inclure
 
-    <input type="checkbox" name="exclude_context" value="#context_1"> Exclure
+    <input type="checkbox" name="exclude_context" value="#context_1" > Exclure
 
 <li> #context_2 : 10 </li>
 
-    <input type="checkbox" name="include_context" value="#context_2"> Inclure
+    <input type="checkbox" name="include_context" value="#context_2" > Inclure
 
-    <input type="checkbox" name="exclude_context" value="#context_2"> Exclure
+    <input type="checkbox" name="exclude_context" value="#context_2" > Exclure
 
 </ul>
 

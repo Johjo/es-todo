@@ -80,7 +80,7 @@ def test_should_include_only_task_matching_full_context(sut: TodolistPeewee, pee
     assert sut.all_open_tasks(TaskFilter(todolist_name=expected_todolist.name, include_context=("#super",), exclude_context=())) == [
         Task(id=task.key, name=task.name) for task in expected_tasks]
 
-def test_should_ixclude_only_task_matching_full_context(sut: TodolistPeewee, peewee_database: Database, fake: TodolistFaker):
+def test_should_exclude_only_task_matching_full_context(sut: TodolistPeewee, peewee_database: Database, fake: TodolistFaker):
     expected_tasks = [fake.a_task().having(name="buy the water #supermarket"), ]
     expected_todolist = fake.a_todolist().having(tasks=[*expected_tasks, fake.a_task().having(name="become #super man")])
 
