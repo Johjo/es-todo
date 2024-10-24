@@ -69,7 +69,9 @@ def inject_all_dependencies(dependencies: Dependencies):
 
 def start():
     from dotenv import load_dotenv
-    dependencies = inject_all_dependencies(bottle_config.dependencies)
+    dependencies = bottle_config.dependencies
+    dependencies = dependencies.feed_path("sqlite_database_path", lambda _: Path("./todolist.db.sqlite"))
+    dependencies = inject_all_dependencies(dependencies)
     bottle_config.dependencies = dependencies
     load_dotenv()
     host = os.environ["HOST"]
