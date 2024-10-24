@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
+from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
     FvpSessionSetPort
 
@@ -37,4 +38,8 @@ class WhichTaskQuery:
         else:
             session = FinalVersionPerfectedSession.create()
         return session
+
+    @classmethod
+    def factory(cls, dependencies: Dependencies) -> 'WhichTaskQuery':
+        return WhichTaskQuery(dependencies.get_adapter(TodolistPort), dependencies.get_adapter(FvpSessionSetPort))
 

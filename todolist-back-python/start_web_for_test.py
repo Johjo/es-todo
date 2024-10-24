@@ -5,7 +5,6 @@ from uuid import uuid4
 from peewee import Database, SqliteDatabase  # type: ignore
 
 from dependencies import Dependencies
-from hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
 from hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
 from hexagon.shared.type import TaskKey
 from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, \
@@ -25,13 +24,21 @@ class TaskKeyGeneratorRandom(OpenTask_Port_TaskKeyGenerator):
         return TaskKey(uuid4())
 
 
+def inject_final_version_perfected(dependencies: Dependencies) -> Dependencies:
+    from secondary.fvp.write.session_set_peewee import SessionPeewee
+    from hexagon.fvp.aggregate import FvpSessionSetPort
+
+    dependencies = dependencies.feed_adapter(FvpSessionSetPort, SessionPeewee.factory)
+    return dependencies
+
+
 def inject_adapter(dependencies: Dependencies):
     dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, TodolistSetPeewee.factory)
+    dependencies = inject_final_version_perfected(dependencies)
 
     task_key_generator = TaskKeyGeneratorRandom()
     dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
     dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, WhichTask_Port_Todolist_Peewee.factory)
-    dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, JsonSessionRepository.factory)
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetPeewee.factory)
 
     return dependencies
@@ -47,16 +54,20 @@ def inject_infrastructure(dependencies: Dependencies) -> Dependencies:
     database = SqliteDatabase("todolist.db.sqlite")
     with database.bind_ctx([DbTodolist, DbTask]):
         database.create_tables([DbTodolist, DbTask])
-    dependencies =  dependencies.feed_infrastructure(Database, lambda _: database)
+    dependencies = dependencies.feed_infrastructure(Database, lambda _: database)
+    return dependencies
+
+
+def inject_all_dependencies(dependencies: Dependencies):
+    dependencies = inject_use_cases(dependencies)
+    dependencies = inject_adapter(dependencies)
+    dependencies = inject_infrastructure(dependencies)
     return dependencies
 
 
 def start():
     from dotenv import load_dotenv
-    dependencies = inject_use_cases(bottle_config.dependencies)
-    dependencies = inject_adapter(dependencies=dependencies)
-    dependencies = inject_path(dependencies=dependencies)
-    dependencies = inject_infrastructure(dependencies=dependencies)
+    dependencies = inject_all_dependencies(bottle_config.dependencies)
     bottle_config.dependencies = dependencies
     load_dotenv()
     host = os.environ["HOST"]

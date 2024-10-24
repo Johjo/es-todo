@@ -1,12 +1,11 @@
 from functools import reduce
+from typing import Any
 
-from dependencies import Dependencies, ResourceType
-from hexagon.fvp.aggregate import FvpSessionSetPort
-from hexagon.fvp.read.which_task import WhichTaskQuery, TodolistPort
-from hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
+from dependencies import Dependencies
+from hexagon.fvp.read.which_task import WhichTaskQuery
+from hexagon.fvp.write.cancel_priority import CancelPriority
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
-from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
 from hexagon.todolist.write.import_many_task import ImportManyTask
@@ -15,44 +14,12 @@ from hexagon.todolist.write.reword_task import RewordTask
 
 
 def inject_use_cases(dependencies: Dependencies) -> Dependencies:
-    use_cases_with_factory = [ResetFvpSession, Fvp_CancelPriority, ChooseAndIgnoreTaskFvp, TodolistCreate]
-    factories = {
-        **{cls: cls.factory for cls in use_cases_with_factory},
-        OpenTaskUseCase: open_task_use_case_factory,
-        CloseTask: close_task_use_case_factory,
-        RewordTask: reword_task_use_case_factory,
-        ImportManyTask: import_many_task_use_case_factory,
-        WhichTaskQuery: which_task_query_factory,
-    }
+    use_cases_with_factory: list[Any] = [ResetFvpSession, CancelPriority, ChooseAndIgnoreTaskFvp, TodolistCreate,
+                                         OpenTaskUseCase, CloseTask, RewordTask, ImportManyTask, WhichTaskQuery]
 
-    def feed_use_case(dep: Dependencies, resource_and_factory) -> Dependencies:
-        use_case, factory = resource_and_factory
-        return dep.feed_use_case(use_case=use_case, use_case_factory=factory)
+    def feed_use_case(dep: Dependencies, use_case: Any) -> Dependencies:
+        return dep.feed_use_case(use_case=use_case, use_case_factory=use_case.factory)
 
-    return reduce(feed_use_case, factories.items(), dependencies)
+    return reduce(feed_use_case, use_cases_with_factory, dependencies)
 
 
-def todolist_create_factory(dependencies: Dependencies):
-    return TodolistCreate(dependencies.get_adapter(TodolistSetPort))
-
-
-def open_task_use_case_factory(dependencies: Dependencies):
-    todolist_set = dependencies.get_adapter(TodolistSetPort)
-    task_key_generator = dependencies.get_adapter(TaskKeyGeneratorPort)
-    return OpenTaskUseCase(todolist_set, task_key_generator)
-
-
-def close_task_use_case_factory(dependencies):
-    return CloseTask(dependencies.get_adapter(TodolistSetPort))
-
-
-def reword_task_use_case_factory(dependencies: Dependencies) -> RewordTask:
-    return RewordTask(dependencies.get_adapter(TodolistSetPort))
-
-
-def import_many_task_use_case_factory(dependencies: Dependencies) -> ImportManyTask:
-    return ImportManyTask(dependencies.get_adapter(TodolistSetPort), dependencies.get_adapter(TaskKeyGeneratorPort))
-
-
-def which_task_query_factory(dependencies: Dependencies) -> WhichTaskQuery:
-    return WhichTaskQuery(dependencies.get_adapter(TodolistPort), dependencies.get_adapter(FvpSessionSetPort))

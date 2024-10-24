@@ -4,6 +4,7 @@ from uuid import UUID
 
 from expression import Result
 
+from dependencies import Dependencies
 from hexagon.shared.type import TaskKey
 from hexagon.todolist.aggregate import TodolistAggregate, TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
@@ -38,3 +39,7 @@ class ImportManyTask:
 
     def _update(self, todolist: TodolistAggregate) -> Result[TodolistAggregate, str]:
         return todolist.import_tasks([task.to_snapshot(self._task_key_generator.generate()) for task in self._external_todolist.all_tasks()])
+
+    @classmethod
+    def factory(cls, dependencies: Dependencies) -> 'ImportManyTask':
+        return ImportManyTask(dependencies.get_adapter(TodolistSetPort), dependencies.get_adapter(TaskKeyGeneratorPort))
