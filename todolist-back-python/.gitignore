@@ -9,3 +9,4 @@ session_fvp.json
 /test_todolist.json
 /test_fvp.json
 /todolist.db.sqlite
+/test/todolist.db.sqlite
