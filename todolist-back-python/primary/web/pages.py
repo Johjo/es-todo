@@ -153,6 +153,12 @@ def cancel_priority(todolist_name, task_key):
     controller.cancel_priority(task_key=TaskKey(UUID(task_key)))
     return redirect_to_todolist(todolist_name)
 
+@bottle_app.post('/todo/<todolist_name>/reset')
+def reset_all_priorities(todolist_name):
+    controller = TodolistWriteController(bottle_config.dependencies)
+    controller.reset_all_priorities()
+    return redirect_to_todolist(todolist_name)
+
 
 def get_string_from_request_post(field_name):
     return request.forms.getunicode(field_name)

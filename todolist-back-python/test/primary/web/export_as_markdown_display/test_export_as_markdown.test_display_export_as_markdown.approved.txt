@@ -60,7 +60,7 @@ Il y a xxxx_number_of_items t\xc3\xa2ches en attente.
 
 <ul>
 
-<li> <a href="/todo/todolist?only_inbox=1">Inbox</a></li>
+<li> <a href="/todo/todolist">Supprimer les filtres</a></li>
 
 <li> #context_1 : 5 </li>
 

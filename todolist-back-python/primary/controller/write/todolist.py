@@ -1,4 +1,5 @@
 from dependencies import Dependencies
+from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 from hexagon.shared.type import TaskKey
 from hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
@@ -42,4 +43,8 @@ class TodolistWriteController:
     def cancel_priority(self, task_key: TaskKey):
         use_case : Fvp_CancelPriority = self.dependencies.get_use_case(Fvp_CancelPriority)
         use_case.execute(task_key)
+
+    def reset_all_priorities(self):
+        use_case : ResetFvpSession = self.dependencies.get_use_case(ResetFvpSession)
+        use_case.execute()
 

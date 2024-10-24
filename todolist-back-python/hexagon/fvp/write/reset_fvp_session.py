@@ -1,5 +1,6 @@
 from collections import OrderedDict
 
+from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 
 
@@ -9,3 +10,7 @@ class ResetFvpSession:
 
     def execute(self):
         self.set_of_fvp_sessions.save(FvpSnapshot(OrderedDict()))
+
+    @classmethod
+    def factory(cls, dependencies:Dependencies):
+        return ResetFvpSession(dependencies.get_adapter(FvpSessionSetPort))

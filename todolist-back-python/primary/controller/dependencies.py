@@ -5,6 +5,7 @@ from hexagon.fvp.aggregate import FvpSessionSetPort
 from hexagon.fvp.read.which_task import WhichTaskQuery, TodolistPort
 from hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
+from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
@@ -14,15 +15,14 @@ from hexagon.todolist.write.reword_task import RewordTask
 
 
 def inject_use_cases(dependencies: Dependencies) -> Dependencies:
+    use_cases_with_factory = [ResetFvpSession, Fvp_CancelPriority, ChooseAndIgnoreTaskFvp, TodolistCreate]
     factories = {
-        TodolistCreate: TodolistCreate.factory,
+        **{cls: cls.factory for cls in use_cases_with_factory},
         OpenTaskUseCase: open_task_use_case_factory,
         CloseTask: close_task_use_case_factory,
         RewordTask: reword_task_use_case_factory,
         ImportManyTask: import_many_task_use_case_factory,
         WhichTaskQuery: which_task_query_factory,
-        ChooseAndIgnoreTaskFvp: ChooseAndIgnoreTaskFvp.factory,
-        Fvp_CancelPriority: Fvp_CancelPriority.factory
     }
 
     def feed_use_case(dep: Dependencies, resource_and_factory) -> Dependencies:
@@ -52,6 +52,7 @@ def reword_task_use_case_factory(dependencies: Dependencies) -> RewordTask:
 
 def import_many_task_use_case_factory(dependencies: Dependencies) -> ImportManyTask:
     return ImportManyTask(dependencies.get_adapter(TodolistSetPort), dependencies.get_adapter(TaskKeyGeneratorPort))
+
 
 def which_task_query_factory(dependencies: Dependencies) -> WhichTaskQuery:
     return WhichTaskQuery(dependencies.get_adapter(TodolistPort), dependencies.get_adapter(FvpSessionSetPort))
