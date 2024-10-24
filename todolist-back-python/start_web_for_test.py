@@ -12,10 +12,10 @@ from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, 
 from primary.controller.dependencies import inject_use_cases
 from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_config, bottle_app
-from secondary.fvp.json_session_repository import JsonSessionRepository
-from secondary.todolist.table import Todolist as DbTodolist, Task as DbTask
-from secondary.todolist.todolist_set_peewee import TodolistSetPeewee
 from secondary.fvp.read.which_task.todolist_peewee import TodolistPeewee as WhichTask_Port_Todolist_Peewee
+from secondary.todolist.table import Todolist as DbTodolist, Task as DbTask
+from secondary.fvp.write.session_set_peewee import Session as DbSession
+from secondary.todolist.todolist_set_peewee import TodolistSetPeewee
 
 
 class TaskKeyGeneratorRandom(OpenTask_Port_TaskKeyGenerator):
@@ -51,9 +51,11 @@ def inject_path(dependencies: Dependencies) -> Dependencies:
 
 
 def inject_infrastructure(dependencies: Dependencies) -> Dependencies:
-    database = SqliteDatabase("todolist.db.sqlite")
-    with database.bind_ctx([DbTodolist, DbTask]):
-        database.create_tables([DbTodolist, DbTask])
+    path = dependencies.get_path("sqlite_database_path")
+    database = SqliteDatabase(path)
+    created_tables = [DbTodolist, DbTask, DbSession]
+    with database.bind_ctx(created_tables):
+        database.create_tables(created_tables)
     dependencies = dependencies.feed_infrastructure(Database, lambda _: database)
     return dependencies
 

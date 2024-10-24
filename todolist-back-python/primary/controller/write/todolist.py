@@ -44,7 +44,7 @@ class TodolistWriteController:
         use_case : Fvp_CancelPriority = self.dependencies.get_use_case(Fvp_CancelPriority)
         use_case.execute(task_key)
 
-    def reset_all_priorities(self):
+    def reset_all_priorities(self) -> None:
         use_case : ResetFvpSession = self.dependencies.get_use_case(ResetFvpSession)
         use_case.execute()
 

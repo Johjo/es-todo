@@ -1,5 +1,3 @@
-from enum import unique
-
 from peewee import CharField, UUIDField, BooleanField, DatabaseProxy, Model  # type: ignore
 
 

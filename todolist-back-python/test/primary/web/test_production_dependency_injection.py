@@ -5,7 +5,10 @@ from start_web_for_test import inject_all_dependencies
 
 @pytest.fixture
 def sut() -> Dependencies:
-    return inject_all_dependencies(Dependencies.create_empty())
+    dependencies = Dependencies.create_empty()
+    dependencies = dependencies.feed_path("sqlite_database_path", lambda _: ":memory:")
+    dependencies = inject_all_dependencies(dependencies)
+    return dependencies
 
 def test_fvp_reset_session_use_case(sut: Dependencies):
     from hexagon.fvp.write.reset_fvp_session import ResetFvpSession

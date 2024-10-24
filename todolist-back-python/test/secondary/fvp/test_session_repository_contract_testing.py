@@ -25,6 +25,15 @@ class TestSessionRepositoryContractTesting(ABC):
         sut.save(expected)
         assert sut.by() == expected
 
+    def test_update_element(self, sut: FvpSessionSetPort) -> None:
+        initial = FvpSnapshot(OrderedDict[TaskKey, TaskKey]({a_task_key(1): a_task_key(1), a_task_key(2): a_task_key(0), a_task_key(3): a_task_key(0)}))
+        sut.save(initial)
+        expected = FvpSnapshot(OrderedDict[TaskKey, TaskKey]({a_task_key(1): a_task_key(1), a_task_key(2): a_task_key(0)}))
+        sut.save(expected)
+        assert sut.by() == expected
+
+
+
     @abstractmethod
     def feed(self, snapshot: FvpSnapshot) -> None:
         pass
