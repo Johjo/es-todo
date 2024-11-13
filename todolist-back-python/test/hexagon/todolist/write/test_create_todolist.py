@@ -1,5 +1,5 @@
 import pytest
-from expression import Ok, Error, Result
+from expression import Ok, Error
 
 from hexagon.todolist.write.create_todolist import TodolistCreate
 from test.fixture import TodolistFaker

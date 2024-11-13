@@ -1,9 +1,9 @@
 from typing import Tuple
 
-from hexagon.shared.type import TaskKey, TaskOpen, TaskName
+from hexagon.shared.type import TaskKey
 from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort, Task
 from dependencies import Dependencies
-from test.fixture import a_task_key, TodolistFaker, TaskBuilder
+from test.fixture import TodolistFaker, TaskBuilder
 from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented
 
 
