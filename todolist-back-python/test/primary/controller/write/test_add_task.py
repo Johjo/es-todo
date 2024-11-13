@@ -1,6 +1,5 @@
 
 from dependencies import Dependencies
-from hexagon.shared.type import TaskName, TodolistName
 from primary.controller.write.todolist import TodolistWriteController
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest

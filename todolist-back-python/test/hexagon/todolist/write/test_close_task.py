@@ -4,8 +4,8 @@ import pytest
 from expression import Ok, Error
 
 from hexagon.todolist.write.close_task import CloseTask
-from test.hexagon.todolist.fixture import TodolistSetForTest
 from test.fixture import TodolistFaker
+from test.hexagon.todolist.fixture import TodolistSetForTest
 
 
 @pytest.fixture
@@ -21,7 +21,7 @@ def test_close_task(sut: CloseTask, todolist_set: TodolistSetForTest, fake: Todo
     sut.execute(todolist.name, task.to_key())
 
     actual = todolist_set.by(todolist.name).value
-    assert actual == todolist.having(tasks=[(replace(task, is_open=False))]).to_snapshot()
+    assert actual == todolist.having(tasks=[task.having(is_open=False)]).to_snapshot()
 
 
 def test_close_when_two_tasks(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):

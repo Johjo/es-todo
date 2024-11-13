@@ -6,42 +6,9 @@ from expression import Option, Nothing, Some  # type: ignore
 from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
-from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey
-from hexagon.todolist.aggregate import TodolistSnapshot
-from hexagon.todolist.port import TodolistSetPort
 from infra.memory import Memory
-from primary.controller.read.todolist import TodolistSetReadPort, Task
 from primary.web.pages import bottle_config
-from test.fixture import TodolistFaker, TodolistBuilder
-
-
-class TodolistSetForTest(TodolistSetPort, TodolistSetReadPort):
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
-        raise NotImplementedError()
-
-    def all_by_name(self) -> list[TodolistName]:
-        raise NotImplementedError()
-
-    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        return [(TodolistContext("#context_1"), TodolistContextCount(5)),
-                (TodolistContext("#context_2"), TodolistContextCount(10)), ]
-
-    def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
-        raise NotImplementedError()
-
-    def __init__(self) -> None:
-        self._todolist: dict[TodolistName, TodolistBuilder] = {}
-
-    def by(self, todolist_name: TodolistName) -> Option[TodolistSnapshot]:
-        if todolist_name not in self._todolist:
-            return Nothing
-        return Some(self._todolist[todolist_name].to_snapshot())
-
-    def save_snapshot(self, snapshot: TodolistSnapshot) -> None:
-        raise NotImplementedError()
-
-    def feed(self, todolist: TodolistBuilder) -> None:
-        self._todolist[todolist.name] = todolist
+from test.fixture import TodolistFaker
 
 
 def test_show_when_no_task(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):

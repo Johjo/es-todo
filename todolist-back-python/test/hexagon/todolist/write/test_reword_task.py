@@ -4,8 +4,8 @@ import pytest
 from expression import Ok, Error
 
 from hexagon.todolist.write.reword_task import RewordTask
-from test.hexagon.todolist.fixture import TodolistSetForTest
 from test.fixture import TodolistFaker
+from test.hexagon.todolist.fixture import TodolistSetForTest
 
 
 @pytest.fixture

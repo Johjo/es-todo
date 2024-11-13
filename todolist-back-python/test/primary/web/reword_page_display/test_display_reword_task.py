@@ -4,24 +4,23 @@ from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
 from hexagon.shared.type import TaskName, TaskOpen
-from primary.controller.read.todolist import TodolistSetReadPort as TodolistRead_Port_Todolist
+from infra.memory import Memory
 from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
-from test.primary.controller.read.test_query_one_task import TodolistForTest
 
 
-def test_display_reword_task(app: TestApp, fake: TodolistFaker):
-    todolist = TodolistForTest()
-    dependencies = Dependencies.create_empty().feed_adapter(TodolistRead_Port_Todolist, lambda _: todolist)
-    bottle_config.dependencies = dependencies
+def test_display_reword_task(app: TestApp, test_dependencies: Dependencies, memory: Memory, fake: TodolistFaker):
+    # GIVEN
+    bottle_config.dependencies = test_dependencies
 
-    initial_task = fake.a_task(1).having(name=TaskName("initial name"), is_open=TaskOpen(True))
-    reworded_task = initial_task.having(name=initial_task.name)
+    task = fake.a_task(1).having(name=TaskName("initial name"), is_open=TaskOpen(True))
+    todolist = fake.a_todolist(name="todolist").having(tasks=[task])
 
-    a_todolist = fake.a_todolist(name="todolist").having(tasks=[initial_task])
-    todolist.feed(a_todolist.to_name(), initial_task.to_key(), reworded_task.to_task())
+    memory.save(todolist.to_snapshot())
 
-    response = app.get(f'/todo/{a_todolist.name}/item/{initial_task.key}/reword')
+    # WHEN
+    response = app.get(f'/todo/{todolist.name}/item/{task.to_key()}/reword')
 
+    # THEN
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())

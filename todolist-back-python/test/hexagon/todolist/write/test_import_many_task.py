@@ -3,7 +3,7 @@ from expression import Ok, Error
 
 from hexagon.todolist.write.import_many_task import ImportManyTask, ExternalTodoListPort, TaskImported
 from test.fixture import TodolistFaker, TaskBuilder
-from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest, TodolistSetForTest
 
 
 @pytest.fixture
@@ -87,8 +87,12 @@ def test_tell_ok_when_import_task(sut: ImportManyTask, todolist_set: TodolistSet
 
 def test_tell_error_when_todolist_doest_not_exist(sut: ImportManyTask, todolist_set: TodolistSetForTest,
                                                   external_todolist: ExternalTodolistForTest, fake: TodolistFaker):
+    # GIVEN
+    unknown_todolist = fake.a_todolist()
+    todolist_set.feed_nothing(unknown_todolist.to_name())
+
     # WHEN
-    response = sut.execute("unknown_todolist", external_todolist)
+    response = sut.execute(unknown_todolist.to_name(), external_todolist)
 
     # THEN
     assert response == Error("todolist not found")

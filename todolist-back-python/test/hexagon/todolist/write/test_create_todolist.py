@@ -5,29 +5,35 @@ from hexagon.todolist.write.create_todolist import TodolistCreate
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TodolistSetForTest
 
+@pytest.fixture
+def todolist_set() -> TodolistSetForTest:
+    return TodolistSetForTest()
 
-@pytest.mark.parametrize("expected", [
-    "my_todolist",
-    "other_todolist",
-])
-def test_create_todolist(expected, fake: TodolistFaker) -> None:
-    expected_todolist = fake.a_todolist(expected)
-    todolist_set = TodolistSetForTest()
+@pytest.fixture
+def sut(todolist_set: TodolistSetForTest) -> TodolistCreate:
+    return TodolistCreate(todolist_set)
 
-    response = TodolistCreate(todolist_set).execute(todolist_name=expected_todolist.name)
 
+def test_create_todolist(sut: TodolistCreate, todolist_set: TodolistSetForTest, fake: TodolistFaker) -> None:
+    # GIVEN
+    expected_todolist = fake.a_todolist()
+    todolist_set.feed_nothing(expected_todolist.to_name())
+
+    #WHEN
+    response = sut.execute(todolist_name=expected_todolist.to_name())
+
+    # THEN
     assert todolist_set.by(expected_todolist.name).value == expected_todolist.to_snapshot()
     assert response == Ok(None)
 
 
-def test_tell_error_when_create_existing_todolist(fake: TodolistFaker) -> None:
-    # given
+def test_tell_error_when_create_existing_todolist(sut: TodolistCreate, todolist_set: TodolistSetForTest, fake: TodolistFaker) -> None:
+    # GIVEN
     existing_todolist = fake.a_todolist()
-    todolist_set = TodolistSetForTest()
     todolist_set.feed(existing_todolist)
 
-    # when
-    response: Result[None, None] = TodolistCreate(todolist_set).execute(todolist_name=existing_todolist.to_name())
+    # WHEN
+    response = sut.execute(todolist_name=existing_todolist.to_name())
 
-    # then
+    # THEN
     assert response == Error(None)

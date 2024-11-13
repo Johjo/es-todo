@@ -1,10 +1,10 @@
 import pytest
 from expression import Ok, Error
 
-from hexagon.shared.type import TaskName, TodolistName
+from hexagon.shared.type import TaskName
 from hexagon.todolist.write.open_task import OpenTaskUseCase
 from test.fixture import TodolistFaker
-from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest, TodolistSetForTest
 
 
 @pytest.fixture
@@ -63,7 +63,14 @@ def test_tell_ok_when_open_task(sut, todolist_set: TodolistSetForTest, task_key_
     assert response == Ok(None)
 
 
-def test_tell_error_when_open_task_for_unknown_todolist(sut, todolist_set):
-    response = sut.execute(todolist_name=TodolistName("my_todolist"), name=TaskName("buy the milk"))
+def test_tell_error_when_open_task_for_unknown_todolist(sut: OpenTaskUseCase, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+    # GIVEN
+    unknown_todolist = fake.a_todolist()
+    todolist_set.feed_nothing(unknown_todolist.to_name())
 
+    # WHEN
+    response = sut.execute(todolist_name=unknown_todolist.to_name(), name=TaskName("buy the milk"))
+
+    # THEN
     assert response == Error("todolist not found")
+
