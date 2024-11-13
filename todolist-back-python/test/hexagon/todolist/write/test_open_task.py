@@ -1,11 +1,10 @@
-from dataclasses import replace
-
 import pytest
 from expression import Ok, Error
 
+from hexagon.shared.type import TaskName
 from hexagon.todolist.write.open_task import OpenTaskUseCase
 from test.hexagon.todolist.conftest import todolist_set
-from test.hexagon.todolist.fixture import TodolistSetForTest, a_todolist_snapshot_old, TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
 from test.fixture import TodolistFaker
 
 
@@ -20,9 +19,9 @@ def sut(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorFo
 
 
 def test_open_task_when_no_task(sut: OpenTaskUseCase, todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest, fake: TodolistFaker):
-    todolist = fake.a_todolist_old()
-    todolist_set.feed(todolist)
-    expected_task = fake.a_task_old()
+    todolist = fake.a_todolist()
+    todolist_set.feed(todolist.to_snapshot())
+    expected_task = fake.a_task()
 
     task_key_generator.feed(expected_task.key)
 
@@ -30,15 +29,15 @@ def test_open_task_when_no_task(sut: OpenTaskUseCase, todolist_set: TodolistSetF
 
     actual = todolist_set.by(todolist.name).value
 
-    assert actual == replace(todolist, tasks=[expected_task])
+    assert actual == todolist.having(tasks=[expected_task]).to_snapshot()
 
 
 def test_open_task_when_one_task(sut, todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest, fake: TodolistFaker):
-    first_task = fake.a_task_old(key=1)
-    expected_task = fake.a_task_old(key=2)
+    first_task = fake.a_task(1)
+    expected_task = fake.a_task(2)
 
-    initial = replace(a_todolist_snapshot_old("my_todolist"), tasks=[first_task])
-    todolist_set.feed(initial)
+    initial = fake.a_todolist("my_todolist").having(tasks=[first_task])
+    todolist_set.feed(initial.to_snapshot())
 
     task_key_generator.feed(expected_task.key)
 
@@ -46,17 +45,22 @@ def test_open_task_when_one_task(sut, todolist_set: TodolistSetForTest, task_key
     sut.execute(todolist_name="my_todolist", name=expected_task.name)
 
     actual = todolist_set.by("my_todolist").value
-    assert actual == replace(initial, tasks=[first_task, expected_task])
+    assert actual == initial.having(tasks=[first_task, expected_task]).to_snapshot()
 
 
 def test_tell_ok_when_open_task(sut, todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest, fake: TodolistFaker):
-    initial = a_todolist_snapshot_old("my_todolist")
-    todolist_set.feed(initial)
-    task_key_generator.feed(fake.a_task_old().key)
+    # data
+    todolist = fake.a_todolist()
+    open_task = fake.a_task()
 
+    # given
+    todolist_set.feed(todolist)
+    task_key_generator.feed(open_task.to_key())
 
-    response = sut.execute(todolist_name="my_todolist", name="buy the milk")
+    # when
+    response = sut.execute(todolist_name=todolist.to_name(), name=open_task.to_name())
 
+    # then
     assert response == Ok(None)
 
 

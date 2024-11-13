@@ -1,7 +1,8 @@
 import uuid
+from bdb import effective
 from pathlib import Path
 
-from expression import Option
+from expression import Option, Nothing
 
 from dependencies import Dependencies
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
@@ -28,12 +29,12 @@ class TodolistSetJson(TodolistSetPort):
         return {"key": str(task.key), "name": task.name, "is_open": task.is_open}
 
     def _todolist_from_dict(self, d):
-        return TodolistSnapshot(name=d["name"], tasks=[self._task_from_dict(task) for task in d["tasks"]])
+        return TodolistSnapshot(name=d["name"], tasks=tuple(self._task_from_dict(task) for task in d["tasks"]))
 
     @staticmethod
     def _task_from_dict(d):
         key = uuid.UUID(d["key"])
-        return TaskSnapshot(name=d["name"], is_open=d["is_open"], key=key)
+        return TaskSnapshot(name=d["name"], is_open=d["is_open"], key=key, execution_date=Nothing)
 
     @classmethod
     def factory(cls, dependencies: Dependencies):

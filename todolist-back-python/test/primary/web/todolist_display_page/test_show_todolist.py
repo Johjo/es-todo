@@ -1,15 +1,15 @@
-from dataclasses import replace
+from datetime import datetime
 
-import pytest
-from approvaltests import verify
-from approvaltests.reporters import PythonNativeReporter
-from expression import Option, Nothing, Some
-from webtest import TestApp
+from approvaltests import verify  # type: ignore
+from approvaltests.reporters import PythonNativeReporter  # type: ignore
+from expression import Option, Nothing, Some  # type: ignore
+from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
 from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey
 from hexagon.todolist.aggregate import TodolistSnapshot
 from hexagon.todolist.port import TodolistSetPort
+from infra.memory import Memory
 from primary.controller.read.todolist import TodolistSetReadPort, Task
 from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker, TodolistBuilder
@@ -44,28 +44,19 @@ class TodolistSetForTest(TodolistSetPort, TodolistSetReadPort):
         self._todolist[todolist.name] = todolist
 
 
-@pytest.fixture
-def todolist_set() -> TodolistSetForTest:
-    return TodolistSetForTest()
-
-
-def test_show_when_no_task(todolist_set: TodolistSetForTest, test_dependencies: Dependencies, app: TestApp,
-                           fake: TodolistFaker):
-    test_dependencies = test_dependencies.feed_adapter(TodolistSetPort, lambda _: todolist_set)
-    test_dependencies = test_dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist_set)
+def test_show_when_no_task(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
     bottle_config.dependencies = test_dependencies
-    todolist_set.feed(fake.a_todolist(name="my_todolist"))
-
+    memory.save(fake.a_todolist(name="my_todolist").to_snapshot())
     response = app.get('/todo/my_todolist')
 
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
 
 
-def test_show_when_one_task(todolist_set: TodolistSetForTest, test_dependencies: Dependencies, app: TestApp,
+def test_show_when_one_task(memory: Memory, test_dependencies: Dependencies, app: TestApp,
                             fake: TodolistFaker):
     bottle_config.dependencies = test_dependencies
-    todolist_set.feed(fake.a_todolist(name="my_todolist").having(tasks=[fake.a_task(1).having(name="buy the milk")]))
+    memory.save(fake.a_todolist(name="my_todolist").having(tasks=[fake.a_task(1).having(name="buy the milk")]).to_snapshot())
 
     response = app.get('/todo/my_todolist')
 
@@ -73,12 +64,25 @@ def test_show_when_one_task(todolist_set: TodolistSetForTest, test_dependencies:
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
 
 
-def test_show_when_two_tasks(todolist_set: TodolistSetForTest, test_dependencies: Dependencies, app: TestApp,
+def test_show_when_task_has_execution_date(memory: Memory, test_dependencies: Dependencies,
+                                           app: TestApp,
+                                           fake: TodolistFaker):
+    bottle_config.dependencies = test_dependencies
+    memory.save(fake.a_todolist(name="my_todolist").having(
+        tasks=[fake.a_task(1).having(name="buy the milk", execution_date=datetime(2023, 10, 19))]).to_snapshot())
+
+    response = app.get('/todo/my_todolist')
+
+    assert response.status == '200 OK'
+    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
+
+
+def test_show_when_two_tasks(memory: Memory, test_dependencies: Dependencies, app: TestApp,
                              fake: TodolistFaker):
     bottle_config.dependencies = test_dependencies
-    todolist_set.feed(fake.a_todolist().having(
+    memory.save(fake.a_todolist().having(
         name="my_todolist",
-        tasks=[fake.a_task(1).having(name="buy the milk"), fake.a_task(2).having(name="buy the water")]))
+        tasks=[fake.a_task(1).having(name="buy the milk"), fake.a_task(2).having(name="buy the water")]).to_snapshot())
 
     response = app.get('/todo/my_todolist')
 

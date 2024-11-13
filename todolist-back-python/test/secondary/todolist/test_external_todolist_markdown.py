@@ -1,12 +1,10 @@
 import re
-from dataclasses import replace
 
 import pytest
 from faker import Faker
 
-from hexagon.todolist.aggregate import TaskSnapshot
 from hexagon.todolist.write.import_many_task import ExternalTodoListPort, TaskImported
-from test.fixture import TodolistFaker
+from test.fixture import TodolistFaker, TaskBuilder
 
 
 class MarkdownTodolist(ExternalTodoListPort):
@@ -25,7 +23,7 @@ def test_read_no_task_from_markdown():
 
 
 def test_read_one_task_from_markdown(fake: TodolistFaker):
-    expected_task = imported_task_from(fake.a_task_old(1))
+    expected_task = imported_task_from(fake.a_task())
 
     markdown = markdown_from_tasks(expected_task)
     sut = MarkdownTodolist(markdown)
@@ -34,7 +32,7 @@ def test_read_one_task_from_markdown(fake: TodolistFaker):
 
 
 def test_read_many_task_from_markdown(fake: TodolistFaker):
-    expected_tasks = [imported_task_from(fake.a_task_old(1)), imported_task_from(fake.a_task_old(2))]
+    expected_tasks = [imported_task_from(fake.a_task()), imported_task_from(fake.a_task())]
 
     markdown = markdown_from_tasks(*expected_tasks)
     sut = MarkdownTodolist(markdown)
@@ -43,7 +41,7 @@ def test_read_many_task_from_markdown(fake: TodolistFaker):
 
 
 def test_read_closed_task(fake: TodolistFaker):
-    expected_tasks = [imported_task_from(replace(fake.a_task_old(1), is_open=False))]
+    expected_tasks = [imported_task_from(fake.a_closed_task())]
 
     markdown = markdown_from_tasks(*expected_tasks)
     sut = MarkdownTodolist(markdown)
@@ -60,5 +58,5 @@ def markdown_from_tasks(*tasks: TaskImported) -> str:
     return "\n".join([f"- [{" " if task.is_open else "x"}] {task.name}" for task in tasks])
 
 
-def imported_task_from(task: TaskSnapshot) -> TaskImported:
-    return TaskImported(name=task.name, is_open=task.is_open)
+def imported_task_from(task: TaskBuilder) -> TaskImported:
+    return TaskImported(name=task.to_name(), is_open=task.to_open())

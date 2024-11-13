@@ -1,5 +1,8 @@
+import re
 from pathlib import Path
 from uuid import UUID
+
+from expression import Nothing
 
 from dependencies import Dependencies
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
@@ -22,13 +25,26 @@ class TodolistSetReadJson(TodolistSetReadPort):
         return self._to_task(task_data)
 
     def _to_task(self, task):
-        return Task(id=TaskKey(UUID(task["key"])), name=task["name"], is_open=task["is_open"])
+        return Task(id=TaskKey(UUID(task["key"])), name=task["name"], is_open=task["is_open"], execution_date=Nothing)
 
     def all_by_name(self) -> list[str]:
         return self._json_file.all_keys()
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        raise NotImplementedError()
+        todolist = self._json_file.read(todolist_name).value
+        tasks = [self._to_task(task) for task in todolist["tasks"]]
+        counts_by_context: dict[str, int] = {}
+        for task in tasks:
+            if task.is_open:
+                contexts = self._extract_context_from_name(task)
+                for context in contexts:
+                    counts_by_context[context] = counts_by_context.get(context, 0) + 1
+        return [(context, count) for context, count in counts_by_context.items()]
+
+    @staticmethod
+    def _extract_context_from_name(task):
+        contexts = re.findall(r"([#@][_A-Za-z0-9-]+)", task.name)
+        return [TodolistContext(context.lower()) for context in contexts]
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetReadJson':

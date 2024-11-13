@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from hexagon.shared.type import TaskKey
 
 
+# todo: voir si ce type est utile
 @dataclass
 class Task:
     id: TaskKey

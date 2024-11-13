@@ -6,6 +6,7 @@ from hexagon.todolist.aggregate import TodolistSnapshot
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from primary.controller.dependencies import inject_use_cases
 from primary.controller.write.todolist import TodolistWriteController
+from test.fixture import TodolistBuilder
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 
 
@@ -22,8 +23,11 @@ class TodolistSetForTest(TodolistSetPort):
     def save_snapshot(self, todolist: TodolistSnapshot) -> None:
         self._all_todolist[todolist.name] = Some(todolist)
 
-    def feed(self, todolist: TodolistSnapshot) -> None:
-        self._all_todolist[todolist.name] = Some(todolist)
+    def feed(self, todolist: TodolistSnapshot | TodolistBuilder) -> None:
+        if isinstance(todolist, TodolistSnapshot):
+            self._all_todolist[todolist.name] = Some(todolist)
+        if isinstance(todolist, TodolistBuilder):
+            self._all_todolist[todolist.name] = Some(todolist.to_snapshot())
 
     def feed_with_nothing(self, todolist_name: str) -> None:
         self._all_todolist[todolist_name] = Nothing

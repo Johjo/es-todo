@@ -10,3 +10,11 @@ class Task(Model):
 
 class Todolist(Model):
     name = CharField(primary_key=True)
+
+
+class Session(Model):
+    ignored = UUIDField()
+    chosen = UUIDField()
+
+
+

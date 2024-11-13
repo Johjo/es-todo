@@ -1,0 +1,19 @@
+b'<H2>  Reporter la t\xc3\xa2che </H2>
+
+<p>buy the milk</p>
+
+
+
+<form action="/todo/todolist/item/00000000-0000-0000-0000-000000000001/postpone?" method="post">
+
+        <label for="execution_date">Date d&#039;execution</label>
+
+        <input type="date" id="execution_date" name="execution_date"
+
+               value="">
+
+    <input type="submit" value="Reporter">
+
+</form>
+
+'

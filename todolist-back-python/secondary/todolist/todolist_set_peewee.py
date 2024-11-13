@@ -1,45 +1,47 @@
 import re
 
 from expression import Option, Nothing, Some
-from peewee import DoesNotExist, Database
+from peewee import DoesNotExist, Database  # type: ignore
 
 from dependencies import Dependencies
-from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey
+from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey, TaskName, TaskOpen
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort
+from infra.peewee.sdk import PeeweeSdk, Task as TaskSdk, Todolist as TodolistSdk, TodolistDoesNotExist
 from primary.controller.read.todolist import TodolistSetReadPort, Task
-from secondary.todolist.table import Task as DbTask, Todolist as DbTodolist
+
+
+def map_to_task_presentation(task: TaskSdk) -> Task:
+    return Task(id=TaskKey(task.key),
+                name=TaskName(task.name),
+                is_open=TaskOpen(task.is_open),
+                execution_date=Nothing)
 
 
 class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
-
     def __init__(self, database: Database):
-        self._database: Database= database
+        self._sdk = PeeweeSdk(database)
 
     def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
-        with self._database.bind_ctx([DbTask]):
-            all_tasks = DbTask.select().where(DbTask.todolist_name == todolist_name)
-            return [Task(id=task.key, name=task.name, is_open=task.is_open) for task in all_tasks]
+        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=todolist_name)
+        return [map_to_task_presentation(task) for task in all_tasks_sdk]
 
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
-        with self._database.bind_ctx([DbTask]):
-            task = DbTask.get(DbTask.todolist_name == todolist_name, DbTask.key == task_key)
-            return Task(id=task.key, name=task.name, is_open=task.is_open)
+        task: TaskSdk = self._sdk.task_by(todolist_name, task_key)
+        return map_to_task_presentation(task)
 
     def all_by_name(self) -> list[TodolistName]:
-        with self._database.bind_ctx([DbTodolist, DbTask]):
-            query = DbTodolist.select(DbTodolist.name).execute()
-            return [TodolistName(todolist.name) for todolist in query]
+        all_todolist : list[TodolistSdk] = self._sdk.all_todolist()
+        return [TodolistName(todolist.name) for todolist in all_todolist]
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        with self._database.bind_ctx([DbTask]):
-            tasks = DbTask.select(DbTask.name).where(DbTask.todolist_name == todolist_name, DbTask.is_open == True)
-            counts_by_context: dict[str, int]= {}
-            for task in tasks:
-                contexts = self._extract_context_from_name(task)
-                for context in contexts:
-                    counts_by_context[context] = counts_by_context.get(context, 0) + 1
-            return [(context, count) for context, count in counts_by_context.items()]
+        all_tasks_sdk: list[TaskSdk] = self._sdk.all_open_tasks(todolist_name=todolist_name)
+        counts_by_context: dict[str, int]= {}
+        for task in all_tasks_sdk:
+            contexts = self._extract_context_from_name(task)
+            for context in contexts:
+                counts_by_context[context] = counts_by_context.get(context, 0) + 1
+        return [(TodolistContext(context), TodolistContextCount(count)) for context, count in counts_by_context.items()]
 
     @staticmethod
     def _extract_context_from_name(task):
@@ -47,40 +49,27 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
         return [TodolistContext(context.lower()) for context in contexts]
 
     def by(self, todolist_name: TodolistName) -> Option[TodolistSnapshot]:
-        with self._database.bind_ctx([DbTodolist, DbTask]):
-            try:
-                todolist = DbTodolist.get(DbTodolist.name == todolist_name)
-            except DoesNotExist:
-                return Nothing
-            tasks = DbTask.select().where(DbTask.todolist_name == todolist_name)
+        try:
+            todolist = self._sdk.todolist_by(todolist_name=todolist_name)
+            tasks = self._sdk.all_tasks(todolist_name)
             return Some(self._to_todolist_snapshot(todolist, tasks))
+        except TodolistDoesNotExist:
+            return Nothing
 
-
-    def _to_todolist_snapshot(self, todolist, tasks):
-        return TodolistSnapshot(name=todolist.name, tasks=[self._to_task_snapshot(task) for task in tasks])
-
-    @staticmethod
-    def _to_task_snapshot(task):
-        return TaskSnapshot(key=task.key, name=task.name, is_open=task.is_open)
-
-    def save_snapshot(self, snapshot: TodolistSnapshot) -> None:
-        with self._database.bind_ctx([DbTodolist, DbTask]):
-            self.delete_previous_todolist(snapshot)
-            self.save_todolist(snapshot)
+    def _to_todolist_snapshot(self, todolist: TodolistSdk, tasks: list[TaskSdk]) -> TodolistSnapshot:
+        return TodolistSnapshot(name=TodolistName(todolist.name),
+                                tasks=tuple([self._to_task_snapshot(task) for task in tasks]))
 
     @staticmethod
-    def save_todolist(snapshot):
-        DbTodolist.create(name=snapshot.name)
-        for task in snapshot.tasks:
-            DbTask.create(todolist_name=snapshot.name, key=task.key, name=task.name, is_open=task.is_open)
+    def _to_task_snapshot(task: TaskSdk) -> TaskSnapshot:
+        return TaskSnapshot(key=TaskKey(task.key), name=TaskName(task.name), is_open=TaskOpen(task.is_open),
+                            execution_date=Nothing)
 
-    @staticmethod
-    def delete_previous_todolist(snapshot):
-        DbTodolist.delete().where(DbTodolist.name == snapshot.name).execute()
-        DbTask.delete().where(DbTask.todolist_name == snapshot.name).execute()
+    def save_snapshot(self, todolist: TodolistSnapshot) -> None:
+        self._sdk.upsert_todolist(todolist=TodolistSdk(name=todolist.name),
+                                  tasks=[TaskSdk(key=task.key, name=task.name, is_open=task.is_open) for task in
+                                         todolist.tasks])
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetPeewee':
         return TodolistSetPeewee(dependencies.get_infrastructure(Database))
-
-

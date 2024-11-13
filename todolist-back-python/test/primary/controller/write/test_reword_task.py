@@ -6,14 +6,14 @@ from test.primary.controller.write.conftest import TodolistSetForTest
 
 
 def test_reword_task(todolist_set: TodolistSetForTest, sut: TodolistWriteController, fake: TodolistFaker):
-    task = fake.a_task_old()
-    todolist = replace(fake.a_todolist_old(), tasks=[task])
+    expected_task = fake.a_task()
+    todolist = fake.a_todolist().having(tasks=[expected_task.having(name="buy the milk")])
     todolist_set.feed(todolist)
 
-    sut.reword_task(todolist.name, task.key, "buy the milk")
+    sut.reword_task(todolist.name, expected_task.key, expected_task.name)
 
     actual = todolist_set.by(todolist.name).value
-    assert actual == replace(todolist, tasks=[(replace(task, name="buy the milk"))])
+    assert actual == todolist.having(tasks=[expected_task]).to_snapshot()
 
 
 

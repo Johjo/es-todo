@@ -1,30 +1,23 @@
-from peewee import Database, Model, UUIDField
+from peewee import Database, Model, UUIDField  # type: ignore
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSessionSetPort, FvpSnapshot
-
-
-class Session(Model):
-    ignored = UUIDField()
-    chosen = UUIDField()
+from hexagon.shared.type import TaskKey
+from infra.peewee.sdk import PeeweeSdk, FvpSession as FvpSessionSdk
 
 
 class SessionPeewee(FvpSessionSetPort):
     def __init__(self, database: Database):
         self._database : Database = database
+        self._sdk = PeeweeSdk(database)
 
-    def save(self, snapshot: FvpSnapshot) -> None:
-        with self._database.bind_ctx([Session]):
-            Session.delete().execute()
-            for ignored, chosen in snapshot.to_primitive_dict().items():
-                Session.create(ignored=ignored, chosen=chosen)
+    def save(self, session: FvpSnapshot) -> None:
+        self._sdk.upsert_fvp_session(
+            FvpSessionSdk(priorities=[(ignored, chosen) for ignored, chosen in session.task_priorities.items()]))
 
     def by(self) -> FvpSnapshot | None:
-        with self._database.bind_ctx([Session]):
-            return FvpSnapshot.from_primitive_dict({session.ignored: session.chosen for session in Session.select()})
-
-
-        pass
+        session : FvpSessionSdk = self._sdk.fvp_session_by()
+        return FvpSnapshot.from_primitive_dict({TaskKey(ignored): TaskKey(chosen) for (ignored, chosen) in session.priorities})
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'SessionPeewee':

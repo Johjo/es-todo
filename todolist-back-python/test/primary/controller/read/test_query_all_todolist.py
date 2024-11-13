@@ -20,12 +20,12 @@ class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
 
 def test_query_all_todolist(dependencies: Dependencies, fake: TodolistFaker):
     todolist_set = TodolistSetReadForTest()
-    first_todolist = fake.a_todolist_old()
-    second_todolist = fake.a_todolist_old()
+    first_todolist = fake.a_todolist()
+    second_todolist = fake.a_todolist()
 
-    todolist_set.feed(first_todolist.name, second_todolist.name)
+    todolist_set.feed(first_todolist.to_name(), second_todolist.to_name())
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist_set)
 
     sut = TodolistReadController(dependencies)
 
-    assert sut.all_todolist_by_name() == [first_todolist.name, second_todolist.name]
+    assert sut.all_todolist_by_name() == [first_todolist.to_name(), second_todolist.to_name()]

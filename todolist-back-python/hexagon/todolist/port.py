@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from expression import Option
+from expression import Option, Some
 
 from hexagon.shared.type import TaskKey, TodolistName
 from hexagon.todolist.aggregate import TodolistSnapshot

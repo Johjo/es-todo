@@ -2,19 +2,20 @@ from dataclasses import replace
 
 import bottle  # type: ignore
 from approvaltests import verify  # type: ignore
-from approvaltests.reporters import PythonNativeReporter
+from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp, TestResponse  # type: ignore
 
 from dependencies import Dependencies
+from infra.memory import Memory
 from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
 from test.primary.web.conftest import app, fake
 
 
-def test_index(todolist_set, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
+def test_index(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
     bottle_config.dependencies = test_dependencies
-    todolist_set.feed(replace(fake.a_todolist_old(), name="1-todolist-1"))
-    todolist_set.feed(replace(fake.a_todolist_old(), name="2-todolist-2"))
+    memory.save(fake.a_todolist("1-todolist-1").to_snapshot())
+    memory.save(fake.a_todolist("2-todolist-2").to_snapshot())
 
     response = app.get('/')
 

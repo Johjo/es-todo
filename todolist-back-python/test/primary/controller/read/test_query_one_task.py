@@ -11,6 +11,7 @@ class TodolistForTest(TodolistSetReadPortNotImplemented):
     def __init__(self) -> None:
         self._tasks: dict[Tuple[str, TaskKey,], Task] = {}
 
+    # todo get id from task
     def feed(self, todolist_name: str, task_key: TaskKey, task: Task):
         self._tasks[(todolist_name, task_key)] = task
 
@@ -26,7 +27,7 @@ def test_query_one_task(dependencies: Dependencies, fake: TodolistFaker):
     todolist = TodolistForTest()
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist)
 
-    expected_task = Task(id=a_task_key(1), name=TaskName("buy milk"), is_open=TaskOpen(True))
+    expected_task = fake.a_task(1).having(name=TaskName("buy milk"), is_open=TaskOpen(True)).to_task()
     todolist.feed(todolist_name="my todolist", task_key=a_task_key(1), task=expected_task)
 
     controller = TodolistReadController(dependencies)

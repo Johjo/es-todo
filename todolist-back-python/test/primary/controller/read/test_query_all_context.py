@@ -20,12 +20,15 @@ class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
 
 
 def test_query_all_context(dependencies: Dependencies, fake: TodolistFaker):
+    # given
     expected_count_by_contexts = [("#context1", 5), ("#context2", 10)]
     todolist_set = TodolistSetReadForTest()
-    todolist = fake.a_todolist_old()
-    todolist_set.feed(todolist.name, expected_count_by_contexts[1], expected_count_by_contexts[0])
+    todolist = fake.a_todolist()
+    todolist_set.feed(todolist.to_name(), expected_count_by_contexts[1], expected_count_by_contexts[0])
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist_set)
 
+    # when
     sut = TodolistReadController(dependencies)
 
-    assert sut.counts_by_context(todolist.name) == expected_count_by_contexts
+    # then
+    assert sut.counts_by_context(todolist.to_name()) == expected_count_by_contexts

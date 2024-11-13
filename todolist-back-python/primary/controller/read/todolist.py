@@ -1,8 +1,11 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
+from expression import Option
+
 from dependencies import Dependencies
-from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount, TaskOpen, TaskName
+from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount, TaskOpen, TaskName, \
+    TaskExecutionDate
 
 
 # todo : use a task key instead of an id
@@ -11,14 +14,11 @@ class Task:
     id: TaskKey
     name: TaskName
     is_open: TaskOpen
-
-    def to_dict(self):
-        return {
-            "id": str(self.id),
-            "name": self.name
-        }
+    execution_date: Option[TaskExecutionDate]
 
 
+
+# todo : use TaskPresentation instead Task
 class TodolistSetReadPort(ABC):
     @abstractmethod
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:

@@ -10,12 +10,13 @@ from hexagon.todolist.write.close_task import CloseTask
 from hexagon.todolist.write.create_todolist import TodolistCreate
 from hexagon.todolist.write.import_many_task import ImportManyTask
 from hexagon.todolist.write.open_task import OpenTaskUseCase
+from hexagon.todolist.write.postpone_task import PostPoneTask
 from hexagon.todolist.write.reword_task import RewordTask
 
 
 def inject_use_cases(dependencies: Dependencies) -> Dependencies:
     use_cases_with_factory: list[Any] = [ResetFvpSession, CancelPriority, ChooseAndIgnoreTaskFvp, TodolistCreate,
-                                         OpenTaskUseCase, CloseTask, RewordTask, ImportManyTask, WhichTaskQuery]
+                                         OpenTaskUseCase, CloseTask, RewordTask, ImportManyTask, WhichTaskQuery, PostPoneTask]
 
     def feed_use_case(dep: Dependencies, use_case: Any) -> Dependencies:
         return dep.feed_use_case(use_case=use_case, use_case_factory=use_case.factory)

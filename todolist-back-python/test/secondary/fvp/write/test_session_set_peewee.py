@@ -3,17 +3,17 @@ from peewee import Database, SqliteDatabase
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from secondary.fvp.write.session_set_peewee import SessionPeewee, Session as DbSession
+from infra.peewee.sdk import PeeweeSdk, FvpSession as FvpSessionSdk
+from secondary.fvp.write.session_set_peewee import SessionPeewee
 from test.secondary.fvp.test_session_repository_contract_testing import TestSessionRepositoryContractTesting
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def peewee_database():
     database = SqliteDatabase(':memory:')
     database.connect()
-    created_table = [DbSession]
-    with database.bind_ctx(created_table):
-        database.create_tables(created_table)
+    sdk = PeeweeSdk(database)
+    sdk.create_tables()
     return database
 
 
@@ -27,10 +27,10 @@ def dependencies(peewee_database: Database) -> Dependencies:
 
 
 class TestSessionRepositoryPeewee(TestSessionRepositoryContractTesting):
-    def feed(self, snapshot: FvpSnapshot) -> None:
-        with self._database.bind_ctx([DbSession]):
-            for ignored, chosen in snapshot.to_primitive_dict().items():
-                DbSession.create(ignored=ignored, chosen=chosen)
+    def feed(self, session: FvpSnapshot) -> None:
+        sdk = PeeweeSdk(self._database)
+        sdk.upsert_fvp_session(
+            FvpSessionSdk(priorities=[(ignored, chosen) for ignored, chosen in session.task_priorities.items()]))
 
     @pytest.fixture(autouse=True)
     def setup(self, peewee_database: Database, dependencies: Dependencies) -> None:
