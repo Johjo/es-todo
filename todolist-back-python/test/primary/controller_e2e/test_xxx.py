@@ -1,15 +1,16 @@
 from uuid import UUID
 
 import pytest
-from peewee import Database, SqliteDatabase
+from dateutil.utils import today
+from expression import Some
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import ChooseTheTask, DoTheTask
 from hexagon.fvp.read.which_task import TaskFilter
-from hexagon.shared.type import TaskKey
+from hexagon.shared.type import TaskKey, TaskExecutionDate, TodolistName
 from hexagon.todolist.port import TaskKeyGeneratorPort
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
-from primary.controller.read.todolist import TodolistReadController
+from primary.controller.read.todolist import TodolistReadController, Task
 from primary.controller.write.todolist import TodolistWriteController
 from start_web_for_test import inject_all_dependencies
 
@@ -65,4 +66,6 @@ def test_xxx(dependencies: Dependencies):
                                                                                     id_2=TaskKey(UUID(int=2)),
                                                                                     name_2="task 2 #context_2")
 
+    write.postpone_task(name=TodolistName("todolist"), key=TaskKey(UUID(int=1)), execution_date=TaskExecutionDate(today().date()))
+    assert read.task_by(todolist_name="todolist", task_key=TaskKey(UUID(int=1))) == Task(id=TaskKey(UUID(int=1)), name="task 1 #context_1", is_open=True, execution_date=Some(today().date()))
 

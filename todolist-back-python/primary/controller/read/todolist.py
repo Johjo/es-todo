@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import cast
 
 from expression import Option
 
@@ -15,7 +16,6 @@ class Task:
     name: TaskName
     is_open: TaskOpen
     execution_date: Option[TaskExecutionDate]
-
 
 
 # todo : use TaskPresentation instead Task
@@ -43,7 +43,7 @@ class TodolistReadController:
 
     def all_todolist_by_name(self) -> list[str]:
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
-        return todolist_set.all_by_name()
+        return cast(list[str], todolist_set.all_by_name())
 
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)

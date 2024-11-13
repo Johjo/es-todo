@@ -1,10 +1,11 @@
 import uuid
-from bdb import effective
+from datetime import date
 from pathlib import Path
 
-from expression import Option, Nothing
+from expression import Option, Nothing, Some
 
 from dependencies import Dependencies
+from hexagon.shared.type import TaskKey
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort
 from infra.json_file import JsonFile
@@ -26,7 +27,7 @@ class TodolistSetJson(TodolistSetPort):
 
     @staticmethod
     def _to_task_dict(task: TaskSnapshot):
-        return {"key": str(task.key), "name": task.name, "is_open": task.is_open}
+        return {"key": str(task.key), "name": task.name, "is_open": task.is_open, "execution_date": task.execution_date.map(lambda d: d.isoformat()).default_value(None)}
 
     def _todolist_from_dict(self, d):
         return TodolistSnapshot(name=d["name"], tasks=tuple(self._task_from_dict(task) for task in d["tasks"]))
@@ -34,7 +35,11 @@ class TodolistSetJson(TodolistSetPort):
     @staticmethod
     def _task_from_dict(d):
         key = uuid.UUID(d["key"])
-        return TaskSnapshot(name=d["name"], is_open=d["is_open"], key=key, execution_date=Nothing)
+        try:
+            execution_date = Some(date.fromisoformat(d["execution_date"]))
+        except TypeError:
+            execution_date = Nothing
+        return TaskSnapshot(key=TaskKey(key), name=d["name"], is_open=d["is_open"], execution_date=execution_date)
 
     @classmethod
     def factory(cls, dependencies: Dependencies):

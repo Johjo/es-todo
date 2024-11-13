@@ -1,6 +1,7 @@
 from dataclasses import replace
 
 import pytest
+from dateutil.utils import today
 
 from dependencies import Dependencies
 from primary.controller.read.todolist import TodolistSetReadPort
@@ -10,6 +11,13 @@ from test.fixture import TodolistFaker, TodolistBuilder
 class BaseTestTodolistSetRead:
     def test_read_task_by(self, sut: TodolistSetReadPort, fake: TodolistFaker):
         expected_task = fake.a_task()
+        todolist = fake.a_todolist().having(tasks=[fake.a_task(), expected_task, fake.a_task()])
+        self.feed_todolist(todolist)
+
+        assert sut.task_by(todolist.name, expected_task.to_key()) == expected_task.to_task()
+
+    def test_read_task_having_execution_date(self, sut: TodolistSetReadPort, fake: TodolistFaker):
+        expected_task = fake.a_task().having(execution_date=today().date())
         todolist = fake.a_todolist().having(tasks=[fake.a_task(), expected_task, fake.a_task()])
         self.feed_todolist(todolist)
 
@@ -40,7 +48,7 @@ class BaseTestTodolistSetRead:
 
     def test_read_all_tasks(self, sut: TodolistSetReadPort, fake: TodolistFaker):
         expected_tasks = [fake.a_task(), fake.a_task()]
-        todolist_1 = fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task()])
+        todolist_1 = fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task().having(execution_date=today().date())])
         todolist_2 = fake.a_todolist().having(tasks=expected_tasks)
         todolist_3 = fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task()])
         self.feed_todolist(todolist_1)

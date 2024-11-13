@@ -1,5 +1,5 @@
 from dataclasses import dataclass, replace
-from datetime import datetime
+from datetime import datetime, date
 from uuid import UUID, uuid4
 
 from expression import Option, Nothing, Some
@@ -27,7 +27,7 @@ class TaskBuilder:
     key: TaskKey | UUID | None = None
     name: TaskName | str | None = None
     is_open: TaskOpen | bool | None= None
-    execution_date: Option[TaskExecutionDate | datetime] | TaskExecutionDate | datetime | None = None
+    execution_date: Option[TaskExecutionDate | date] | TaskExecutionDate | date | None = None
 
     def having(self, **kwargs) -> 'TaskBuilder':
         return replace(self, **kwargs)
@@ -65,7 +65,7 @@ class TaskBuilder:
         return Some(TaskExecutionDate(self.execution_date))
 
     def to_peewee_sdk(self) -> sdk.Task:
-        return sdk.Task(key=self.to_key(), name=self.to_name(), is_open=self.to_open())
+        return sdk.Task(key=self.to_key(), name=self.to_name(), is_open=self.to_open(), execution_date=self.to_execution_date())
 
 
 @dataclass(frozen=True)

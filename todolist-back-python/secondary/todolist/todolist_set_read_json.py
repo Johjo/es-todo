@@ -1,8 +1,9 @@
 import re
+from datetime import date
 from pathlib import Path
 from uuid import UUID
 
-from expression import Nothing
+from expression import Nothing, Some
 
 from dependencies import Dependencies
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
@@ -24,8 +25,14 @@ class TodolistSetReadJson(TodolistSetReadPort):
         task_data = tasks[task_key]
         return self._to_task(task_data)
 
-    def _to_task(self, task):
-        return Task(id=TaskKey(UUID(task["key"])), name=task["name"], is_open=task["is_open"], execution_date=Nothing)
+    @staticmethod
+    def _to_task(task):
+        try:
+            execution_date = Some(date.fromisoformat(task["execution_date"]))
+        except TypeError:
+            execution_date = Nothing
+
+        return Task(id=TaskKey(UUID(task["key"])), name=task["name"], is_open=task["is_open"], execution_date=execution_date)
 
     def all_by_name(self) -> list[str]:
         return self._json_file.all_keys()

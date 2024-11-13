@@ -1,6 +1,8 @@
 from dataclasses import dataclass
+from datetime import datetime, date
 from uuid import UUID
 
+from expression import Option, Nothing, Some
 from peewee import Database, DoesNotExist  # type: ignore
 
 from infra.peewee.table import Task as TaskRow, Todolist as TodolistRow, Session as SessionRow
@@ -11,10 +13,11 @@ class Task:
     key: UUID
     name: str
     is_open: bool
+    execution_date: Option[date]
 
     @classmethod
     def from_row(cls, row: TaskRow) -> 'Task':
-        return Task(key=row.key, name=row.name, is_open=row.is_open)
+        return Task(key=row.key, name=row.name, is_open=row.is_open, execution_date=Some(row.execution_date) if row.execution_date else Nothing)
 
 
 @dataclass(frozen=True, eq=True)
@@ -77,7 +80,7 @@ class PeeweeSdk:
     def _save_todolist(todolist: Todolist, tasks: list[Task]):
         TodolistRow.create(name=todolist.name)
         for task in tasks:
-            TaskRow.create(todolist_name=todolist.name, key=task.key, name=task.name, is_open=task.is_open)
+            TaskRow.create(todolist_name=todolist.name, key=task.key, name=task.name, is_open=task.is_open, execution_date=task.execution_date.default_value(None))
 
     @staticmethod
     def _delete_previous_todolist(todolist_name: str) -> None:

@@ -1,10 +1,12 @@
 import re
+from typing import cast
 
 from expression import Option, Nothing, Some
 from peewee import DoesNotExist, Database  # type: ignore
 
 from dependencies import Dependencies
-from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey, TaskName, TaskOpen
+from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey, TaskName, TaskOpen, \
+    TaskExecutionDate
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort
 from infra.peewee.sdk import PeeweeSdk, Task as TaskSdk, Todolist as TodolistSdk, TodolistDoesNotExist
@@ -15,7 +17,7 @@ def map_to_task_presentation(task: TaskSdk) -> Task:
     return Task(id=TaskKey(task.key),
                 name=TaskName(task.name),
                 is_open=TaskOpen(task.is_open),
-                execution_date=Nothing)
+                execution_date=cast(Option[TaskExecutionDate], task.execution_date))
 
 
 class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
@@ -63,12 +65,12 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
     @staticmethod
     def _to_task_snapshot(task: TaskSdk) -> TaskSnapshot:
         return TaskSnapshot(key=TaskKey(task.key), name=TaskName(task.name), is_open=TaskOpen(task.is_open),
-                            execution_date=Nothing)
+                            execution_date=cast(Option[TaskExecutionDate], task.execution_date))
 
     def save_snapshot(self, todolist: TodolistSnapshot) -> None:
         self._sdk.upsert_todolist(todolist=TodolistSdk(name=todolist.name),
-                                  tasks=[TaskSdk(key=task.key, name=task.name, is_open=task.is_open) for task in
-                                         todolist.tasks])
+                                  tasks=[TaskSdk(key=task.key, name=task.name, is_open=task.is_open,
+                                                 execution_date=task.execution_date) for task in todolist.tasks])
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetPeewee':

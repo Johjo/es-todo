@@ -1,4 +1,5 @@
 import pytest
+from dateutil.utils import today
 from expression import Nothing, Some
 from faker import Faker
 
@@ -33,7 +34,7 @@ class BaseTestTodolistSet:
 
     def test_get_by_when_todolist_has_tasks(self, sut: TodolistSetPort, fake: TodolistFaker):
         # given
-        expected_todolist = fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task()])
+        expected_todolist = fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task().having(execution_date=today().date())])
         self.feed_todolist(fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task()]))
         self.feed_todolist(expected_todolist)
 
