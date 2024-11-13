@@ -1,16 +1,12 @@
-from dataclasses import replace
 
-from approvaltests import verify  # type: ignore
-from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp  # type: ignore
 
 from hexagon.shared.type import TaskOpen
-from hexagon.todolist.aggregate import TaskSnapshot
 from dependencies import Dependencies
 from infra.memory import Memory
 from primary.web.pages import bottle_config
-from test.fixture import a_task_key, TodolistFaker
-from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
+from test.fixture import TodolistFaker
+from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.primary.web.fixture import CleanResponse
 
 

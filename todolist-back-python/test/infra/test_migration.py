@@ -1,5 +1,4 @@
-from peewee import SqliteDatabase, DateField  # type: ignore
-from playhouse.migrate import SqliteMigrator, migrate  # type: ignore
+from peewee import SqliteDatabase  # type: ignore
 
 from infra.peewee.table import Todolist as TodolistActual, Task as TaskActual, Session as FvpSessionActual
 from infra.peewee.table_previous import Todolist as TodolistPrevious, Task as TaskPrevious, \

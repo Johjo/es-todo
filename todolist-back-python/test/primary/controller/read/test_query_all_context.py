@@ -1,6 +1,6 @@
 from dependencies import Dependencies
-from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
-from primary.controller.read.todolist import TodolistSetReadPort, Task, TodolistReadController
+from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount
+from primary.controller.read.todolist import TodolistSetReadPort, TodolistReadController
 from test.fixture import TodolistFaker
 from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented
 
@@ -13,7 +13,7 @@ class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
         self._all_contexts[todolist_name] = [(TodolistContext(count[0]), TodolistContextCount(count[1])) for count in counts_by_context]
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        if not todolist_name in self._all_contexts:
+        if todolist_name not in self._all_contexts:
             raise Exception(f"feed todolist {todolist_name} with context")
         return self._all_contexts[todolist_name]
 

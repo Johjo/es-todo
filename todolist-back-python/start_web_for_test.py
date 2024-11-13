@@ -14,7 +14,6 @@ from primary.controller.dependencies import inject_use_cases
 from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_config, bottle_app
 from secondary.fvp.read.which_task.todolist_peewee import TodolistPeewee as WhichTask_Port_Todolist_Peewee
-from infra.peewee.table import Todolist as DbTodolist, Task as DbTask, Session as DbSession
 from secondary.todolist.todolist_set_peewee import TodolistSetPeewee
 
 

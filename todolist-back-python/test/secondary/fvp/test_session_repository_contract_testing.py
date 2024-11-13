@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from collections import OrderedDict
-from uuid import uuid4, UUID
 
 import pytest
 

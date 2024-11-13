@@ -1,5 +1,4 @@
 from collections import OrderedDict
-from uuid import uuid4
 
 import pytest
 

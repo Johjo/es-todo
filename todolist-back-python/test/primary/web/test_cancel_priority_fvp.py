@@ -1,7 +1,5 @@
 from collections import OrderedDict
 
-from approvaltests import verify  # type: ignore
-from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
@@ -11,7 +9,7 @@ from infra.memory import Memory
 from primary.web.pages import bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.fixture import TodolistFaker
-from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.primary.web.fixture import CleanResponse
 
 

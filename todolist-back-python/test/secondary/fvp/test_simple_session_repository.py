@@ -1,4 +1,3 @@
-from typing import final
 
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest

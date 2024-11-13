@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime, date
+from datetime import date
 from uuid import UUID
 
 from expression import Option, Nothing, Some

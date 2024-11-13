@@ -1,9 +1,7 @@
 import pytest
 from expression import Ok, Error
 
-from hexagon.shared.type import TaskName
 from hexagon.todolist.write.open_task import OpenTaskUseCase
-from test.hexagon.todolist.conftest import todolist_set
 from test.hexagon.todolist.fixture import TodolistSetForTest, TaskKeyGeneratorForTest
 from test.fixture import TodolistFaker
 

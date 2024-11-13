@@ -1,8 +1,6 @@
 from pathlib import Path
 
 import pytest
-from approvaltests import verify  # type: ignore
-from approvaltests.reporters import PythonNativeReporter  # type: ignore
 
 from dependencies import Dependencies
 from hexagon.todolist.port import TodolistSetPort

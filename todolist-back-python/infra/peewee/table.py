@@ -1,4 +1,4 @@
-from peewee import CharField, UUIDField, BooleanField, DatabaseProxy, Model, DateField  # type: ignore
+from peewee import CharField, UUIDField, BooleanField, Model, DateField  # type: ignore
 
 
 class Task(Model):

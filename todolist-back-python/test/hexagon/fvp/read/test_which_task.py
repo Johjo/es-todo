@@ -1,6 +1,4 @@
-from collections import OrderedDict
 from dataclasses import replace
-from uuid import uuid4, UUID
 
 import pytest
 from faker import Faker

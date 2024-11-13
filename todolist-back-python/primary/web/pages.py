@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Any
 from uuid import UUID
 
-from bottle import template, Bottle, view, response, request, redirect  # type: ignore
+from bottle import template, Bottle, view, request, redirect  # type: ignore
 from bottle_utils import form
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter

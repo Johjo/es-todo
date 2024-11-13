@@ -1,5 +1,3 @@
-from approvaltests import verify  # type: ignore
-from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies

@@ -51,7 +51,7 @@ class Dependencies:
 
 
     def _get_resource(self, resource_type: ResourceType, resource) -> Any:
-        if not (resource_type, resource) in self.factory:
+        if (resource_type, resource) not in self.factory:
             raise Exception(f"{resource_type.value} for {resource} must be injected first")
         return self.factory[(resource_type, resource)](self)
 

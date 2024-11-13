@@ -1,4 +1,3 @@
-from pathlib import Path
 
 from peewee import DateField, Database, SqliteDatabase  # type: ignore
 from playhouse.migrate import SqliteMigrator, migrate  # type: ignore

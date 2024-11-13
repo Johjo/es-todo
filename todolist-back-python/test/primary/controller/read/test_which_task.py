@@ -9,7 +9,6 @@ from hexagon.fvp.read.which_task import TodolistPort
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.hexagon.fvp.read.test_which_task import TodolistForTest, FvpFaker
-from test.primary.controller.conftest import dependencies
 
 
 @pytest.fixture

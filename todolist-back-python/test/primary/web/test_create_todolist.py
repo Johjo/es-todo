@@ -1,5 +1,3 @@
-from approvaltests import verify  # type: ignore
-from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
@@ -12,5 +10,5 @@ def test_create_todolist(test_dependencies: Dependencies, app: TestApp):
 
     response = app.post('/todo', params={'name': "my_created_todolist"})
 
-    assert CleanResponse(response).location() == f"/todo/my_created_todolist"
+    assert CleanResponse(response).location() == "/todo/my_created_todolist"
     assert response.status_code == 302

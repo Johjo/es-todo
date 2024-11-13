@@ -15,7 +15,7 @@ class TodolistSetForTest(TodolistSetPort):
         self._all_todolist: dict[str, Option[TodolistSnapshot]] = {}
 
     def by(self, todolist_name: str) -> Option[TodolistSnapshot]:
-        if not todolist_name in self._all_todolist:
+        if todolist_name not in self._all_todolist:
             raise Exception("todolist must be fed before being read")
 
         return self._all_todolist[todolist_name]

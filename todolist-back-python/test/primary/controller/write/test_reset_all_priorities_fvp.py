@@ -6,7 +6,7 @@ from faker.proxy import Faker
 from dependencies import Dependencies
 from hexagon.shared.type import TaskKey
 from primary.controller.write.todolist import TodolistWriteController
-from test.fixture import a_task_key, TodolistFaker
+from test.fixture import TodolistFaker
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest

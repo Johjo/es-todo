@@ -1,5 +1,4 @@
 import pytest
-from peewee import Database, SqliteDatabase  # type: ignore
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task
@@ -7,7 +6,6 @@ from hexagon.fvp.read.which_task import TodolistPort, TaskFilter
 from hexagon.todolist.aggregate import TaskSnapshot
 from infra.memory import Memory
 from test.fixture import TodolistBuilder
-from test.primary.controller.write.conftest import dependencies
 from test.secondary.fvp.read.which_task.base_test_todolist import BaseTestTodolist
 
 

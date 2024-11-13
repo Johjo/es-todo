@@ -1,4 +1,4 @@
-from peewee import Database, Model, UUIDField  # type: ignore
+from peewee import Database  # type: ignore
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSessionSetPort, FvpSnapshot

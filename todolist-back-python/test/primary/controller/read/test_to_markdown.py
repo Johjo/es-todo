@@ -1,5 +1,5 @@
 from hexagon.shared.type import TaskOpen
-from primary.controller.read.todolist import to_markdown, Task
+from primary.controller.read.todolist import to_markdown
 from test.fixture import TodolistFaker
 
 

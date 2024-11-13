@@ -2,7 +2,7 @@ import re
 from typing import cast
 
 from expression import Option, Nothing, Some
-from peewee import DoesNotExist, Database  # type: ignore
+from peewee import Database  # type: ignore
 
 from dependencies import Dependencies
 from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey, TaskName, TaskOpen, \
