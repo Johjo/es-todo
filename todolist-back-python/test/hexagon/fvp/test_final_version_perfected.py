@@ -425,7 +425,6 @@ def test_acceptance_full(sut):
 
 def test_empty_snapshot(sut):
     snapshot = sut.to_snapshot()
-    d = OrderedDict()
     assert snapshot == FvpSnapshot(OrderedDict())
 
 def test_write_priorities_to_snapshot(sut):

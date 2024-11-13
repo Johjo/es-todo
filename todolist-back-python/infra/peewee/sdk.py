@@ -59,7 +59,7 @@ class PeeweeSdk:
 
     def all_open_tasks(self, todolist_name):
         with self._database.bind_ctx([TaskRow]):
-            query = TaskRow.select().where(TaskRow.todolist_name == todolist_name, TaskRow.is_open == True)
+            query = TaskRow.select().where(TaskRow.todolist_name == todolist_name, TaskRow.is_open)
             return [Task.from_row(row) for row in query]
 
     def todolist_by(self, todolist_name: str) -> Todolist:
@@ -72,7 +72,7 @@ class PeeweeSdk:
 
     def upsert_todolist(self, todolist: Todolist, tasks: list[Task]):
         with self._database.bind_ctx([TodolistRow, TaskRow]):
-            with self._database.atomic() as transaction:
+            with self._database.atomic():
                 self._delete_previous_todolist(todolist.name)
                 self._save_todolist(todolist, tasks=tasks)
 
@@ -94,7 +94,7 @@ class PeeweeSdk:
 
     def upsert_fvp_session(self, fvp_session: FvpSession) -> None:
         with self._database.bind_ctx([SessionRow]):
-            with self._database.atomic() as transaction:
+            with self._database.atomic():
                 SessionRow.delete().execute()
                 for ignored, chosen in fvp_session.priorities:
                     SessionRow.create(ignored=ignored, chosen=chosen)

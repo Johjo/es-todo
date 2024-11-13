@@ -52,7 +52,7 @@ class TodolistJson(TodolistPort):
 
     @staticmethod
     def _to_task_list(todolist: dict[Any, Any]) -> list[Task]:
-        return [Task(id=TaskKey(UUID(task["key"])), name=task["name"]) for task in todolist["tasks"] if task["is_open"] == True]
+        return [Task(id=TaskKey(UUID(task["key"])), name=task["name"]) for task in todolist["tasks"] if task["is_open"]]
 
     @classmethod
     def factory(cls, dependencies: Dependencies):

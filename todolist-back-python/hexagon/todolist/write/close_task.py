@@ -2,6 +2,7 @@ from expression import Result
 
 from dependencies import Dependencies
 from hexagon.shared.type import TaskKey
+from hexagon.todolist.aggregate import TodolistAggregate
 from hexagon.todolist.port import TodolistSetPort
 from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
 
@@ -11,7 +12,8 @@ class CloseTask:
         self._todolist_set = todolist_set
 
     def execute(self, todolist_name: str, key: TaskKey) -> Result[None, str]:
-        update = lambda todolist: todolist.close_task(key)
+        def update(todolist: TodolistAggregate) -> Result[TodolistAggregate, str]:
+            return todolist.close_task(key)
         return UpdateTodolistAggregate(self._todolist_set).execute(todolist_name, update)
 
     @classmethod

@@ -27,17 +27,14 @@ class ExternalTodoListPort(ABC):
 
 class ImportManyTask:
     def __init__(self, todolist_set: TodolistSetPort, task_key_generator: TaskKeyGeneratorPort):
-        self._external_todolist: ExternalTodoListPort | None = None
         self._todolist_set = todolist_set
         self._task_key_generator = task_key_generator
 
     def execute(self, todolist_name: str, external_todolist: ExternalTodoListPort):
-        self._external_todolist = external_todolist
-        update = lambda todolist: todolist.import_tasks(external_todolist.all_tasks())
-        return UpdateTodolistAggregate(self._todolist_set).execute(todolist_name, self._update)
+        def update(todolist: TodolistAggregate) -> Result[TodolistAggregate, str]:
+            return todolist.import_tasks([task.to_snapshot(self._task_key_generator.generate()) for task in external_todolist.all_tasks()])
 
-    def _update(self, todolist: TodolistAggregate) -> Result[TodolistAggregate, str]:
-        return todolist.import_tasks([task.to_snapshot(self._task_key_generator.generate()) for task in self._external_todolist.all_tasks()])
+        return UpdateTodolistAggregate(self._todolist_set).execute(todolist_name, update)
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'ImportManyTask':
