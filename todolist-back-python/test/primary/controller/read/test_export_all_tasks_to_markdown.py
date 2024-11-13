@@ -23,7 +23,7 @@ def test_export_all_tasks_to_markdown_when_one_task(dependencies: Dependencies, 
     sut = TodolistReadController(dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist_set))
     actual = sut.to_markdown(todolist.name)
 
-    assert actual == to_markdown([task.to_task() for task in todolist.tasks])
+    assert actual == to_markdown([task.to_task() for task in todolist.to_tasks()])
 
 
 class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
@@ -31,7 +31,7 @@ class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
         self._tasks_by_todolist = dict[TodolistName, list[Task]]()
 
     def feed(self, todolist: TodolistBuilder):
-        self._tasks_by_todolist[todolist.name] = [task.to_task() for task in todolist.tasks]
+        self._tasks_by_todolist[todolist.name] = [task.to_task() for task in todolist.to_tasks()]
 
     def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
         if todolist_name not in self._tasks_by_todolist:

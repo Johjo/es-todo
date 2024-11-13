@@ -41,7 +41,7 @@ class TodolistSetForTest(TodolistSetPort, TodolistSetReadPort):
             return Nothing
         return Some(self._all_snapshot[todolist_name])
 
-    def all_by_name(self) -> list[str]:
+    def all_by_name(self) -> list[TodolistName]:
         return [snapshot.name for snapshot in self._all_snapshot.values()]
 
 

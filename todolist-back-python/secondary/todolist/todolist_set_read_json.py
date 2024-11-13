@@ -34,8 +34,8 @@ class TodolistSetReadJson(TodolistSetReadPort):
 
         return Task(id=TaskKey(UUID(task["key"])), name=task["name"], is_open=task["is_open"], execution_date=execution_date)
 
-    def all_by_name(self) -> list[str]:
-        return self._json_file.all_keys()
+    def all_by_name(self) -> list[TodolistName]:
+        return [TodolistName(todolist_name) for todolist_name in self._json_file.all_keys()]
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
         todolist = self._json_file.read(todolist_name).value
@@ -46,7 +46,7 @@ class TodolistSetReadJson(TodolistSetReadPort):
                 contexts = self._extract_context_from_name(task)
                 for context in contexts:
                     counts_by_context[context] = counts_by_context.get(context, 0) + 1
-        return [(context, count) for context, count in counts_by_context.items()]
+        return [(TodolistContext(context), TodolistContextCount(count)) for context, count in counts_by_context.items()]
 
     @staticmethod
     def _extract_context_from_name(task):

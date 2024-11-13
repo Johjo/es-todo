@@ -1,6 +1,6 @@
 from dependencies import Dependencies
 from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
-from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate
+from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName
 from hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
 from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from hexagon.todolist.write.close_task import CloseTask
@@ -16,23 +16,23 @@ class TodolistWriteController:
     def __init__(self, dependencies: Dependencies) -> None:
         self.dependencies = dependencies
 
-    def create_todolist(self, todolist_name: str) -> None:
+    def create_todolist(self, todolist_name: TodolistName) -> None:
         use_case: TodolistCreate = self.dependencies.get_use_case(TodolistCreate)
         use_case.execute(todolist_name=todolist_name)
 
-    def open_task(self, todolist_name: str, task_name: str):
+    def open_task(self, todolist_name: TodolistName, task_name: TaskName):
         use_case: OpenTaskUseCase = self.dependencies.get_use_case(OpenTaskUseCase)
         use_case.execute(todolist_name=todolist_name, name=task_name)
 
-    def close_task(self, todolist_name: str, task_key: TaskKey):
+    def close_task(self, todolist_name: TodolistName, task_key: TaskKey):
         use_case: CloseTask = self.dependencies.get_use_case(CloseTask)
         use_case.execute(todolist_name=todolist_name, key=task_key)
 
-    def reword_task(self, todolist_name: str, task_key: TaskKey, new_name: str):
+    def reword_task(self, todolist_name: TodolistName, task_key: TaskKey, new_name: TaskName):
         use_case: RewordTask = self.dependencies.get_use_case(RewordTask)
         use_case.execute(todolist_name, task_key, new_name)
 
-    def import_many_tasks_from_markdown(self, todolist_name: str, markdown: str):
+    def import_many_tasks_from_markdown(self, todolist_name: TodolistName, markdown: str):
         use_case: ImportManyTask = self.dependencies.get_use_case(ImportManyTask)
         external_todolist = MarkdownTodolist(markdown)
         use_case.execute(todolist_name, external_todolist)

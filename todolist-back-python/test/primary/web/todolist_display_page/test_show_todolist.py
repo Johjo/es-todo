@@ -29,7 +29,7 @@ class TodolistSetForTest(TodolistSetPort, TodolistSetReadPort):
     def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
         raise NotImplementedError()
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._todolist: dict[TodolistName, TodolistBuilder] = {}
 
     def by(self, todolist_name: TodolistName) -> Option[TodolistSnapshot]:

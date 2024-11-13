@@ -15,7 +15,7 @@ class SessionPeewee(FvpSessionSetPort):
         self._sdk.upsert_fvp_session(
             FvpSessionSdk(priorities=[(ignored, chosen) for ignored, chosen in session.task_priorities.items()]))
 
-    def by(self) -> FvpSnapshot | None:
+    def by(self) -> FvpSnapshot:
         session : FvpSessionSdk = self._sdk.fvp_session_by()
         return FvpSnapshot.from_primitive_dict({TaskKey(ignored): TaskKey(chosen) for (ignored, chosen) in session.priorities})
 

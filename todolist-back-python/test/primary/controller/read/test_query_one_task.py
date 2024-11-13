@@ -7,6 +7,7 @@ from test.fixture import a_task_key, TodolistFaker
 from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented
 
 
+# todo: don't use this in web test
 class TodolistForTest(TodolistSetReadPortNotImplemented):
     def __init__(self) -> None:
         self._tasks: dict[Tuple[str, TaskKey,], Task] = {}

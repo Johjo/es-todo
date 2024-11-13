@@ -7,7 +7,7 @@ from expression import Some
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import ChooseTheTask, DoTheTask
 from hexagon.fvp.read.which_task import TaskFilter
-from hexagon.shared.type import TaskKey, TaskExecutionDate, TodolistName
+from hexagon.shared.type import TaskKey, TaskExecutionDate, TodolistName, TaskName, TaskOpen
 from hexagon.todolist.port import TaskKeyGeneratorPort
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, Task
@@ -43,29 +43,33 @@ def test_xxx(dependencies: Dependencies):
     write = TodolistWriteController(dependencies)
     read = TodolistReadController(dependencies)
     fvp_read = FinalVersionPerfectedReadController(dependencies)
+    todolist_name = TodolistName("todolist")
 
-    write.create_todolist(todolist_name="todolist")
-    assert read.all_todolist_by_name() == ["todolist"]
+    write.create_todolist(todolist_name=todolist_name)
+    assert read.all_todolist_by_name() == [todolist_name]
 
-    write.open_task(todolist_name="todolist", task_name="task 1 #context_1")
-    write.open_task(todolist_name="todolist", task_name="task 2 #context_2")
+    write.open_task(todolist_name=todolist_name, task_name=TaskName("task 1 #context_1"))
+    write.open_task(todolist_name=todolist_name, task_name=TaskName("task 2 #context_2"))
 
-    assert read.counts_by_context(todolist_name="todolist") == [("#context_1", 1), ("#context_2", 1)]
-    assert fvp_read.which_task(TaskFilter(todolist_name="todolist")) == ChooseTheTask(id_1=TaskKey(UUID(int=1)),
+    assert read.counts_by_context(todolist_name=todolist_name) == [("#context_1", 1), ("#context_2", 1)]
+    assert fvp_read.which_task(TaskFilter(todolist_name=todolist_name)) == ChooseTheTask(id_1=TaskKey(UUID(int=1)),
                                                                                     name_1="task 1 #context_1",
                                                                                     id_2=TaskKey(UUID(int=2)),
                                                                                     name_2="task 2 #context_2")
 
     write.choose_and_ignore_task(chosen_task=TaskKey(UUID(int=1)), ignored_task=TaskKey(UUID(int=2)))
 
-    assert fvp_read.which_task(TaskFilter(todolist_name="todolist")) == DoTheTask(id=TaskKey(UUID(int=1)), name="task 1 #context_1")
+    assert fvp_read.which_task(TaskFilter(todolist_name=todolist_name)) == DoTheTask(id=TaskKey(UUID(int=1)), name="task 1 #context_1")
 
     write.reset_all_priorities()
-    assert fvp_read.which_task(TaskFilter(todolist_name="todolist")) == ChooseTheTask(id_1=TaskKey(UUID(int=1)),
+    assert fvp_read.which_task(TaskFilter(todolist_name=todolist_name)) == ChooseTheTask(id_1=TaskKey(UUID(int=1)),
                                                                                     name_1="task 1 #context_1",
                                                                                     id_2=TaskKey(UUID(int=2)),
                                                                                     name_2="task 2 #context_2")
 
-    write.postpone_task(name=TodolistName("todolist"), key=TaskKey(UUID(int=1)), execution_date=TaskExecutionDate(today().date()))
-    assert read.task_by(todolist_name="todolist", task_key=TaskKey(UUID(int=1))) == Task(id=TaskKey(UUID(int=1)), name="task 1 #context_1", is_open=True, execution_date=Some(today().date()))
-
+    write.postpone_task(name=todolist_name, key=TaskKey(UUID(int=1)), execution_date=TaskExecutionDate(today().date()))
+    assert read.task_by(todolist_name=todolist_name,
+                        task_key=TaskKey(UUID(int=1))) == Task(
+        id=TaskKey(UUID(int=1)),
+        name=TaskName("task 1 #context_1"),
+        is_open=TaskOpen(True), execution_date=Some(TaskExecutionDate(today().date())))

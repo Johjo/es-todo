@@ -23,7 +23,7 @@ class ChooseAndIgnoreTaskFvp:
         if snapshot:
             session = FinalVersionPerfectedSession.from_snapshot(snapshot)
         else:
-            session = FinalVersionPerfectedSession.create()
+            raise NotImplementedError()
         return session
 
     @classmethod

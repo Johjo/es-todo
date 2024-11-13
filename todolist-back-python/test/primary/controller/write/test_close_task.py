@@ -10,7 +10,7 @@ def test_close_task(todolist_set: TodolistSetForTest, sut: TodolistWriteControll
     todolist = fake.a_todolist().having(tasks=[task])
     todolist_set.feed(todolist)
 
-    sut.close_task(todolist_name=todolist.name, task_key=task.key)
+    sut.close_task(todolist_name=todolist.to_name(), task_key=task.to_key())
 
     actual = todolist_set.by(todolist.name).value
     assert actual == todolist.having(tasks=[(replace(task, is_open=False))]).to_snapshot()

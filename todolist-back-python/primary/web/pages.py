@@ -1,14 +1,14 @@
-import urllib
+from urllib.parse import quote as urlencode
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 from uuid import UUID
 
 from bottle import template, Bottle, view, request, redirect  # type: ignore
-from bottle_utils import form
+from bottle_utils import form  # type: ignore
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import TaskFilter
-from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate
+from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, Task
 from dependencies import Dependencies
@@ -104,7 +104,7 @@ def show_todolist_when_two_tasks(todolist_name: str, choose_the_task: ChooseTheT
 @bottle_app.post("/todo/<todolist_name>/item")
 def open_task(todolist_name: str):
     task_name = get_string_from_request_post("task_name")
-    TodolistWriteController(bottle_config.dependencies).open_task(todolist_name, task_name)
+    TodolistWriteController(bottle_config.dependencies).open_task(TodolistName(todolist_name), TaskName(task_name))
     return redirect_to_todolist(todolist_name)
 
 
@@ -114,16 +114,16 @@ def redirect_to_todolist(todolist_name):
 
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/close")
 def close_task(todolist_name: str, task_key: str):
-    TodolistWriteController(bottle_config.dependencies).close_task(todolist_name, task_key=TaskKey(UUID(task_key)))
+    TodolistWriteController(bottle_config.dependencies).close_task(TodolistName(todolist_name), task_key=TaskKey(UUID(task_key)))
     return redirect_to_todolist(todolist_name)
 
 
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/reword")
 def reword_task(todolist_name: str, task_key: str):
     controller = TodolistWriteController(bottle_config.dependencies)
-    controller.reword_task(todolist_name=todolist_name,
+    controller.reword_task(todolist_name=TodolistName(todolist_name),
                            task_key=TaskKey(UUID(task_key)),
-                           new_name=get_string_from_request_post("new_name"))
+                           new_name=TaskName(get_string_from_request_post("new_name")))
 
     return redirect_to_todolist(todolist_name)
 
@@ -204,7 +204,7 @@ def reset_all_priorities(todolist_name):
     return redirect_to_todolist(todolist_name)
 
 
-def get_string_from_request_post(field_name):
+def get_string_from_request_post(field_name: str) -> str:
     return request.forms.getunicode(field_name)
 
 
@@ -216,5 +216,5 @@ def base_value(todolist_name: str) -> dict[str, Any]:
         "counts_by_context": TodolistReadController(bottle_config.dependencies).counts_by_context(todolist_name),
         "included_context": request.query.getall("include_context"),
         "excluded_context": request.query.getall("exclude_context"),
-        "urlencode": urllib.parse.quote,
+        "urlencode": urlencode,
     }

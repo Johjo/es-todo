@@ -1,5 +1,6 @@
 from dataclasses import dataclass, replace
 from datetime import datetime, date
+from typing import cast
 from uuid import UUID, uuid4
 
 from expression import Option, Nothing, Some
@@ -61,7 +62,7 @@ class TaskBuilder:
         if isinstance(self.execution_date, datetime):
             return Some(TaskExecutionDate(self.execution_date))
         if isinstance(self.execution_date, Option):
-            return self.execution_date
+            return cast(Option[TaskExecutionDate], self.execution_date)
         return Some(TaskExecutionDate(self.execution_date))
 
     def to_peewee_sdk(self) -> sdk.Task:

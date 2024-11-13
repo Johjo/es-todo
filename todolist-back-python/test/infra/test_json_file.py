@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 from approvaltests import verify  # type: ignore
-from approvaltests.reporters import PythonNativeReporter
+from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from expression import Some, Nothing
 
 from infra.json_file import JsonFile

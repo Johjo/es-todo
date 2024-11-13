@@ -22,7 +22,7 @@ class TodolistSetForTest(TodolistSetReadPortNotImplemented):
         self.tasks_by_todolist: dict[TodolistName, list[Task]] = {}
 
     def feed(self, todolist: TodolistBuilder) -> None:
-        self.tasks_by_todolist[todolist.name] = [task.to_task() for task in todolist.tasks]
+        self.tasks_by_todolist[todolist.name] = [task.to_task() for task in todolist.to_tasks()]
 
     def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
         if todolist_name not in self.tasks_by_todolist:

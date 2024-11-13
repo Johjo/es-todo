@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from datetime import date
+from typing import cast
 from uuid import UUID
 
 from expression import Option, Nothing, Some
 from peewee import Database, DoesNotExist  # type: ignore
 
+from hexagon.shared.type import TodolistName, TaskKey, TaskName, TaskOpen, TaskExecutionDate
 from infra.peewee.table import Task as TaskRow, Todolist as TodolistRow, Session as SessionRow
 
 
@@ -17,7 +19,11 @@ class Task:
 
     @classmethod
     def from_row(cls, row: TaskRow) -> 'Task':
-        return Task(key=row.key, name=row.name, is_open=row.is_open, execution_date=Some(row.execution_date) if row.execution_date else Nothing)
+        return Task(
+            key=TaskKey(cast(UUID, row.key)),
+            name=TaskName(cast(str, row.name)),
+            is_open=TaskOpen(cast(bool, row.is_open)),
+            execution_date=Some(TaskExecutionDate(cast(date, row.execution_date))) if row.execution_date else Nothing)
 
 
 @dataclass(frozen=True, eq=True)
@@ -26,7 +32,8 @@ class Todolist:
 
     @classmethod
     def from_row(cls, row: TodolistRow) -> 'Todolist':
-        return Todolist(name=row.name)
+        name: str = cast(str, row.name)
+        return Todolist(name=TodolistName(name))
 
 
 @dataclass(frozen=True, eq=True)

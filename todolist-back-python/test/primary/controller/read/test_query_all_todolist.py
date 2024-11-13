@@ -1,3 +1,4 @@
+from hexagon.shared.type import TodolistName
 from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort
 from dependencies import Dependencies
 from test.fixture import TodolistFaker
@@ -6,12 +7,12 @@ from test.primary.controller.read.fixture import TodolistSetReadPortNotImplement
 
 class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
     def __init__(self) -> None:
-        self._all_todolist: list[str] = []
+        self._all_todolist: list[TodolistName] = []
 
-    def feed(self, *names: str):
+    def feed(self, *names: TodolistName):
         self._all_todolist = [n for n in names]
 
-    def all_by_name(self) -> list[str]:
+    def all_by_name(self) -> list[TodolistName]:
         return self._all_todolist
 
 

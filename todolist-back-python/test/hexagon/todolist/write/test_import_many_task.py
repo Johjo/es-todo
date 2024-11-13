@@ -26,7 +26,7 @@ class ExternalTodolistForTest(ExternalTodoListPort):
         return self._tasks
 
     def feed(self, *tasks: TaskImported):
-        self._tasks = tasks
+        self._tasks = list(tasks)
 
 
 @pytest.fixture
@@ -44,7 +44,7 @@ def test_import_many_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
     external_todolist.feed(*to_imported_task_list(expected_tasks))
     task_key_generator.feed(*[task for task in expected_tasks])
     todolist = fake.a_todolist()
-    todolist_set.feed(todolist.to_snapshot())
+    todolist_set.feed(todolist)
 
     sut.execute(todolist.name, external_todolist)
 
@@ -60,7 +60,7 @@ def test_import_many_task_when_existing_task(sut: ImportManyTask, todolist_set: 
     external_todolist.feed(to_imported_task(expected_task))
     task_key_generator.feed(expected_task)
     todolist = fake.a_todolist().having(tasks=[first_task])
-    todolist_set.feed(todolist.to_snapshot())
+    todolist_set.feed(todolist)
 
     sut.execute(todolist.name, external_todolist)
 
@@ -99,4 +99,4 @@ def to_imported_task_list(expected_tasks: list[TaskBuilder]) -> list[TaskImporte
 
 
 def to_imported_task(task: TaskBuilder) -> TaskImported:
-    return TaskImported(name=task.name, is_open=task.is_open)
+    return TaskImported(name=task.to_name(), is_open=task.to_open())

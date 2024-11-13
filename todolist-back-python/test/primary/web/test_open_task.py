@@ -16,7 +16,7 @@ def test_open_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTest,
 
     todolist =  fake.a_todolist("todolist")
     memory.save(todolist.to_snapshot())
-    task_key_generator.feed(expected_task.key)
+    task_key_generator.feed(expected_task.to_key())
 
 
     response = app.post(f'/todo/{todolist.name}/item', params={'task_name': expected_task.name})

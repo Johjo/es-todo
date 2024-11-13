@@ -4,11 +4,12 @@ from dataclasses import dataclass
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
     FvpSessionSetPort
+from hexagon.shared.type import TodolistName
 
 
 @dataclass(frozen=True, eq=True)
 class TaskFilter:
-    todolist_name: str
+    todolist_name: TodolistName
     include_context: tuple[str, ...] = ()
     exclude_context: tuple[str, ...] = ()
 

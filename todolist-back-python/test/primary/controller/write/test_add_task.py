@@ -1,8 +1,9 @@
 
 from dependencies import Dependencies
+from hexagon.shared.type import TaskName, TodolistName
 from primary.controller.write.todolist import TodolistWriteController
-from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.fixture import TodolistFaker
+from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.primary.controller.write.conftest import TodolistSetForTest
 
 
@@ -10,10 +11,11 @@ def test_open_task_when_no_task(todolist_set: TodolistSetForTest, task_key_gener
     todolist = fake.a_todolist()
     todolist_set.feed(todolist)
     expected_task = fake.a_task()
-    task_key_generator.feed(expected_task.key)
+    task_key_generator.feed(expected_task.to_key())
 
-    sut.open_task(todolist_name=todolist.name,
-                         task_name=expected_task.name)
+    sut.open_task(
+        todolist_name=todolist.to_name(),
+        task_name=expected_task.to_name())
 
     actual = todolist_set.by(todolist.name).value
 

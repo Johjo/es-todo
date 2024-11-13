@@ -19,7 +19,7 @@ def test_display_reword_task(app: TestApp, fake: TodolistFaker):
     reworded_task = initial_task.having(name=initial_task.name)
 
     a_todolist = fake.a_todolist(name="todolist").having(tasks=[initial_task])
-    todolist.feed(a_todolist.name, initial_task.key, reworded_task.to_task())
+    todolist.feed(a_todolist.to_name(), initial_task.to_key(), reworded_task.to_task())
 
     response = app.get(f'/todo/{a_todolist.name}/item/{initial_task.key}/reword')
 

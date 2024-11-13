@@ -18,7 +18,7 @@ class BaseTestTodolist:
         self.feed_todolist(another_todolist)
 
         assert sut.all_open_tasks(TaskFilter(todolist_name=expected_todolist.name)) == [
-            Task(id=task.key, name=task.name) for task in expected_tasks]
+            Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     def test_should_list_only_task_having_one_included_context(self, sut: TodolistPort, fake: TodolistFaker):
         expected_tasks = [fake.a_task().having(name="buy the milk #supermarket"),
@@ -27,9 +27,9 @@ class BaseTestTodolist:
 
         self.feed_todolist(expected_todolist)
 
-        assert sut.all_open_tasks(
-            TaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket",))) == [
-                   Task(id=task.key, name=task.name) for task in expected_tasks]
+        task_filter = TaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket",))
+        assert sut.all_open_tasks(task_filter) == [Task(id=task.to_key(), name=task.to_name()) for task in
+                                                   expected_tasks]
 
     def test_should_list_only_task_having_any_included_context(self, sut: TodolistPort, fake: TodolistFaker):
         expected_tasks = [fake.a_task().having(name="buy the milk #supermarket"),
@@ -40,7 +40,7 @@ class BaseTestTodolist:
 
         assert sut.all_open_tasks(
             TaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket", "#sport"))) == [
-                   Task(id=task.key, name=task.name) for task in expected_tasks]
+                   Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     def test_should_not_list_task_having_any_excluded_context(self, sut: TodolistPort, fake: TodolistFaker):
         expected_tasks = [fake.a_task().having(name="buy the milk #supermarket"), ]
@@ -51,7 +51,7 @@ class BaseTestTodolist:
 
         assert sut.all_open_tasks(TaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket",),
                                              exclude_context=("#sport",))) == [
-                   Task(id=task.key, name=task.name) for task in expected_tasks]
+            Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     def test_should_include_only_task_matching_full_context(self, sut: TodolistPort, fake: TodolistFaker):
         expected_tasks = [fake.a_task().having(name="become #super man"), ]
@@ -62,7 +62,7 @@ class BaseTestTodolist:
 
         assert sut.all_open_tasks(
             TaskFilter(todolist_name=expected_todolist.name, include_context=("#super",), exclude_context=())) == [
-                   Task(id=task.key, name=task.name) for task in expected_tasks]
+                   Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     def test_should_exclude_only_task_matching_full_context(self, sut: TodolistPort, fake: TodolistFaker):
         expected_tasks = [fake.a_task().having(name="buy the water #supermarket"), ]
@@ -73,7 +73,7 @@ class BaseTestTodolist:
 
         assert sut.all_open_tasks(
             TaskFilter(todolist_name=expected_todolist.name, include_context=(), exclude_context=("#super",))) == [
-                   Task(id=task.key, name=task.name) for task in expected_tasks]
+                   Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     @staticmethod
     def test_should_no_task_when_todolist_does_not_exist(sut: TodolistPort, fake: TodolistFaker):
