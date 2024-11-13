@@ -43,12 +43,6 @@ def inject_adapter(dependencies: Dependencies):
     return dependencies
 
 
-def inject_path(dependencies: Dependencies) -> Dependencies:
-    dependencies = dependencies.feed_path("todolist_json_path", lambda _: Path("./test_todolist.json"))
-    dependencies = dependencies.feed_path("session_fvp_json_path", lambda _: Path("./test_fvp.json"))
-    return dependencies
-
-
 def inject_infrastructure(dependencies: Dependencies) -> Dependencies:
     path = dependencies.get_path("sqlite_database_path")
     database = SqliteDatabase(path)
