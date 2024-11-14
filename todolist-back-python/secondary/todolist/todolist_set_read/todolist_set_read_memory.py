@@ -1,6 +1,7 @@
 import re
 
 from dependencies import Dependencies
+from hexagon.fvp.read.which_task import TaskFilter
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from infra.memory import Memory
 from primary.controller.read.todolist import TodolistSetReadPort, Task
@@ -32,9 +33,9 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
         contexts = re.findall(r"([#@][_A-Za-z0-9-]+)", task.name)
         return [TodolistContext(context.lower()) for context in contexts]
 
-
-    def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
-        return [Task(id=task.key, name=task.name, is_open=task.is_open, execution_date=task.execution_date) for task in self.memory.all_tasks(todolist_name)]
+    # todo task_filter
+    def all_tasks(self, todolist_name: TodolistName, task_filter: TaskFilter) -> list[Task]:
+        return [Task(id=task.key, name=task.name, is_open=task.is_open, execution_date=task.execution_date) for task in self.memory.all_tasks(todolist_name) if task_filter.include(task_name=task.name)]
 
     @classmethod
     def factory(cls, dependencies: Dependencies)-> 'TodolistSetReadInMemory':

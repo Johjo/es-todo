@@ -5,6 +5,7 @@ from expression import Option, Nothing, Some
 from peewee import Database  # type: ignore
 
 from dependencies import Dependencies
+from hexagon.fvp.read.which_task import TaskFilter
 from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey, TaskName, TaskOpen, \
     TaskExecutionDate
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
@@ -24,9 +25,10 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
     def __init__(self, database: Database):
         self._sdk = PeeweeSdk(database)
 
-    def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
-        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=todolist_name)
-        return [map_to_task_presentation(task) for task in all_tasks_sdk]
+    # todo task_filter
+    def all_tasks(self, todolist_name: TodolistName, task_filter: TaskFilter) -> list[Task]:
+        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=task_filter.todolist_name)
+        return [map_to_task_presentation(task) for task in all_tasks_sdk if task_filter.include(task_name=task.name)]
 
     def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
         task: TaskSdk = self._sdk.task_by(todolist_name, task_key)

@@ -3,6 +3,7 @@ import pytest
 from dateutil.utils import today
 
 from dependencies import Dependencies
+from hexagon.fvp.read.which_task import TaskFilter
 from primary.controller.read.todolist import TodolistSetReadPort
 from test.fixture import TodolistFaker, TodolistBuilder
 
@@ -46,15 +47,17 @@ class BaseTestTodolistSetRead:
                                                         ("@context4", 1), ("@con-text5", 1)]
 
     def test_read_all_tasks(self, sut: TodolistSetReadPort, fake: TodolistFaker):
-        expected_tasks = [fake.a_task(), fake.a_task()]
+        expected_tasks = [fake.a_task().having(name="#include1 buy the milk"), fake.a_task().having(name="buy the water #include2")]
         todolist_1 = fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task().having(execution_date=today().date())])
-        todolist_2 = fake.a_todolist().having(tasks=expected_tasks)
+        todolist_2 = fake.a_todolist().having(tasks=[*expected_tasks, fake.a_task().having(name="#include1 #exclude2"), fake.a_task().having(name="#include2 #exclude1")])
         todolist_3 = fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task()])
         self.feed_todolist(todolist_1)
         self.feed_todolist(todolist_2)
         self.feed_todolist(todolist_3)
 
-        actual = sut.all_tasks(todolist_2.name)
+        actual = sut.all_tasks(todolist_2.to_name(), TaskFilter(todolist_name=todolist_2.to_name(),
+                                                                include_context=("#include1", "#include2"),
+                                                                exclude_context=("#exclude1", "#exclude2")))
         assert actual == [task.to_task() for task in expected_tasks]
 
     @pytest.fixture

@@ -13,6 +13,30 @@ class TaskFilter:
     include_context: tuple[str, ...] = ()
     exclude_context: tuple[str, ...] = ()
 
+    def include(self, task_name: str) -> bool:
+        if not self.match_included_context(task_name):
+            return False
+
+        if self.match_excluded_context(task_name):
+            return False
+
+        return True
+
+    def match_included_context(self, task_name: str) -> bool:
+        if self.include_context == ():
+            return True
+
+        for context in self.include_context:
+            if any(context == word for word in task_name.split()):
+                return True
+        return False
+
+
+    def match_excluded_context(self, task_name: str) -> bool:
+        for context in self.exclude_context:
+            if any(context == word for word in task_name.split()):
+                return True
+        return False
 
 
 class TodolistPort(ABC):

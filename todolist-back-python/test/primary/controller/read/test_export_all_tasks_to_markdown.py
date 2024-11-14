@@ -1,4 +1,5 @@
 from dependencies import Dependencies
+from hexagon.fvp.read.which_task import TaskFilter
 from hexagon.shared.type import TodolistName
 from primary.controller.read.todolist import TodolistSetReadPort, Task, TodolistReadController, to_markdown
 from test.fixture import TodolistFaker, TodolistBuilder
@@ -33,7 +34,8 @@ class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
     def feed(self, todolist: TodolistBuilder):
         self._tasks_by_todolist[todolist.name] = [task.to_task() for task in todolist.to_tasks()]
 
-    def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
+    # todo task_filter
+    def all_tasks(self, todolist_name: TodolistName, task_filter: TaskFilter) -> list[Task]:
         if todolist_name not in self._tasks_by_todolist:
             raise Exception(f"feed task for todolist '{todolist_name}' first")
         return self._tasks_by_todolist[todolist_name]

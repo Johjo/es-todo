@@ -5,6 +5,7 @@ from typing import cast
 from expression import Option
 
 from dependencies import Dependencies
+from hexagon.fvp.read.which_task import TaskFilter
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount, TaskOpen, TaskName, \
     TaskExecutionDate
 
@@ -33,7 +34,7 @@ class TodolistSetReadPort(ABC):
         pass
 
     @abstractmethod
-    def all_tasks(self, todolist_name: TodolistName) -> list[Task]:
+    def all_tasks(self, todolist_name: TodolistName, task_filter: TaskFilter) -> list[Task]:
         pass
 
 
@@ -56,7 +57,7 @@ class TodolistReadController:
 
     def to_markdown(self, todolist_name: str):
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
-        return to_markdown(todolist_set.all_tasks(TodolistName(todolist_name)))
+        return to_markdown(todolist_set.all_tasks(TodolistName(todolist_name), TaskFilter(todolist_name=TodolistName(todolist_name))))
 
 
 def to_markdown(tasks: list[Task]) -> str:
