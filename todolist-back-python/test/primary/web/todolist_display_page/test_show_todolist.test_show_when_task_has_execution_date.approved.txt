@@ -18,7 +18,7 @@ b'<html>
 
     <h2> buy the milk </h2>
 
-        <p> Some 2023-10-19 00:00:00</p>
+        <p> 2023-10-19 00:00:00</p>
 
         <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/reword?">Renommer</a> <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/postpone?">Reporter</a>
 

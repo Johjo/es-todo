@@ -1,25 +1,29 @@
 import re
 
 from dependencies import Dependencies
-from hexagon.fvp.read.which_task import TaskFilter
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from infra.memory import Memory
-from primary.controller.read.todolist import TodolistSetReadPort, Task
+from primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
 
 
 class TodolistSetReadInMemory(TodolistSetReadPort):
     def __init__(self, memory: Memory):
         self.memory = memory
 
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
         task = self.memory.task_by(todolist_name, task_key)
-        return Task(id=task.key, name=task.name, is_open=task.is_open, execution_date=task.execution_date)
+        return self._to_task_presentation(task)
+
+    @staticmethod
+    def _to_task_presentation(task):
+        return TaskPresentation(key=task.key, name=task.name, is_open=task.is_open,
+                                execution_date=task.execution_date.default_value(None))
 
     def all_by_name(self) -> list[TodolistName]:
         return [TodolistName(name) for name in self.memory.all_todolist_by_name()]
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        tasks = [Task(id=task.key, name=task.name, is_open=task.is_open, execution_date=task.execution_date) for task in self.memory.all_tasks(todolist_name)]
+        tasks = self.memory.all_tasks(todolist_name)
         counts_by_context: dict[str, int] = {}
         for task in tasks:
             if task.is_open:
@@ -34,8 +38,8 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
         return [TodolistContext(context.lower()) for context in contexts]
 
     # todo task_filter
-    def all_tasks(self, todolist_name: TodolistName, task_filter: TaskFilter) -> list[Task]:
-        return [Task(id=task.key, name=task.name, is_open=task.is_open, execution_date=task.execution_date) for task in self.memory.all_tasks(todolist_name) if task_filter.include(task_name=task.name)]
+    def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
+        return [self._to_task_presentation(task) for task in self.memory.all_tasks(task_filter.todolist_name) if task_filter.include(task_name=task.name)]
 
     @classmethod
     def factory(cls, dependencies: Dependencies)-> 'TodolistSetReadInMemory':

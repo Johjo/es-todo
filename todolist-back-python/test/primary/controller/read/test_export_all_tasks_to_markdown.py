@@ -1,7 +1,7 @@
 from dependencies import Dependencies
-from hexagon.fvp.read.which_task import TaskFilter
 from hexagon.shared.type import TodolistName
-from primary.controller.read.todolist import TodolistSetReadPort, Task, TodolistReadController, to_markdown
+from primary.controller.read.todolist import TodolistSetReadPort, TodolistReadController, to_markdown, \
+    TaskPresentation, TaskFilter
 from test.fixture import TodolistFaker, TodolistBuilder
 from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented
 
@@ -24,18 +24,18 @@ def test_export_all_tasks_to_markdown_when_one_task(dependencies: Dependencies, 
     sut = TodolistReadController(dependencies.feed_adapter(TodolistSetReadPort, lambda _: todolist_set))
     actual = sut.to_markdown(todolist.name)
 
-    assert actual == to_markdown([task.to_task() for task in todolist.to_tasks()])
+    assert actual == to_markdown([task.to_presentation() for task in todolist.to_tasks()])
 
 
 class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
     def __init__(self):
-        self._tasks_by_todolist = dict[TodolistName, list[Task]]()
+        self._tasks_by_todolist = dict[TodolistName, list[TaskPresentation]]()
 
+    # todo : change feed by task filter
     def feed(self, todolist: TodolistBuilder):
-        self._tasks_by_todolist[todolist.name] = [task.to_task() for task in todolist.to_tasks()]
+        self._tasks_by_todolist[todolist.name] = [task.to_presentation() for task in todolist.to_tasks()]
 
-    # todo task_filter
-    def all_tasks(self, todolist_name: TodolistName, task_filter: TaskFilter) -> list[Task]:
-        if todolist_name not in self._tasks_by_todolist:
-            raise Exception(f"feed task for todolist '{todolist_name}' first")
-        return self._tasks_by_todolist[todolist_name]
+    def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
+        if task_filter.todolist_name not in self._tasks_by_todolist:
+            raise Exception(f"feed task for todolist '{task_filter.todolist_name}' first")
+        return self._tasks_by_todolist[task_filter.todolist_name]

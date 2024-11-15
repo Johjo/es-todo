@@ -31,7 +31,7 @@ def test_which_task_when_two_and_one_chosen(dependencies: Dependencies, todolist
                                             fake: FvpFaker):
     ignored_task = replace(fake.a_task(2), name="buy water")
     chosen_task = replace(fake.a_task(1), name="buy milk")
-    task_filter = fake.a_task_filter()
+    task_filter = fake.a_which_task_filter()
     fvp_session_set.feed(FvpSnapshot.from_primitive_dict({ignored_task.id: chosen_task.id}))
     todolist.feed(task_filter, chosen_task, ignored_task)
 

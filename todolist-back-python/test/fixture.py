@@ -9,10 +9,7 @@ from faker import Faker
 from hexagon.shared.type import TaskKey, TaskName, TodolistName, TaskOpen, TaskExecutionDate
 from hexagon.todolist.aggregate import TaskSnapshot, TodolistSnapshot
 from infra.peewee import sdk
-from primary.controller.read.todolist import Task
-
-
-
+from primary.controller.read.todolist import TaskPresentation, TaskFilter
 
 
 def a_task_key(index: TaskKey | UUID | int | None = None) -> TaskKey:
@@ -36,8 +33,9 @@ class TaskBuilder:
     def to_snapshot(self) -> TaskSnapshot:
         return TaskSnapshot(key=self.to_key(), name=self.to_name(), is_open=self.to_open(), execution_date=self.to_execution_date())
 
-    def to_task(self) -> Task:
-        return Task(id=self.to_key(), name=self.to_name(), is_open=self.to_open(), execution_date=self.to_execution_date())
+    def to_presentation(self) -> TaskPresentation:
+        return TaskPresentation(key=self.to_key(), name=self.to_name(),
+                                is_open=self.to_open(), execution_date=self.to_execution_date().default_value(None))
 
     def to_key(self) -> TaskKey:
         if self.key is None:
@@ -94,6 +92,19 @@ class TodolistBuilder:
         return sdk.Todolist(name=self.to_name())
 
 
+@dataclass(frozen=True)
+class TaskFilterBuilder:
+    todolist_name: str | None = None
+
+    def build(self) -> TaskFilter:
+        return TaskFilter(todolist_name=self.to_todolist_name())
+
+    def to_todolist_name(self):
+        if self.todolist_name is None:
+            raise Exception("feed todolist name before getting filter")
+        return TodolistName(self.todolist_name)
+
+
 class TodolistFaker:
     def __init__(self, fake: Faker):
         self.fake = fake
@@ -120,5 +131,5 @@ class TodolistFaker:
     def task_name(self) -> TaskName:
         return TaskName(self.fake.sentence())
 
-
-
+    def a_task_filter(self, todolist_name: str) -> TaskFilterBuilder:
+        return TaskFilterBuilder(todolist_name=todolist_name)

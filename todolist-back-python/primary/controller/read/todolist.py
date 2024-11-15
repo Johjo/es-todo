@@ -1,28 +1,75 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from datetime import date
 from typing import cast
-
-from expression import Option
+from uuid import UUID
 
 from dependencies import Dependencies
-from hexagon.fvp.read.which_task import TaskFilter
-from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount, TaskOpen, TaskName, \
-    TaskExecutionDate
+from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
+from shared.filter import TextFilter
 
 
-# todo : use a task key instead of an id
+@dataclass(frozen=True)
+class Criterion:
+    pass
+
+
 @dataclass
-class Task:
-    id: TaskKey
-    name: TaskName
-    is_open: TaskOpen
-    execution_date: Option[TaskExecutionDate]
+class Category:
+    pass
 
 
-# todo : use TaskPresentation instead Task
+@dataclass(frozen=True)
+class Include(Criterion):
+    category: Category
+
+
+@dataclass(frozen=True)
+class Exclude(Criterion):
+    category: Category
+
+
+@dataclass
+class Word(Category):
+    value: str
+
+
+@dataclass(frozen=True, eq=True)
+class TaskFilter:
+    todolist_name: TodolistName
+    criteria: tuple[Criterion, ...] = ()
+
+    def include(self, task_name: str) -> bool:
+        include_context: set[str] = set()
+        exclude_context: set[str] = set()
+
+        for criterion in self.criteria:
+            match criterion:
+                case Include(Word(word)):
+                    include_context.add(word)
+                case Exclude(Word(word)):
+                    exclude_context.add(word)
+                case _:
+                    raise ValueError(f"Unknown criterion {criterion}")
+
+        text_filter = TextFilter(included_words=tuple(include_context), excluded_words=tuple(exclude_context))
+        return text_filter.include(task_name)
+
+    @classmethod
+    def create(cls, todolist_name: TodolistName, *criteria: Criterion) -> 'TaskFilter':
+        return TaskFilter(todolist_name=todolist_name, criteria=tuple(criteria))
+
+@dataclass(frozen=True)
+class TaskPresentation:
+    key: UUID
+    name: str
+    is_open: bool
+    execution_date: date | None
+
+
 class TodolistSetReadPort(ABC):
     @abstractmethod
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
         pass
 
     @abstractmethod
@@ -34,7 +81,7 @@ class TodolistSetReadPort(ABC):
         pass
 
     @abstractmethod
-    def all_tasks(self, todolist_name: TodolistName, task_filter: TaskFilter) -> list[Task]:
+    def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
         pass
 
 
@@ -46,7 +93,7 @@ class TodolistReadController:
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
         return cast(list[str], todolist_set.all_by_name())
 
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
         return todolist_set.task_by(todolist_name=todolist_name, task_key=task_key)
 
@@ -57,10 +104,15 @@ class TodolistReadController:
 
     def to_markdown(self, todolist_name: str):
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
-        return to_markdown(todolist_set.all_tasks(TodolistName(todolist_name), TaskFilter(todolist_name=TodolistName(todolist_name))))
+        return to_markdown(todolist_set.all_tasks(TaskFilter(todolist_name=TodolistName(todolist_name))))
+
+    def all_task(self, task_filter: TaskFilter):
+        todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
+        return todolist_set.all_tasks(task_filter=task_filter)
 
 
-def to_markdown(tasks: list[Task]) -> str:
-    def task_to_markdown(task: Task) -> str:
+def to_markdown(tasks: list[TaskPresentation]) -> str:
+    def task_to_markdown(task: TaskPresentation) -> str:
         return f"- [{" " if task.is_open else "x"}] {task.name}"
+
     return "\n".join([task_to_markdown(task) for task in tasks])

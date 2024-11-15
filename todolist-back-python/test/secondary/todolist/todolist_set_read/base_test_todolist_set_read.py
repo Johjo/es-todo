@@ -3,8 +3,7 @@ import pytest
 from dateutil.utils import today
 
 from dependencies import Dependencies
-from hexagon.fvp.read.which_task import TaskFilter
-from primary.controller.read.todolist import TodolistSetReadPort
+from primary.controller.read.todolist import TodolistSetReadPort, TaskFilter, Include, Exclude, Word
 from test.fixture import TodolistFaker, TodolistBuilder
 
 
@@ -14,14 +13,14 @@ class BaseTestTodolistSetRead:
         todolist = fake.a_todolist().having(tasks=[fake.a_task(), expected_task, fake.a_task()])
         self.feed_todolist(todolist)
 
-        assert sut.task_by(todolist.name, expected_task.to_key()) == expected_task.to_task()
+        assert sut.task_by(todolist.name, expected_task.to_key()) == expected_task.to_presentation()
 
     def test_read_task_having_execution_date(self, sut: TodolistSetReadPort, fake: TodolistFaker):
         expected_task = fake.a_task().having(execution_date=today().date())
         todolist = fake.a_todolist().having(tasks=[fake.a_task(), expected_task, fake.a_task()])
         self.feed_todolist(todolist)
 
-        assert sut.task_by(todolist.name, expected_task.to_key()) == expected_task.to_task()
+        assert sut.task_by(todolist.name, expected_task.to_key()) == expected_task.to_presentation()
 
     def test_read_all_by_name(self, sut: TodolistSetReadPort, fake: TodolistFaker):
         todolist_1 = fake.a_todolist()
@@ -55,10 +54,11 @@ class BaseTestTodolistSetRead:
         self.feed_todolist(todolist_2)
         self.feed_todolist(todolist_3)
 
-        actual = sut.all_tasks(todolist_2.to_name(), TaskFilter(todolist_name=todolist_2.to_name(),
-                                                                include_context=("#include1", "#include2"),
-                                                                exclude_context=("#exclude1", "#exclude2")))
-        assert actual == [task.to_task() for task in expected_tasks]
+        task_filter = TaskFilter.create(todolist_2.to_name(), Include(Word("#include1")), Include(Word("#include2")), Exclude(Word("#exclude1")), Exclude(Word("#exclude2")))
+
+        actual = sut.all_tasks(task_filter)
+
+        assert actual == [task.to_presentation() for task in expected_tasks]
 
     @pytest.fixture
     def sut(self, dependencies: Dependencies) -> TodolistSetReadPort:

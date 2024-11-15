@@ -1,17 +1,19 @@
-from urllib.parse import quote as urlencode
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
+from urllib.parse import quote as urlencode
 from uuid import UUID
 
 from bottle import template, Bottle, view, request, redirect  # type: ignore
 from bottle_utils import form  # type: ignore
+
+from dependencies import Dependencies
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
-from hexagon.fvp.read.which_task import TaskFilter
+from hexagon.fvp.read.which_task import WhichTaskFilter
 from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
-from primary.controller.read.todolist import TodolistReadController, Task
-from dependencies import Dependencies
+from primary.controller.read.todolist import TodolistReadController, TaskPresentation, TaskFilter, Include, Word, \
+    Exclude
 from primary.controller.write.todolist import TodolistWriteController
 
 bottle_app = Bottle()
@@ -54,7 +56,7 @@ def import_task(todolist_name):
 
 @bottle_app.route("/todo/<todolist_name>")
 def show_todolist(todolist_name):
-    task_filter = TaskFilter(todolist_name=todolist_name,
+    task_filter = WhichTaskFilter(todolist_name=todolist_name,
                              include_context=tuple(request.query.getall('include_context')),
                              exclude_context=tuple(request.query.getall('exclude_context')))
 
@@ -130,8 +132,10 @@ def reword_task(todolist_name: str, task_key: str):
 
 @bottle_app.get("/todo/<todolist_name>/item/<task_key>/reword")
 def display_reword_task(todolist_name: str, task_key: str):
-    task: Task = TodolistReadController(bottle_config.dependencies).task_by(todolist_name=todolist_name,
-                                                                            task_key=TaskKey(UUID(task_key)))
+    controller = TodolistReadController(bottle_config.dependencies)
+
+    task: TaskPresentation = controller.task_by(todolist_name=todolist_name,
+                                                task_key=TaskKey(UUID(task_key)))
     return template("reword", {
         "todolist_name": todolist_name,
         "task_id": task_key,

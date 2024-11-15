@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from hexagon.shared.type import TaskKey
-from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort, Task
+from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort, TaskPresentation
 from dependencies import Dependencies
 from test.fixture import TodolistFaker, TaskBuilder
 from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented
@@ -9,13 +9,13 @@ from test.primary.controller.read.fixture import TodolistSetReadPortNotImplement
 
 class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
     def __init__(self) -> None:
-        self._tasks: dict[Tuple[str, TaskKey,], Task] = {}
+        self._tasks: dict[Tuple[str, TaskKey,], TaskPresentation] = {}
 
     # todo get id from task
     def feed(self, todolist_name: str, task: TaskBuilder):
-        self._tasks[(todolist_name, task.to_key())] = task.to_task()
+        self._tasks[(todolist_name, task.to_key())] = task.to_presentation()
 
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
         assert self.already_fed(task_key, todolist_name), "task must be fed before being read"
         return self._tasks[(todolist_name, task_key)]
 
@@ -33,4 +33,4 @@ def test_query_one_task(dependencies: Dependencies, fake: TodolistFaker):
     controller = TodolistReadController(dependencies)
     actual = controller.task_by("my todolist", expected_task.to_key())
 
-    assert actual == expected_task.to_task()
+    assert actual == expected_task.to_presentation()

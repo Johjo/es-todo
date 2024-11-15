@@ -5,20 +5,19 @@ from expression import Option, Nothing, Some
 from peewee import Database  # type: ignore
 
 from dependencies import Dependencies
-from hexagon.fvp.read.which_task import TaskFilter
 from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCount, TaskKey, TaskName, TaskOpen, \
     TaskExecutionDate
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort
 from infra.peewee.sdk import PeeweeSdk, Task as TaskSdk, Todolist as TodolistSdk, TodolistDoesNotExist
-from primary.controller.read.todolist import TodolistSetReadPort, Task
+from primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
 
 
-def map_to_task_presentation(task: TaskSdk) -> Task:
-    return Task(id=TaskKey(task.key),
+def map_to_task_presentation(task: TaskSdk) -> TaskPresentation:
+    return TaskPresentation(key=TaskKey(task.key),
                 name=TaskName(task.name),
                 is_open=TaskOpen(task.is_open),
-                execution_date=cast(Option[TaskExecutionDate], task.execution_date))
+                execution_date=task.execution_date.default_value(None))
 
 
 class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
@@ -26,11 +25,11 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
         self._sdk = PeeweeSdk(database)
 
     # todo task_filter
-    def all_tasks(self, todolist_name: TodolistName, task_filter: TaskFilter) -> list[Task]:
+    def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
         all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=task_filter.todolist_name)
         return [map_to_task_presentation(task) for task in all_tasks_sdk if task_filter.include(task_name=task.name)]
 
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> Task:
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
         task: TaskSdk = self._sdk.task_by(todolist_name, task_key)
         return map_to_task_presentation(task)
 

@@ -6,13 +6,12 @@ from webtest import TestApp  # type: ignore
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
 from hexagon.fvp.aggregate import Task
-from hexagon.fvp.read.which_task import TaskFilter
 from hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
 from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, \
     TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
 from infra.memory import Memory
 from primary.controller.dependencies import inject_use_cases
-from primary.controller.read.todolist import TodolistSetReadPort
+from primary.controller.read.todolist import TodolistSetReadPort, TaskFilter
 from primary.web.pages import bottle_app, bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
@@ -45,24 +44,9 @@ def app_dependencies() -> Dependencies:
     return inject_use_cases(Dependencies.create_empty())
 
 
-# @pytest.fixture
-# def todolist_set():
-#     return TodolistSetForTest()
-
-
 @pytest.fixture
 def task_key_generator():
     return TaskKeyGeneratorForTest()
-
-
-# todo : move in a single file
-class TodolistForTest(WhichTask_Port_Todolist):
-    def __init__(self, todolist_set: Todolist_Port_TodolistSet):
-        self._todolist_set = todolist_set
-
-    def all_open_tasks(self, task_filter: TaskFilter) -> list[Task]:
-        return [Task(id=task.key, name=task.name) for task in
-                self._todolist_set.by(task_filter.todolist_name).value.tasks if task.is_open]
 
 
 @pytest.fixture

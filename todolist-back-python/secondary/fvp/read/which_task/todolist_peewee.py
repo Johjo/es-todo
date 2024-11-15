@@ -2,7 +2,8 @@ from peewee import Database  # type: ignore
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task
-from hexagon.fvp.read.which_task import TodolistPort, TaskFilter
+from hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
+from primary.controller.read.todolist import TaskFilter
 from infra.peewee.sdk import PeeweeSdk
 
 
@@ -11,7 +12,7 @@ class TodolistPeewee(TodolistPort):
         self._database = database
         self._sdk = PeeweeSdk(database)
 
-    def all_open_tasks(self, task_filter: TaskFilter) -> list[Task]:
+    def all_open_tasks(self, task_filter: WhichTaskFilter) -> list[Task]:
         all_tasks = self._sdk.all_open_tasks(task_filter.todolist_name)
         return [Task(id=task.key, name=task.name) for task in all_tasks if task_filter.include(task_name=task.name)]
 

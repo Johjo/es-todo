@@ -3,7 +3,7 @@ from faker import Faker
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task
-from hexagon.fvp.read.which_task import TodolistPort, TaskFilter
+from hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
 from secondary.fvp.read.which_task.todolist_peewee import TodolistPeewee
 from test.fixture import TodolistFaker, TodolistBuilder
 
@@ -17,7 +17,7 @@ class BaseTestTodolist:
         self.feed_todolist(expected_todolist)
         self.feed_todolist(another_todolist)
 
-        assert sut.all_open_tasks(TaskFilter(todolist_name=expected_todolist.name)) == [
+        assert sut.all_open_tasks(WhichTaskFilter(todolist_name=expected_todolist.name)) == [
             Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     def test_should_list_only_task_having_one_included_context(self, sut: TodolistPort, fake: TodolistFaker):
@@ -27,7 +27,7 @@ class BaseTestTodolist:
 
         self.feed_todolist(expected_todolist)
 
-        task_filter = TaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket",))
+        task_filter = WhichTaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket",))
         assert sut.all_open_tasks(task_filter) == [Task(id=task.to_key(), name=task.to_name()) for task in
                                                    expected_tasks]
 
@@ -39,7 +39,7 @@ class BaseTestTodolist:
         self.feed_todolist(expected_todolist)
 
         assert sut.all_open_tasks(
-            TaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket", "#sport"))) == [
+            WhichTaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket", "#sport"))) == [
                    Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     def test_should_not_list_task_having_any_excluded_context(self, sut: TodolistPort, fake: TodolistFaker):
@@ -49,8 +49,8 @@ class BaseTestTodolist:
 
         self.feed_todolist(expected_todolist)
 
-        assert sut.all_open_tasks(TaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket",),
-                                             exclude_context=("#sport",))) == [
+        assert sut.all_open_tasks(WhichTaskFilter(todolist_name=expected_todolist.name, include_context=("#supermarket",),
+                                                exclude_context=("#sport",))) == [
             Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     def test_should_include_only_task_matching_full_context(self, sut: TodolistPort, fake: TodolistFaker):
@@ -61,7 +61,7 @@ class BaseTestTodolist:
         self.feed_todolist(expected_todolist)
 
         assert sut.all_open_tasks(
-            TaskFilter(todolist_name=expected_todolist.name, include_context=("#super",), exclude_context=())) == [
+            WhichTaskFilter(todolist_name=expected_todolist.name, include_context=("#super",), exclude_context=())) == [
                    Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     def test_should_exclude_only_task_matching_full_context(self, sut: TodolistPort, fake: TodolistFaker):
@@ -72,13 +72,13 @@ class BaseTestTodolist:
         self.feed_todolist(expected_todolist)
 
         assert sut.all_open_tasks(
-            TaskFilter(todolist_name=expected_todolist.name, include_context=(), exclude_context=("#super",))) == [
+            WhichTaskFilter(todolist_name=expected_todolist.name, include_context=(), exclude_context=("#super",))) == [
                    Task(id=task.to_key(), name=task.to_name()) for task in expected_tasks]
 
     @staticmethod
     def test_should_no_task_when_todolist_does_not_exist(sut: TodolistPort, fake: TodolistFaker):
         unknown_todolist = fake.a_todolist()
-        assert sut.all_open_tasks(TaskFilter(todolist_name=unknown_todolist.name)) == []
+        assert sut.all_open_tasks(WhichTaskFilter(todolist_name=unknown_todolist.name)) == []
 
     @pytest.fixture
     def dependencies(self) -> Dependencies:
