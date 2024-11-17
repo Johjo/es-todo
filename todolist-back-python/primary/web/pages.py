@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, date
 from typing import Any
 from urllib.parse import quote as urlencode
 from uuid import UUID
@@ -62,12 +62,19 @@ def import_task(todolist_name):
 
 
 @bottle_app.route("/todo/<todolist_name>")
-def show_todolist(todolist_name):
-    task_filter = WhichTaskFilter(todolist_name=todolist_name,
-                             include_context=tuple(request.query.getall('include_context')),
-                             exclude_context=tuple(request.query.getall('exclude_context')))
+def show_todolist(todolist_name: str) -> str:
+    task_filter = WhichTaskFilter(todolist_name=TodolistName(todolist_name),
+                                  include_context=tuple(request.query.getall('include_context')),
+                                  exclude_context=tuple(request.query.getall('exclude_context')),
+                                  reference_date=date(2050, 10, 17))
 
-    which_task = FinalVersionPerfectedReadController(bottle_config.dependencies).which_task(task_filter=task_filter)
+    controller = FinalVersionPerfectedReadController(bottle_config.dependencies)
+    which_task = controller.which_task(
+        todolist_name=todolist_name,
+        include_context=tuple(request.query.getall('include_context')),
+        exclude_context=tuple(request.query.getall('exclude_context')),
+        task_filter=task_filter)
+
     match which_task:
         case NothingToDo():
             return show_todolist_when_no_task(todolist_name=todolist_name)

@@ -95,12 +95,6 @@ class TodolistSetReadPort(ABC):
         pass
 
 
-class CalendarPort(ABC):
-    @abstractmethod
-    def today(self) -> date:
-        pass
-
-
 class TodolistReadController:
     def __init__(self, dependencies: Dependencies):
         self.dependencies = dependencies

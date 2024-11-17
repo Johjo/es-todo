@@ -3,7 +3,8 @@ from datetime import date
 import pytest
 
 from dependencies import Dependencies
-from primary.controller.read.todolist import TodolistSetReadPort, TodolistReadController, TaskPresentation, CalendarPort
+from primary.controller.read.todolist import TodolistSetReadPort, TodolistReadController, TaskPresentation
+from primary.controller.read.final_version_perfected import CalendarPort
 from test.fixture import TodolistFaker, TaskBuilder
 from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented
 

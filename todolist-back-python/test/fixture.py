@@ -133,3 +133,10 @@ class TodolistFaker:
 
     def a_task_filter(self, todolist_name: str) -> TaskFilterBuilder:
         return TaskFilterBuilder(todolist_name=todolist_name)
+
+    def a_date(self, before: date | None = None, after: date | None = None) -> date:
+        if not before:
+            before = date(2030, 10, 17)
+        if not after:
+            after = date(1930, 10, 17)
+        return cast(date, self.fake.date_between(start_date=after, end_date=before))

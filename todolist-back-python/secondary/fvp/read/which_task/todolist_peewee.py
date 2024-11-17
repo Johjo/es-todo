@@ -13,7 +13,7 @@ class TodolistPeewee(TodolistPort):
 
     def all_open_tasks(self, task_filter: WhichTaskFilter) -> list[Task]:
         all_tasks = self._sdk.all_open_tasks(task_filter.todolist_name)
-        return [Task(id=task.key, name=task.name) for task in all_tasks if task_filter.include(task_name=task.name)]
+        return [Task(id=task.key, name=task.name) for task in all_tasks if task_filter.include(task_name=task.name, task_date=task.execution_date)]
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistPeewee':

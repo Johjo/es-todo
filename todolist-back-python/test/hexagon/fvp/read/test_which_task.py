@@ -6,7 +6,6 @@ from faker import Faker
 from hexagon.fvp.aggregate import Task, NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot
 from hexagon.fvp.read.which_task import TodolistPort, WhichTaskQuery, WhichTaskFilter
 from hexagon.shared.type import TodolistName
-from primary.controller.read.todolist import TaskFilter
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.fixture import a_task_key
 
@@ -47,13 +46,8 @@ class FvpFaker:
             key = self._fake.random_int()
         return Task(id=a_task_key(key), name=self._fake.sentence())
 
-    def a_task_filter_old(self):
-        return TaskFilter(todolist_name=self._fake.word(),
-                          include_context=(self._fake.word(),),
-                          exclude_context=(self._fake.word(),))
-
     def a_which_task_filter(self) -> WhichTaskFilter:
-        return WhichTaskFilter(todolist_name=TodolistName(self._fake.word()),
+        return WhichTaskFilter(todolist_name=TodolistName(self._fake.word()), reference_date=self._fake.date_object(),
                           include_context=(self._fake.word(),),
                           exclude_context=(self._fake.word(),))
 

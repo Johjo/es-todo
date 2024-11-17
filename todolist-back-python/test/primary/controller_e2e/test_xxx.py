@@ -1,3 +1,4 @@
+from datetime import date
 from uuid import UUID
 
 import pytest
@@ -43,6 +44,14 @@ def test_xxx(dependencies: Dependencies):
     read = TodolistReadController(dependencies)
     fvp_read = FinalVersionPerfectedReadController(dependencies)
     todolist_name = TodolistName("todolist")
+    which_task_filter = WhichTaskFilter(todolist_name=todolist_name, reference_date=date(2020, 10, 17))
+
+    def which_task():
+        return fvp_read.which_task(todolist_name=todolist_name,
+                                   include_context=which_task_filter.include_context,
+                                   exclude_context=which_task_filter.exclude_context,
+                                   task_filter=which_task_filter)
+
 
     write.create_todolist(todolist_name=todolist_name)
     assert read.all_todolist_by_name() == [todolist_name]
@@ -51,20 +60,16 @@ def test_xxx(dependencies: Dependencies):
     write.open_task(todolist_name=todolist_name, task_name=TaskName("task 2 #context_2"))
 
     assert read.counts_by_context(todolist_name=todolist_name) == [("#context_1", 1), ("#context_2", 1)]
-    assert fvp_read.which_task(WhichTaskFilter(todolist_name=todolist_name)) == ChooseTheTask(id_1=TaskKey(UUID(int=1)),
-                                                                                            name_1="task 1 #context_1",
-                                                                                            id_2=TaskKey(UUID(int=2)),
-                                                                                            name_2="task 2 #context_2")
+    assert which_task() == ChooseTheTask(id_1=TaskKey(UUID(int=1)), name_1="task 1 #context_1",
+                                         id_2=TaskKey(UUID(int=2)), name_2="task 2 #context_2")
 
     write.choose_and_ignore_task(chosen_task=TaskKey(UUID(int=1)), ignored_task=TaskKey(UUID(int=2)))
 
-    assert fvp_read.which_task(WhichTaskFilter(todolist_name=todolist_name)) == DoTheTask(id=TaskKey(UUID(int=1)), name="task 1 #context_1")
+    assert which_task() == DoTheTask(id=TaskKey(UUID(int=1)), name="task 1 #context_1")
 
     write.reset_all_priorities()
-    assert fvp_read.which_task(WhichTaskFilter(todolist_name=todolist_name)) == ChooseTheTask(id_1=TaskKey(UUID(int=1)),
-                                                                                            name_1="task 1 #context_1",
-                                                                                            id_2=TaskKey(UUID(int=2)),
-                                                                                            name_2="task 2 #context_2")
+    assert which_task() == ChooseTheTask(id_1=TaskKey(UUID(int=1)), name_1="task 1 #context_1",
+                                         id_2=TaskKey(UUID(int=2)), name_2="task 2 #context_2")
 
     write.postpone_task(name=todolist_name, key=TaskKey(UUID(int=1)), execution_date=TaskExecutionDate(today().date()))
     assert read.task_by(todolist_name=todolist_name,

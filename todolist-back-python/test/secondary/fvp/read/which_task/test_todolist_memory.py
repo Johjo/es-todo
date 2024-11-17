@@ -14,7 +14,8 @@ class TodolistMemory(TodolistPort):
 
     def all_open_tasks(self, task_filter: WhichTaskFilter) -> list[Task]:
         tasks = [task for task in self.memory.all_tasks(todolist_name=task_filter.todolist_name) if task.is_open]
-        return [Task(id=task.key, name=task.name) for task in tasks if task_filter.include(task.name)]
+        return [Task(id=task.key, name=task.name) for task in tasks if
+                task_filter.include(task.name, task.execution_date)]
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistMemory':

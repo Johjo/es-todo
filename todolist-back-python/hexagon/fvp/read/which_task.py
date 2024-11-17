@@ -1,5 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from datetime import date
+
+from expression import Option, Nothing
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
@@ -11,10 +14,14 @@ from shared.filter import TextFilter
 @dataclass(frozen=True, eq=True)
 class WhichTaskFilter:
     todolist_name: TodolistName
+    reference_date: date
     include_context: tuple[str, ...] = ()
     exclude_context: tuple[str, ...] = ()
 
-    def include(self, task_name: str) -> bool:
+    def include(self, task_name: str, task_date: Option[date]) -> bool:
+        if task_date != Nothing:
+            if task_date.value > self.reference_date:
+                return False
         text_filter = TextFilter(included_words=self.include_context, excluded_words=self.exclude_context)
         return text_filter.include(task_name)
 
