@@ -1,0 +1,107 @@
+b'<html>
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Todo</title>
+
+</head>
+
+<body>
+
+
+
+<p>
+
+<h2> Calendrier</h2>
+
+<ul>
+
+<li>
+
+    <p><strong>2020-10-13</strong> buy the milk <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/reword?">Renommer</a> <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/postpone?">Reporter</a></p>
+
+    </li>
+
+
+
+<li>
+
+    <p><strong>2020-10-14</strong> buy the water <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/reword?">Renommer</a> <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/postpone?">Reporter</a></p>
+
+    </li>
+
+
+
+</ul>
+
+</p>
+
+
+
+<div>
+
+Ajouter une t\xc3\xa2che
+
+<form action="/todo/my_todolist/item?" method="post">
+
+    <input type="text" name="task_name">
+
+    <input type="submit" value="Add item">
+
+</form>
+
+</div>
+
+
+
+Red\xc3\xa9marrer l\'algo
+
+<form action="/todo/my_todolist/reset?" method="post">
+
+    <input type="submit" value="Reset">
+
+</form>
+
+
+
+Il y a xxxx_number_of_items t\xc3\xa2ches en attente.
+
+
+
+
+
+<h2> Contexte </h2>
+
+<form action="/todo/my_todolist" method="get">
+
+<ul>
+
+<li> <a href="/todo/my_todolist">Supprimer les filtres</a></li>
+
+</ul>
+
+    <input type="submit" value="Filtrer">
+
+</form>
+
+
+
+<ul>
+
+<li><a href="/todo/my_todolist/export">Exporter les t\xc3\xa2ches</a></li>
+
+<li><a href="/todo/my_todolist/import">Importer des t\xc3\xa2ches</a></li>
+
+</ul>
+
+
+
+
+
+
+
+</body>
+
+</html>'

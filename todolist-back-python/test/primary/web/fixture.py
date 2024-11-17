@@ -12,4 +12,3 @@ class CleanResponse:
         without_localhost = without_protocol.split("/", 1)[1]
         return "/" + without_localhost
 
-

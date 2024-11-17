@@ -3,7 +3,6 @@ from peewee import Database  # type: ignore
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task
 from hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
-from primary.controller.read.todolist import TaskFilter
 from infra.peewee.sdk import PeeweeSdk
 
 
@@ -21,7 +20,7 @@ class TodolistPeewee(TodolistPort):
         return TodolistPeewee(dependencies.get_infrastructure(Database))
 
     @staticmethod
-    def match_included_context(task_filter: TaskFilter, task_name: str) -> bool:
+    def match_included_context(task_filter: WhichTaskFilter, task_name: str) -> bool:
         if task_filter.include_context == ():
             return True
 

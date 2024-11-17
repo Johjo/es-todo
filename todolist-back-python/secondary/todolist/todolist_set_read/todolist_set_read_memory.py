@@ -1,4 +1,7 @@
 import re
+from datetime import date
+
+from expression import Nothing
 
 from dependencies import Dependencies
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
@@ -37,11 +40,23 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
         contexts = re.findall(r"([#@][_A-Za-z0-9-]+)", task.name)
         return [TodolistContext(context.lower()) for context in contexts]
 
-    # todo task_filter
     def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
         return [self._to_task_presentation(task) for task in self.memory.all_tasks(task_filter.todolist_name) if task_filter.include(task_name=task.name)]
 
+    def all_tasks_postponed_task(self, todolist_name: str, reference_date: date):
+        return [self._to_task_presentation(task) for task in self.memory.all_tasks(todolist_name) if task.is_open and task.execution_date != Nothing and task.execution_date.value >= reference_date]
+
+    # todo task_filter
     @classmethod
     def factory(cls, dependencies: Dependencies)-> 'TodolistSetReadInMemory':
         memory = dependencies.get_infrastructure(Memory)
         return TodolistSetReadInMemory(memory)
+
+
+
+
+
+
+
+
+

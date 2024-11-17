@@ -1,9 +1,11 @@
+from datetime import date
 
 import pytest
 from dateutil.utils import today
 
 from dependencies import Dependencies
-from primary.controller.read.todolist import TodolistSetReadPort, TaskFilter, Include, Exclude, Word
+from primary.controller.read.todolist import TodolistSetReadPort, TaskFilter, Include, Exclude, Word, \
+    TodolistReadController
 from test.fixture import TodolistFaker, TodolistBuilder
 
 
@@ -59,6 +61,20 @@ class BaseTestTodolistSetRead:
         actual = sut.all_tasks(task_filter)
 
         assert actual == [task.to_presentation() for task in expected_tasks]
+
+    def test_read_all_postponed_tasks(self, sut: TodolistSetReadPort, fake: TodolistFaker):
+        expected_tasks = [fake.a_task().having(execution_date=date(2020, 10, 17)),
+                          fake.a_task().having(execution_date=date(2021, 11, 23))]
+        todolist_2 = fake.a_todolist().having(tasks=[*expected_tasks, fake.a_task(), fake.a_closed_task(),
+                                                     fake.a_task().having(execution_date=date(2020, 10, 16))])
+        self.feed_todolist(todolist_2)
+
+        actual = sut.all_tasks_postponed_task(todolist_name=todolist_2.to_name(), reference_date=date(2020, 10, 17))
+
+        assert actual == [task.to_presentation() for task in expected_tasks]
+
+
+
 
     @pytest.fixture
     def sut(self, dependencies: Dependencies) -> TodolistSetReadPort:

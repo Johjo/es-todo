@@ -6,6 +6,7 @@ from uuid import UUID
 
 from bottle import template, Bottle, view, request, redirect  # type: ignore
 from bottle_utils import form  # type: ignore
+from dateutil.utils import today
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
@@ -45,6 +46,14 @@ def create_todolist():
 @view("import")
 def show_import(todolist_name):
     return base_value(todolist_name)
+
+
+@bottle_app.route("/todo/<todolist_name>/calendar")
+@view("calendar")
+def show_calendar(todolist_name):
+    tasks = TodolistReadController(bottle_config.dependencies).all_tasks_postponed_task(todolist_name)
+    return {**base_value(todolist_name),
+            "tasks":tasks}
 
 
 @bottle_app.post("/todo/<todolist_name>/import")

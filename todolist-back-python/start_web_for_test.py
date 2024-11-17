@@ -1,4 +1,5 @@
 import os
+from datetime import date, datetime
 from pathlib import Path
 from uuid import uuid4
 
@@ -11,7 +12,7 @@ from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, 
     TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
 from infra.peewee.sdk import PeeweeSdk
 from primary.controller.dependencies import inject_use_cases
-from primary.controller.read.todolist import TodolistSetReadPort
+from primary.controller.read.todolist import TodolistSetReadPort, CalendarPort
 from primary.web.pages import bottle_config, bottle_app
 from secondary.fvp.read.which_task.todolist_peewee import TodolistPeewee as WhichTask_Port_Todolist_Peewee
 from secondary.todolist.todolist_set_peewee import TodolistSetPeewee
@@ -31,6 +32,15 @@ def inject_final_version_perfected(dependencies: Dependencies) -> Dependencies:
     return dependencies
 
 
+class Calendar(CalendarPort):
+    def today(self) -> date:
+        return datetime.today().date()
+
+    @classmethod
+    def factory(cls, dependencies: Dependencies) -> 'Calendar':
+        return Calendar()
+
+
 def inject_adapter(dependencies: Dependencies):
     dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, TodolistSetPeewee.factory)
     dependencies = inject_final_version_perfected(dependencies)
@@ -39,6 +49,7 @@ def inject_adapter(dependencies: Dependencies):
     dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
     dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, WhichTask_Port_Todolist_Peewee.factory)
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetPeewee.factory)
+    dependencies = dependencies.feed_adapter(CalendarPort, Calendar.factory)
 
     return dependencies
 

@@ -33,6 +33,10 @@ class Exclude(Criterion):
 class Word(Category):
     value: str
 
+@dataclass
+class WithoutDate(Category):
+    pass
+
 
 @dataclass(frozen=True, eq=True)
 class TaskFilter:
@@ -49,6 +53,8 @@ class TaskFilter:
                     include_context.add(word)
                 case Exclude(Word(word)):
                     exclude_context.add(word)
+                case Exclude(WithoutDate()):
+                    pass
                 case _:
                     raise ValueError(f"Unknown criterion {criterion}")
 
@@ -84,6 +90,16 @@ class TodolistSetReadPort(ABC):
     def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
         pass
 
+    @abstractmethod
+    def all_tasks_postponed_task(self, todolist_name: str, reference_date: date) -> list[TaskPresentation]:
+        pass
+
+
+class CalendarPort(ABC):
+    @abstractmethod
+    def today(self) -> date:
+        pass
+
 
 class TodolistReadController:
     def __init__(self, dependencies: Dependencies):
@@ -109,6 +125,11 @@ class TodolistReadController:
     def all_task(self, task_filter: TaskFilter):
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
         return todolist_set.all_tasks(task_filter=task_filter)
+
+    def all_tasks_postponed_task(self, todolist_name: str):
+        todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
+        calendar : CalendarPort = self.dependencies.get_adapter(CalendarPort)
+        return todolist_set.all_tasks_postponed_task(todolist_name=todolist_name, reference_date=calendar.today())
 
 
 def to_markdown(tasks: list[TaskPresentation]) -> str:
