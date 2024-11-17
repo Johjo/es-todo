@@ -6,15 +6,13 @@ from uuid import UUID
 
 from bottle import template, Bottle, view, request, redirect  # type: ignore
 from bottle_utils import form  # type: ignore
-from dateutil.utils import today
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
 from hexagon.fvp.read.which_task import WhichTaskFilter
 from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
-from primary.controller.read.todolist import TodolistReadController, TaskPresentation, TaskFilter, Include, Word, \
-    Exclude
+from primary.controller.read.todolist import TodolistReadController, TaskPresentation
 from primary.controller.write.todolist import TodolistWriteController
 
 bottle_app = Bottle()

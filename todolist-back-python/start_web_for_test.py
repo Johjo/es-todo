@@ -37,7 +37,7 @@ class Calendar(CalendarPort):
         return datetime.today().date()
 
     @classmethod
-    def factory(cls, dependencies: Dependencies) -> 'Calendar':
+    def factory(cls, _: Dependencies) -> 'Calendar':
         return Calendar()
 
 

@@ -1,7 +1,6 @@
 from datetime import date
 
 import pytest
-from faker import Faker
 
 from dependencies import Dependencies
 from primary.controller.read.todolist import TodolistSetReadPort, TodolistReadController, TaskPresentation, CalendarPort
@@ -11,13 +10,13 @@ from test.primary.controller.read.fixture import TodolistSetReadPortNotImplement
 
 class _TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
     def __init__(self) -> None:
-        self._all_tasks: dict[tuple[str, date], list[TaskPresentation]] = {}
+        self._all_tasks: dict[str, list[TaskPresentation]] = {}
 
-    def all_tasks_postponed_task(self, todolist_name: str, reference_date: date) -> list[TaskPresentation]:
-        return self._all_tasks[(todolist_name, reference_date)]
+    def all_tasks_postponed_task(self, todolist_name: str) -> list[TaskPresentation]:
+        return self._all_tasks[todolist_name]
 
-    def feed(self, todolist_name: str, reference_date: date, expected_tasks: list[TaskBuilder]):
-        self._all_tasks[(todolist_name, reference_date)] = [task.to_presentation() for task in expected_tasks]
+    def feed(self, todolist_name: str, expected_tasks: list[TaskBuilder]):
+        self._all_tasks[todolist_name] = [task.to_presentation() for task in expected_tasks]
 
 
 @pytest.fixture
@@ -54,14 +53,11 @@ def sut(dependencies: Dependencies) -> TodolistReadController:
     return TodolistReadController(dependencies)
 
 
-def test_query_all_tasks(sut: TodolistReadController, todolist_set_read: _TodolistSetReadForTest, fake: TodolistFaker,
-                         faker: Faker, calendar: _CalendarForTest):
+def test_query_all_tasks(sut: TodolistReadController, todolist_set_read: _TodolistSetReadForTest, fake: TodolistFaker):
     # GIVEN
     expected_tasks = [fake.a_task(), fake.a_task()]
     todolist = fake.a_todolist()
-    today = faker.date_object()
-    calendar.feed_today(today)
-    todolist_set_read.feed(todolist_name=todolist.to_name(), reference_date=today, expected_tasks=expected_tasks)
+    todolist_set_read.feed(todolist_name=todolist.to_name(), expected_tasks=expected_tasks)
 
     # WHEN
     actual = sut.all_tasks_postponed_task(todolist_name=todolist.to_name())

@@ -9,7 +9,7 @@ from hexagon.fvp.read.which_task import WhichTaskFilter
 from hexagon.shared.type import TaskKey, TaskExecutionDate, TodolistName, TaskName, TaskOpen
 from hexagon.todolist.port import TaskKeyGeneratorPort
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
-from primary.controller.read.todolist import TodolistReadController, TaskPresentation, TaskFilter
+from primary.controller.read.todolist import TodolistReadController, TaskPresentation
 from primary.controller.write.todolist import TodolistWriteController
 from start_web_for_test import inject_all_dependencies
 

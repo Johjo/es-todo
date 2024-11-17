@@ -1,5 +1,4 @@
 import re
-from datetime import date
 
 from expression import Nothing
 
@@ -43,8 +42,9 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
     def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
         return [self._to_task_presentation(task) for task in self.memory.all_tasks(task_filter.todolist_name) if task_filter.include(task_name=task.name)]
 
-    def all_tasks_postponed_task(self, todolist_name: str, reference_date: date):
-        return [self._to_task_presentation(task) for task in self.memory.all_tasks(todolist_name) if task.is_open and task.execution_date != Nothing and task.execution_date.value >= reference_date]
+    def all_tasks_postponed_task(self, todolist_name: str):
+        return [self._to_task_presentation(task) for task in self.memory.all_tasks(todolist_name) if
+                task.is_open and task.execution_date != Nothing]
 
     # todo task_filter
     @classmethod

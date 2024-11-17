@@ -1,5 +1,4 @@
 import re
-from datetime import date
 from typing import cast
 
 from expression import Option, Nothing, Some
@@ -22,9 +21,9 @@ def map_to_task_presentation(task: TaskSdk) -> TaskPresentation:
 
 
 class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
-    def all_tasks_postponed_task(self, todolist_name: str, reference_date: date):
+    def all_tasks_postponed_task(self, todolist_name: str):
         all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=todolist_name)
-        return [map_to_task_presentation(task) for task in all_tasks_sdk if task.is_open and task.execution_date != Nothing and task.execution_date.value >= reference_date]
+        return [map_to_task_presentation(task) for task in all_tasks_sdk if task.is_open and task.execution_date != Nothing]
 
     def __init__(self, database: Database):
         self._sdk = PeeweeSdk(database)

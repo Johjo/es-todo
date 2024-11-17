@@ -91,7 +91,7 @@ class TodolistSetReadPort(ABC):
         pass
 
     @abstractmethod
-    def all_tasks_postponed_task(self, todolist_name: str, reference_date: date) -> list[TaskPresentation]:
+    def all_tasks_postponed_task(self, todolist_name: str) -> list[TaskPresentation]:
         pass
 
 
@@ -128,8 +128,7 @@ class TodolistReadController:
 
     def all_tasks_postponed_task(self, todolist_name: str):
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
-        calendar : CalendarPort = self.dependencies.get_adapter(CalendarPort)
-        return todolist_set.all_tasks_postponed_task(todolist_name=todolist_name, reference_date=calendar.today())
+        return todolist_set.all_tasks_postponed_task(todolist_name=todolist_name)
 
 
 def to_markdown(tasks: list[TaskPresentation]) -> str:
