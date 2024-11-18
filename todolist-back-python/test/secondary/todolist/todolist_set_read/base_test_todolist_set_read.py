@@ -62,9 +62,11 @@ class BaseTestTodolistSetRead:
         assert actual == [task.to_presentation() for task in expected_tasks]
 
     def test_read_all_postponed_tasks(self, sut: TodolistSetReadPort, fake: TodolistFaker):
-        expected_tasks = [fake.a_task().having(execution_date=date(2020, 10, 17)),
+        expected_tasks = [fake.a_task().having(execution_date=date(2018, 10, 17)),
+                          fake.a_task().having(execution_date=date(2019, 10, 17)),
+                          fake.a_task().having(execution_date=date(2020, 10, 17)),
                           fake.a_task().having(execution_date=date(2021, 11, 23))]
-        todolist = fake.a_todolist().having(tasks=[*expected_tasks, fake.a_task(), fake.a_closed_task()])
+        todolist = fake.a_todolist().having(tasks=[expected_tasks[2], expected_tasks[1], fake.a_task(), expected_tasks[3], fake.a_closed_task(), expected_tasks[0]])
         self.feed_todolist(todolist)
 
         actual = sut.all_tasks_postponed_task(todolist_name=todolist.to_name())

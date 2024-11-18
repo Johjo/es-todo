@@ -43,8 +43,9 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
         return [self._to_task_presentation(task) for task in self.memory.all_tasks(task_filter.todolist_name) if task_filter.include(task_name=task.name)]
 
     def all_tasks_postponed_task(self, todolist_name: str):
-        return [self._to_task_presentation(task) for task in self.memory.all_tasks(todolist_name) if
-                task.is_open and task.execution_date != Nothing]
+        tasks = [self._to_task_presentation(task) for task in self.memory.all_tasks(todolist_name) if
+                    task.is_open and task.execution_date != Nothing]
+        return sorted(tasks, key=lambda task: task.execution_date)
 
     # todo task_filter
     @classmethod

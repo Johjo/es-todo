@@ -23,7 +23,9 @@ def map_to_task_presentation(task: TaskSdk) -> TaskPresentation:
 class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
     def all_tasks_postponed_task(self, todolist_name: str):
         all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=todolist_name)
-        return [map_to_task_presentation(task) for task in all_tasks_sdk if task.is_open and task.execution_date != Nothing]
+        all_tasks = [map_to_task_presentation(task) for task in all_tasks_sdk if
+                    task.is_open and task.execution_date != Nothing]
+        return sorted(all_tasks, key=lambda task: task.execution_date)
 
     def __init__(self, database: Database):
         self._sdk = PeeweeSdk(database)
