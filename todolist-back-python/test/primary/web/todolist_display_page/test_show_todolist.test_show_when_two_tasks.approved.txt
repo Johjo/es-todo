@@ -10,6 +10,8 @@ b'<html>
 
 <body>
 
+<div><a href="/todo/my_todolist/calendar?">Calendrier</a></div>
+
 
 
 <p>

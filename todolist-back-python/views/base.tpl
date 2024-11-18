@@ -4,6 +4,7 @@
     <title>Todo</title>
 </head>
 <body>
+<div><a href="/todo/{{todolist_name}}/calendar?{{query_string}}">Calendrier</a></div>
 
 {{!base}}
 
