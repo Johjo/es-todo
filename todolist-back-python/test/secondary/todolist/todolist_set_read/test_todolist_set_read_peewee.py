@@ -5,7 +5,7 @@ from peewee import Database, SqliteDatabase
 from dependencies import Dependencies
 from infra.peewee.sdk import PeeweeSdk
 from primary.controller.read.todolist import TodolistSetReadPort
-from secondary.todolist.todolist_set_peewee import TodolistSetPeewee
+from secondary.todolist.todolist_set_peewee import TodolistSetPeewee, TodolistSetReadPeewee
 from test.fixture import TodolistBuilder, TodolistFaker
 from test.secondary.todolist.todolist_set_read.base_test_todolist_set_read import BaseTestTodolistSetRead
 
@@ -26,7 +26,7 @@ class TestTodolistSetReadPeewee(BaseTestTodolistSetRead):
     @pytest.fixture
     def dependencies(self) -> Dependencies:
         all_dependencies = Dependencies.create_empty()
-        all_dependencies = all_dependencies.feed_adapter(TodolistSetReadPort, TodolistSetPeewee.factory)
+        all_dependencies = all_dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadPeewee.factory)
         all_dependencies = all_dependencies.feed_infrastructure(Database, lambda _: self.database)
         return all_dependencies
 

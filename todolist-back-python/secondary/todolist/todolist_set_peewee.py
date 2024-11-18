@@ -20,42 +20,10 @@ def map_to_task_presentation(task: TaskSdk) -> TaskPresentation:
                 execution_date=task.execution_date.default_value(None))
 
 
-class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
-    def all_tasks_postponed_task(self, todolist_name: str):
-        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=todolist_name)
-        all_tasks = [map_to_task_presentation(task) for task in all_tasks_sdk if
-                    task.is_open and task.execution_date != Nothing]
-        return sorted(all_tasks, key=lambda task: task.execution_date)
-
+class TodolistSetPeewee(TodolistSetPort):
     def __init__(self, database: Database):
         self._sdk = PeeweeSdk(database)
 
-    # todo task_filter
-    def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
-        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=task_filter.todolist_name)
-        return [map_to_task_presentation(task) for task in all_tasks_sdk if task_filter.include(task_name=task.name)]
-
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
-        task: TaskSdk = self._sdk.task_by(todolist_name, task_key)
-        return map_to_task_presentation(task)
-
-    def all_by_name(self) -> list[TodolistName]:
-        all_todolist : list[TodolistSdk] = self._sdk.all_todolist()
-        return [TodolistName(todolist.name) for todolist in all_todolist]
-
-    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        all_tasks_sdk: list[TaskSdk] = self._sdk.all_open_tasks(todolist_name=todolist_name)
-        counts_by_context: dict[str, int]= {}
-        for task in all_tasks_sdk:
-            contexts = self._extract_context_from_name(task)
-            for context in contexts:
-                counts_by_context[context] = counts_by_context.get(context, 0) + 1
-        return [(TodolistContext(context), TodolistContextCount(count)) for context, count in counts_by_context.items()]
-
-    @staticmethod
-    def _extract_context_from_name(task):
-        contexts = re.findall(r"([#@][_A-Za-z0-9-]+)", task.name)
-        return [TodolistContext(context.lower()) for context in contexts]
 
     def by(self, todolist_name: TodolistName) -> Option[TodolistSnapshot]:
         try:
@@ -82,3 +50,45 @@ class TodolistSetPeewee(TodolistSetPort, TodolistSetReadPort):
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetPeewee':
         return TodolistSetPeewee(dependencies.get_infrastructure(Database))
+
+
+class TodolistSetReadPeewee(TodolistSetReadPort):
+    def all_tasks_postponed_task(self, todolist_name: str):
+        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=todolist_name)
+        all_tasks = [map_to_task_presentation(task) for task in all_tasks_sdk if
+                     task.is_open and task.execution_date != Nothing]
+        return sorted(all_tasks, key=lambda task: task.execution_date)
+
+    def __init__(self, database: Database):
+        self._sdk = PeeweeSdk(database)
+
+    # todo task_filter
+    def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
+        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=task_filter.todolist_name)
+        return [map_to_task_presentation(task) for task in all_tasks_sdk if task_filter.include(task_name=task.name)]
+
+    def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
+        task: TaskSdk = self._sdk.task_by(todolist_name, task_key)
+        return map_to_task_presentation(task)
+
+    def all_by_name(self) -> list[TodolistName]:
+        all_todolist: list[TodolistSdk] = self._sdk.all_todolist()
+        return [TodolistName(todolist.name) for todolist in all_todolist]
+
+    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
+        all_tasks_sdk: list[TaskSdk] = self._sdk.all_open_tasks(todolist_name=todolist_name)
+        counts_by_context: dict[str, int] = {}
+        for task in all_tasks_sdk:
+            contexts = self._extract_context_from_name(task)
+            for context in contexts:
+                counts_by_context[context] = counts_by_context.get(context, 0) + 1
+        return [(TodolistContext(context), TodolistContextCount(count)) for context, count in counts_by_context.items()]
+
+    @staticmethod
+    def _extract_context_from_name(task):
+        contexts = re.findall(r"([#@][_A-Za-z0-9-]+)", task.name)
+        return [TodolistContext(context.lower()) for context in contexts]
+
+    @classmethod
+    def factory(cls, dependencies: Dependencies) -> 'TodolistSetReadPeewee':
+        return TodolistSetReadPeewee(dependencies.get_infrastructure(Database))

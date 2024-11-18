@@ -85,7 +85,7 @@ class BaseTestTodolistSet:
 
     @pytest.fixture
     def dependencies(self) -> Dependencies:
-        raise NotImplementedError()
+        raise NotImplementedError() # pragma: no cover
 
     def feed_todolist(self, todolist: TodolistBuilder) -> None:
         raise NotImplementedError()

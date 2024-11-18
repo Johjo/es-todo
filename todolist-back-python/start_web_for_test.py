@@ -6,20 +6,19 @@ from uuid import uuid4
 from peewee import Database, SqliteDatabase  # type: ignore
 
 from dependencies import Dependencies
-from hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
+from hexagon.fvp.read.which_task import TodolistPort
 from hexagon.shared.type import TaskKey
-from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, \
-    TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
+from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from infra.peewee.sdk import PeeweeSdk
 from primary.controller.dependencies import inject_use_cases
-from primary.controller.read.todolist import TodolistSetReadPort
 from primary.controller.read.final_version_perfected import CalendarPort
+from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_config, bottle_app
-from secondary.fvp.read.which_task.todolist_peewee import TodolistPeewee as WhichTask_Port_Todolist_Peewee
-from secondary.todolist.todolist_set_peewee import TodolistSetPeewee
+from secondary.fvp.read.which_task.todolist_peewee import TodolistPeewee
+from secondary.todolist.todolist_set_peewee import TodolistSetPeewee, TodolistSetReadPeewee
 
 
-class TaskKeyGeneratorRandom(OpenTask_Port_TaskKeyGenerator):
+class TaskKeyGeneratorRandom(TaskKeyGeneratorPort):
 
     def generate(self) -> TaskKey:
         return TaskKey(uuid4())
@@ -43,13 +42,13 @@ class Calendar(CalendarPort):
 
 
 def inject_adapter(dependencies: Dependencies):
-    dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, TodolistSetPeewee.factory)
+    dependencies = dependencies.feed_adapter(TodolistSetPort, TodolistSetPeewee.factory)
+    dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadPeewee.factory)
     dependencies = inject_final_version_perfected(dependencies)
 
     task_key_generator = TaskKeyGeneratorRandom()
-    dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
-    dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, WhichTask_Port_Todolist_Peewee.factory)
-    dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetPeewee.factory)
+    dependencies = dependencies.feed_adapter(TaskKeyGeneratorPort, lambda _: task_key_generator)
+    dependencies = dependencies.feed_adapter(TodolistPort, TodolistPeewee.factory)
     dependencies = dependencies.feed_adapter(CalendarPort, Calendar.factory)
 
     return dependencies
