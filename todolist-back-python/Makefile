@@ -11,7 +11,13 @@ ROOT_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 .PHONY: help
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
+	@echo "start : start server"
+	@echo "update : update from git"
 
-.PHONY: start ## ⚙ Installation des packages du projet
+.PHONY: start
 start:
 	python -m pipenv run start_web_for_test.py
+
+.PHONY: update
+update:
+	git pull
