@@ -1,10 +1,11 @@
 from dataclasses import dataclass
 from datetime import datetime, date
+from pathlib import Path
 from typing import Any
 from urllib.parse import quote as urlencode
 from uuid import UUID
 
-from bottle import template, Bottle, view, request, redirect  # type: ignore
+from bottle import template, Bottle, view, request, redirect, static_file  # type: ignore
 from bottle_utils import form  # type: ignore
 
 from dependencies import Dependencies
@@ -14,6 +15,7 @@ from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskNa
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, TaskPresentation
 from primary.controller.write.todolist import TodolistWriteController
+from test.primary.controller.write.conftest import dependencies
 
 bottle_app = Bottle()
 
@@ -104,7 +106,6 @@ def show_todolist_when_two_tasks(todolist_name: str, choose_the_task: ChooseTheT
     task_1 = TodolistReadController(bottle_config.dependencies).task_by(todolist_name, choose_the_task.id_1)
     task_2 = TodolistReadController(bottle_config.dependencies).task_by(todolist_name, choose_the_task.id_2)
 
-    print(task_1, task_2)
     return template("choose_the_task",
                     {**base_value(todolist_name),
                      "name_1": choose_the_task.name_1,
@@ -220,6 +221,15 @@ def reset_all_priorities(todolist_name):
     controller = TodolistWriteController(bottle_config.dependencies)
     controller.reset_all_priorities()
     return redirect_to_todolist(todolist_name)
+
+
+@bottle_app.get('/static/<filename:path>')
+def static(filename: str):
+    root : str = bottle_config.dependencies.get_path("static_path")
+    return static_file(filename, root=Path(root).absolute())
+
+
+
 
 
 def get_string_from_request_post(field_name: str) -> str:

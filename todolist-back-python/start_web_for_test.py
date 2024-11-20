@@ -67,6 +67,11 @@ def inject_all_dependencies(dependencies: Dependencies):
     dependencies = inject_use_cases(dependencies)
     dependencies = inject_adapter(dependencies)
     dependencies = inject_infrastructure(dependencies)
+    from dotenv import load_dotenv
+    load_dotenv()
+    static_path = os.environ["STATIC_PATH"]
+    dependencies = dependencies.feed_path("static_path", lambda _: Path(static_path))
+
     return dependencies
 
 

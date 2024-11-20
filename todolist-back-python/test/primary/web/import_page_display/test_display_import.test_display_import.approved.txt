@@ -6,15 +6,83 @@ b'<html>
 
     <title>Todo</title>
 
+    <link rel="stylesheet" href="/static/todolist.css">
+
 </head>
 
 <body>
 
-<div><a href="/todo/my_todolist/calendar?">Calendrier</a></div>
+<div class="menu">
+
+    <div><a href="/todo/my_todolist/calendar?">Calendrier</a></div>
+
+</div>
+
+<div class="page">
+
+    <div class="left">
+
+        <div class="restart-fvp">
+
+            <h2> Red\xc3\xa9marrer l\'algo</h2>
+
+            <form action="/todo/my_todolist/reset?" method="post">
+
+                <input type="submit" value="Red\xc3\xa9marrer l\'algo">
+
+            </form>
+
+        </div>
 
 
 
-<p>
+        <div class="context-filter">
+
+            <h2> Contexte </h2>
+
+            <form action="/todo/my_todolist" method="get">
+
+                <ul>
+
+                    <li><a href="/todo/my_todolist">Supprimer les filtres</a></li>
+
+                </ul>
+
+                <input type="submit" value="Filtrer">
+
+            </form>
+
+        </div>
+
+        <ul>
+
+            <li><a href="/todo/my_todolist/export">Exporter les t\xc3\xa2ches</a></li>
+
+            <li><a href="/todo/my_todolist/import">Importer des t\xc3\xa2ches</a></li>
+
+        </ul>
+
+    </div>
+
+    <div class="center">
+
+        <div class="add-task">
+
+            <h2> Ajouter une t\xc3\xa2che </h2>
+
+            <form action="/todo/my_todolist/item?" method="post">
+
+                <input type="text" name="task_name">
+
+                <input type="submit" value="Ajouter">
+
+            </form>
+
+        </div>
+
+
+
+        <p>
 
 <h2> Importer une t\xc3\xa2che</h2>
 
@@ -32,67 +100,9 @@ b'<html>
 
 
 
-<div>
-
-Ajouter une t\xc3\xa2che
-
-<form action="/todo/my_todolist/item?" method="post">
-
-    <input type="text" name="task_name">
-
-    <input type="submit" value="Add item">
-
-</form>
+    </div>
 
 </div>
-
-
-
-Red\xc3\xa9marrer l\'algo
-
-<form action="/todo/my_todolist/reset?" method="post">
-
-    <input type="submit" value="Reset">
-
-</form>
-
-
-
-Il y a xxxx_number_of_items t\xc3\xa2ches en attente.
-
-
-
-
-
-<h2> Contexte </h2>
-
-<form action="/todo/my_todolist" method="get">
-
-<ul>
-
-<li> <a href="/todo/my_todolist">Supprimer les filtres</a></li>
-
-</ul>
-
-    <input type="submit" value="Filtrer">
-
-</form>
-
-
-
-<ul>
-
-<li><a href="/todo/my_todolist/export">Exporter les t\xc3\xa2ches</a></li>
-
-<li><a href="/todo/my_todolist/import">Importer des t\xc3\xa2ches</a></li>
-
-</ul>
-
-
-
-
-
-
 
 </body>
 
