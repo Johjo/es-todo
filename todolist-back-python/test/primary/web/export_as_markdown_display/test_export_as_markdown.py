@@ -8,7 +8,7 @@ from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
 
 
-def test_display_export_as_markdown(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
+def test_display_export_as_markdown(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
 
     todolist = fake.a_todolist().having(name="todolist").having(tasks=[fake.a_task().having(name="buy milk"), fake.a_task().having(name="buy water")])

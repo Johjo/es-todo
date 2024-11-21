@@ -5,7 +5,7 @@ from primary.web.pages import bottle_config
 from test.primary.web.fixture import CleanResponse
 
 
-def test_create_todolist(test_dependencies: Dependencies, app: TestApp):
+def test_create_todolist(test_dependencies: Dependencies, app: TestApp) -> None:
     bottle_config.dependencies = test_dependencies
 
     response = app.post('/todo', params={'name': "my_created_todolist"})

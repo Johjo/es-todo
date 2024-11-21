@@ -12,6 +12,6 @@ class _CalendarForTest(CalendarPort):
             raise Exception("feed today date")
         return self._today
 
-    def feed_today(self, today):
+    def feed_today(self, today: date) -> None:
         self._today = today
 

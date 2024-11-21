@@ -9,7 +9,7 @@ from test.fixture import TodolistFaker
 from test.primary.web.fixture import CleanResponse
 
 
-def test_choose_and_ignore_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
+def test_choose_and_ignore_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     # given
     bottle_config.dependencies = test_dependencies
     task_1 = fake.a_task().having(name="buy the milk")

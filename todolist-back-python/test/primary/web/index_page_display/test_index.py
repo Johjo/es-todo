@@ -9,7 +9,7 @@ from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
 
 
-def test_index(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
+def test_index(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
     memory.save(fake.a_todolist("1-todolist-1").to_snapshot())
     memory.save(fake.a_todolist("2-todolist-2").to_snapshot())

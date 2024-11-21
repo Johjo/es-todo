@@ -8,10 +8,10 @@ from dependencies import Dependencies
 from infra.memory import Memory
 from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
+from test.primary.web._test_double.calendar_for_test import _CalendarForTest
 
 
-def test_show_when_no_task(memory: Memory, calendar, test_dependencies: Dependencies, app: TestApp,
-                           fake: TodolistFaker):
+def test_show_when_no_task(memory:Memory, calendar: _CalendarForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
     memory.save(fake.a_todolist(name="my_todolist").to_snapshot())
     calendar.feed_today(fake.a_date())
@@ -21,8 +21,7 @@ def test_show_when_no_task(memory: Memory, calendar, test_dependencies: Dependen
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
 
 
-def test_show_when_one_task(memory: Memory, calendar, test_dependencies: Dependencies, app: TestApp,
-                            fake: TodolistFaker):
+def test_show_when_one_task(memory:Memory, calendar: _CalendarForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
     calendar.feed_today(fake.a_date())
     memory.save(fake.a_todolist(name="my_todolist").having(tasks=[fake.a_task(1).having(name="buy the milk")]).to_snapshot())
@@ -33,9 +32,7 @@ def test_show_when_one_task(memory: Memory, calendar, test_dependencies: Depende
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
 
 
-def test_show_when_task_has_execution_date(memory, calendar, test_dependencies: Dependencies,
-                                           app: TestApp,
-                                           fake: TodolistFaker):
+def test_show_when_task_has_execution_date(memory:Memory, calendar: _CalendarForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
     calendar.feed_today(date(2024, 5, 17))
     memory.save(fake.a_todolist(name="my_todolist").having(
@@ -47,7 +44,7 @@ def test_show_when_task_has_execution_date(memory, calendar, test_dependencies: 
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
 
 
-def test_show_when_two_tasks(memory, calendar, test_dependencies: Dependencies, app: TestApp, fake):
+def test_show_when_two_tasks(memory:Memory, calendar: _CalendarForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
     calendar.feed_today(fake.a_date())
     memory.save(fake.a_todolist().having(

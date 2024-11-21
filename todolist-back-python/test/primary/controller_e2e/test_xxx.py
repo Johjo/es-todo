@@ -5,7 +5,7 @@ import pytest
 from dateutil.utils import today
 
 from dependencies import Dependencies
-from hexagon.fvp.aggregate import ChooseTheTask, DoTheTask
+from hexagon.fvp.aggregate import ChooseTheTask, DoTheTask, NothingToDo
 from hexagon.fvp.read.which_task import WhichTaskFilter
 from hexagon.shared.type import TaskKey, TaskExecutionDate, TodolistName, TaskName, TaskOpen
 from hexagon.todolist.port import TaskKeyGeneratorPort
@@ -16,7 +16,7 @@ from start_web_for_test import inject_all_dependencies
 
 
 class TaskKeyGeneratorIncremental(TaskKeyGeneratorPort):
-    def __init__(self):
+    def __init__(self) -> None:
         self.counter = 0
 
     def generate(self) -> TaskKey:
@@ -39,14 +39,14 @@ def dependencies(task_key_generator: TaskKeyGeneratorPort) -> Dependencies:
     return dependencies
 
 
-def test_xxx(dependencies: Dependencies):
+def test_xxx(dependencies: Dependencies) -> None:
     write = TodolistWriteController(dependencies)
     read = TodolistReadController(dependencies)
     fvp_read = FinalVersionPerfectedReadController(dependencies)
     todolist_name = TodolistName("todolist")
     which_task_filter = WhichTaskFilter(todolist_name=todolist_name, reference_date=date(2020, 10, 17))
 
-    def which_task():
+    def which_task() -> NothingToDo | DoTheTask | ChooseTheTask:
         return fvp_read.which_task(todolist_name=todolist_name,
                                    include_context=which_task_filter.include_context,
                                    exclude_context=which_task_filter.exclude_context,

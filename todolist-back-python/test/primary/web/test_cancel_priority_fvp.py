@@ -15,7 +15,7 @@ from test.primary.web.fixture import CleanResponse
 
 def test_choose_and_ignore_task(memory: Memory, task_key_generator: TaskKeyGeneratorForTest,
                                 fvp_session_set: FvpSessionSetForTest, test_dependencies: Dependencies, app: TestApp,
-                                fake: TodolistFaker):
+                                fake: TodolistFaker) -> None:
 
     # GIVEN
     bottle_config.dependencies = test_dependencies

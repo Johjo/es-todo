@@ -3,7 +3,7 @@ from datetime import date, datetime
 from pathlib import Path
 from uuid import uuid4
 
-from peewee import Database, SqliteDatabase  # type: ignore
+from peewee import Database, SqliteDatabase
 
 from dependencies import Dependencies
 from hexagon.fvp.read.which_task import TodolistPort
@@ -41,7 +41,7 @@ class Calendar(CalendarPort):
         return Calendar()
 
 
-def inject_adapter(dependencies: Dependencies):
+def inject_adapter(dependencies: Dependencies) -> Dependencies:
     dependencies = dependencies.feed_adapter(TodolistSetPort, TodolistSetPeewee.factory)
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadPeewee.factory)
     dependencies = inject_final_version_perfected(dependencies)
@@ -63,7 +63,7 @@ def inject_infrastructure(dependencies: Dependencies) -> Dependencies:
     return dependencies
 
 
-def inject_all_dependencies(dependencies: Dependencies):
+def inject_all_dependencies(dependencies: Dependencies) -> Dependencies:
     dependencies = inject_use_cases(dependencies)
     dependencies = inject_adapter(dependencies)
     dependencies = inject_infrastructure(dependencies)
@@ -75,7 +75,7 @@ def inject_all_dependencies(dependencies: Dependencies):
     return dependencies
 
 
-def start():
+def start() -> None:
     from dotenv import load_dotenv
     dependencies = bottle_config.dependencies
     dependencies = dependencies.feed_path("sqlite_database_path", lambda _: Path("./todolist.db.sqlite"))

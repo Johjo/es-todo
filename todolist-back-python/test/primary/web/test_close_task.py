@@ -10,7 +10,7 @@ from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.primary.web.fixture import CleanResponse
 
 
-def test_close_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
+def test_close_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
     expected_task = fake.a_task(1).having(is_open=TaskOpen(False))
 

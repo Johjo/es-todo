@@ -9,7 +9,7 @@ from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
 
 
-def test_display_reword_task(app: TestApp, test_dependencies: Dependencies, memory: Memory, fake: TodolistFaker):
+def test_display_reword_task(app: TestApp, test_dependencies: Dependencies, memory: Memory, fake: TodolistFaker) -> None:
     # GIVEN
     bottle_config.dependencies = test_dependencies
 

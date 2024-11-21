@@ -121,7 +121,7 @@ def open_task(todolist_name: str):
     return redirect_to_todolist(todolist_name)
 
 
-def redirect_to_todolist(todolist_name):
+def redirect_to_todolist(todolist_name) -> str:
     return redirect(f"/todo/{todolist_name}?{request.query_string}")
 
 
@@ -132,7 +132,7 @@ def close_task(todolist_name: str, task_key: str):
 
 
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/reword")
-def reword_task(todolist_name: str, task_key: str):
+def reword_task(todolist_name: str, task_key: str) -> str:
     controller = TodolistWriteController(bottle_config.dependencies)
     controller.reword_task(todolist_name=TodolistName(todolist_name),
                            task_key=TaskKey(UUID(task_key)),
@@ -142,7 +142,7 @@ def reword_task(todolist_name: str, task_key: str):
 
 
 @bottle_app.get("/todo/<todolist_name>/item/<task_key>/reword")
-def display_reword_task(todolist_name: str, task_key: str):
+def display_reword_task(todolist_name: str, task_key: str) -> str:
     controller = TodolistReadController(bottle_config.dependencies)
 
     task: TaskPresentation = controller.task_by(todolist_name=todolist_name,
@@ -159,12 +159,12 @@ class PostponeForm(form.Form):
 
 
 @bottle_app.get("/todo/<todolist_name>/item/<task_key>/postpone")
-def display_postpone_task(todolist_name: str, task_key: str):
+def display_postpone_task(todolist_name: str, task_key: str) -> str:
     postpone_form = PostponeForm()
     return display_form_postpone_task(todolist_name, task_key, postpone_form)
 
 
-def display_form_postpone_task(todolist_name, task_key, postpone_form):
+def display_form_postpone_task(todolist_name, task_key, postpone_form) -> str:
     controller = TodolistReadController(bottle_config.dependencies)
     task = controller.task_by(todolist_name=todolist_name, task_key=TaskKey(UUID(task_key)))
     return template("postpone", {
@@ -177,7 +177,7 @@ def display_form_postpone_task(todolist_name, task_key, postpone_form):
 
 
 @bottle_app.post("/todo/<todolist_name>/item/<task_key>/postpone")
-def postpone(todolist_name: str, task_key: str):
+def postpone(todolist_name: str, task_key: str) -> str:
     postpone_form = PostponeForm(request.forms)
     if postpone_form.is_valid():
         controller = TodolistWriteController(bottle_config.dependencies)
@@ -192,7 +192,7 @@ def postpone(todolist_name: str, task_key: str):
 
 @bottle_app.get("/todo/<todolist_name>/export")
 @view("export")
-def display_export_as_markdown(todolist_name: str):
+def display_export_as_markdown(todolist_name: str) -> dict:
     markdown = TodolistReadController(dependencies=bottle_config.dependencies).to_markdown(todolist_name=todolist_name)
 
     return {**base_value(todolist_name), "markdown_export": markdown, }
@@ -220,7 +220,7 @@ def reset_all_priorities(todolist_name):
 
 
 @bottle_app.get('/static/<filename:path>')
-def static(filename: str):
+def static(filename: str) -> Any:
     root : str = bottle_config.dependencies.get_path("static_path")
     return static_file(filename, root=Path(root).absolute())
 
@@ -229,7 +229,7 @@ def static(filename: str):
 
 
 def get_string_from_request_post(field_name: str) -> str:
-    return request.forms.getunicode(field_name)
+    return str(request.forms.getunicode(field_name))
 
 
 def base_value(todolist_name: str) -> dict[str, Any]:

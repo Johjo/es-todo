@@ -14,7 +14,7 @@ from test.fixture import TodolistFaker
 from test.primary.web.fixture import CleanResponse
 
 
-def test_postpone_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
+def test_postpone_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
     initial_task = fake.a_task()
     today = datetime.today().date()
@@ -29,7 +29,7 @@ def test_postpone_task(memory: Memory, task_key_generator : TaskKeyGeneratorForT
     assert memory.by(todolist.name).value == todolist.having(tasks=[expected_task]).to_snapshot()
 
 
-def test_display_error_if_date_is_invalid(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker):
+def test_display_error_if_date_is_invalid(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
     initial_task = fake.a_task(1).having(name="buy the milk")
 
