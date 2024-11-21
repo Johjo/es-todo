@@ -62,7 +62,6 @@ class TodolistSetReadPeewee(TodolistSetReadPort):
     def __init__(self, database: Database):
         self._sdk = PeeweeSdk(database)
 
-    # todo task_filter
     def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
         all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=task_filter.todolist_name)
         return [map_to_task_presentation(task) for task in all_tasks_sdk if task_filter.include(task_name=task.name)]

@@ -11,7 +11,6 @@ class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
     def __init__(self) -> None:
         self._tasks: dict[Tuple[str, TaskKey,], TaskPresentation] = {}
 
-    # todo get id from task
     def feed(self, todolist_name: str, task: TaskBuilder):
         self._tasks[(todolist_name, task.to_key())] = task.to_presentation()
 

@@ -31,7 +31,6 @@ class TodolistSetReadForTest(TodolistSetReadPortNotImplemented):
     def __init__(self):
         self._tasks_by_todolist = dict[TodolistName, list[TaskPresentation]]()
 
-    # todo : change feed by task filter
     def feed(self, todolist: TodolistBuilder):
         self._tasks_by_todolist[todolist.name] = [task.to_presentation() for task in todolist.to_tasks()]
 

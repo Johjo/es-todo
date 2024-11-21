@@ -47,7 +47,6 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
                     task.is_open and task.execution_date != Nothing]
         return sorted(tasks, key=lambda task: task.execution_date)
 
-    # todo task_filter
     @classmethod
     def factory(cls, dependencies: Dependencies)-> 'TodolistSetReadInMemory':
         memory = dependencies.get_infrastructure(Memory)

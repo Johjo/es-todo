@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 from hexagon.shared.type import TaskKey
 
-
 @dataclass(frozen=True)
 class Task:
     key: TaskKey

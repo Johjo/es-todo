@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from webtest import TestApp
+from webtest import TestApp  # type: ignore
 
 from dependencies import Dependencies
 from primary.web.pages import bottle_config
