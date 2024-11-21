@@ -42,7 +42,6 @@ class WhichTaskQuery:
         open_tasks = self._todolist.all_open_tasks(task_filter)
         return session.which_task(open_tasks)
 
-    # todo: rendre ça plus fonctionnel
     def _get_or_create_session(self) -> FinalVersionPerfectedSession:
         snapshot = self._fvp_sessions_set.by()
         return FinalVersionPerfectedSession.from_snapshot(snapshot)

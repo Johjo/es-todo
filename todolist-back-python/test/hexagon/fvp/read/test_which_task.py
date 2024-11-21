@@ -44,7 +44,7 @@ class FvpFaker:
     def a_task(self, key: None | int = None) -> Task:
         if key is None:
             key = self._fake.random_int()
-        return Task(id=a_task_key(key), name=self._fake.sentence())
+        return Task(key=a_task_key(key))
 
     def a_which_task_filter(self) -> WhichTaskFilter:
         return WhichTaskFilter(todolist_name=TodolistName(self._fake.word()), reference_date=self._fake.date_object(),
@@ -65,30 +65,33 @@ def test_which_task_without_tasks(sut: WhichTaskQuery, todolist: TodolistForTest
 
 
 def test_which_task_with_one_task(sut: WhichTaskQuery, todolist: TodolistForTest, fake: FvpFaker):
-    expected_task = replace(fake.a_task(1), name="buy milk")
+    # GIVEN
+    expected_task = replace(fake.a_task(1))
     task_filter = fake.a_which_task_filter()
     todolist.feed(task_filter, expected_task)
 
-    assert sut.which_task(task_filter) == DoTheTask(id=expected_task.id, name=expected_task.name)
+    # WHEN
+
+    # THEN
+    assert sut.which_task(task_filter) == DoTheTask(key=expected_task.key)
 
 
 def test_which_task_with_two_tasks(sut: WhichTaskQuery, todolist: TodolistForTest, fake: FvpFaker):
-    primary_task = replace(fake.a_task(1), name="buy milk")
-    secondary_task = replace(fake.a_task(2), name="buy water")
+    primary_task = replace(fake.a_task(1))
+    secondary_task = replace(fake.a_task(2))
     task_filter = fake.a_which_task_filter()
     todolist.feed(task_filter, primary_task, secondary_task)
 
-    assert sut.which_task(task_filter) == ChooseTheTask(id_1=primary_task.id, name_1=primary_task.name,
-                                                        id_2=secondary_task.id, name_2=secondary_task.name)
+    assert sut.which_task(task_filter) == ChooseTheTask(main_task_key=primary_task.key, secondary_task_key=secondary_task.key)
 
 
 def test_load_existing_session(sut: WhichTaskQuery, todolist: TodolistForTest, fvp_session_set: FvpSessionSetForTest,
                                fake: FvpFaker):
-    chosen_task = replace(fake.a_task(1), name="buy milk")
-    ignored_task = replace(fake.a_task(2), name="buy water")
+    chosen_task = replace(fake.a_task(1))
+    ignored_task = replace(fake.a_task(2))
     task_filter = fake.a_which_task_filter()
 
-    fvp_session_set.feed(FvpSnapshot.from_primitive_dict({ignored_task.id: chosen_task.id}))
+    fvp_session_set.feed(FvpSnapshot.from_primitive_dict({ignored_task.key: chosen_task.key}))
     todolist.feed(task_filter, chosen_task, ignored_task)
 
-    assert sut.which_task(task_filter) == DoTheTask(id=chosen_task.id, name=chosen_task.name)
+    assert sut.which_task(task_filter) == DoTheTask(key=chosen_task.key)

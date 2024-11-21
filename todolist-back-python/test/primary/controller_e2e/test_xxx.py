@@ -60,16 +60,14 @@ def test_xxx(dependencies: Dependencies):
     write.open_task(todolist_name=todolist_name, task_name=TaskName("task 2 #context_2"))
 
     assert read.counts_by_context(todolist_name=todolist_name) == [("#context_1", 1), ("#context_2", 1)]
-    assert which_task() == ChooseTheTask(id_1=TaskKey(UUID(int=1)), name_1="task 1 #context_1",
-                                         id_2=TaskKey(UUID(int=2)), name_2="task 2 #context_2")
+    assert which_task() == ChooseTheTask(main_task_key=TaskKey(UUID(int=1)), secondary_task_key=TaskKey(UUID(int=2)))
 
     write.choose_and_ignore_task(chosen_task=TaskKey(UUID(int=1)), ignored_task=TaskKey(UUID(int=2)))
 
-    assert which_task() == DoTheTask(id=TaskKey(UUID(int=1)), name="task 1 #context_1")
+    assert which_task() == DoTheTask(key=TaskKey(UUID(int=1)))
 
     write.reset_all_priorities()
-    assert which_task() == ChooseTheTask(id_1=TaskKey(UUID(int=1)), name_1="task 1 #context_1",
-                                         id_2=TaskKey(UUID(int=2)), name_2="task 2 #context_2")
+    assert which_task() == ChooseTheTask(main_task_key=TaskKey(UUID(int=1)), secondary_task_key=TaskKey(UUID(int=2)))
 
     write.postpone_task(name=todolist_name, key=TaskKey(UUID(int=1)), execution_date=TaskExecutionDate(today().date()))
     assert read.task_by(todolist_name=todolist_name,

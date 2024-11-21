@@ -93,26 +93,22 @@ def show_todolist_when_no_task(todolist_name):
 
 
 def show_todolist_when_one_task(todolist_name: str, do_the_task: DoTheTask):
-    task = TodolistReadController(bottle_config.dependencies).task_by(todolist_name, do_the_task.id)
+    task = TodolistReadController(bottle_config.dependencies).task_by(todolist_name, do_the_task.key)
     return template("do_the_task",
                     {**base_value(todolist_name),
-                     "task_name": do_the_task.name,
-                     "task_id": do_the_task.id,
+                     "task_name": task.name,
+                     "task_id": task.key,
                      "task": task,
                      }, )
 
 
 def show_todolist_when_two_tasks(todolist_name: str, choose_the_task: ChooseTheTask):
-    task_1 = TodolistReadController(bottle_config.dependencies).task_by(todolist_name, choose_the_task.id_1)
-    task_2 = TodolistReadController(bottle_config.dependencies).task_by(todolist_name, choose_the_task.id_2)
+    task_1 = TodolistReadController(bottle_config.dependencies).task_by(todolist_name, choose_the_task.main_task_key)
+    task_2 = TodolistReadController(bottle_config.dependencies).task_by(todolist_name, choose_the_task.secondary_task_key)
 
     return template("choose_the_task",
                     {**base_value(todolist_name),
-                     "name_1": choose_the_task.name_1,
-                     "index_1": choose_the_task.id_1,
                      "todolist_name": todolist_name,
-                     "index_2": choose_the_task.id_2,
-                     "name_2": choose_the_task.name_2,
                      "task_1": task_1,
                      "task_2": task_2,
                      })

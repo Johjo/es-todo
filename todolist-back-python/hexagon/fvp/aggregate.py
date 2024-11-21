@@ -5,36 +5,31 @@ from dataclasses import dataclass
 from hexagon.shared.type import TaskKey
 
 
-# todo: voir si ce type est utile
-@dataclass
+@dataclass(frozen=True)
 class Task:
-    id: TaskKey
-    name: str
+    key: TaskKey
 
     def to_do_the_task(self):
-        return DoTheTask(id=self.id, name=self.name)
+        return DoTheTask(key=self.key)
 
-    def to_choose_the_task(self, other_task):
-        return ChooseTheTask(id_1=self.id, name_1=self.name, id_2=other_task.id, name_2=other_task.name)
+    def to_choose_the_task(self, other_task: 'Task'):
+        return ChooseTheTask(main_task_key=self.key, secondary_task_key=other_task.key)
 
 
-@dataclass
+@dataclass(frozen=True)
 class NothingToDo:
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class DoTheTask:
-    id: TaskKey
-    name: str
+    key: TaskKey
 
 
-@dataclass
+@dataclass(frozen=True)
 class ChooseTheTask:
-    id_1: TaskKey
-    name_1: str
-    id_2: TaskKey
-    name_2: str
+    main_task_key: TaskKey
+    secondary_task_key: TaskKey
 
 
 @dataclass(frozen=True)
@@ -54,8 +49,8 @@ class FinalVersionPerfectedSession:
         self.task_priorities: OrderedDict[TaskKey, TaskKey] = task_priorities
 
     def which_task(self, open_tasks: list[Task]) -> NothingToDo | DoTheTask | ChooseTheTask:
-        ids = [task.id for task in open_tasks]
-        tasks = [task for task in open_tasks if self.task_priorities.get(task.id, None) not in ids]
+        ids = [task.key for task in open_tasks]
+        tasks = [task for task in open_tasks if self.task_priorities.get(task.key, None) not in ids]
         match tasks:
             case [task]:
                 return task.to_do_the_task()
