@@ -10,7 +10,7 @@ from primary.web.pages import bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
-from test.primary.web.fixture import CleanResponse
+from test.primary.web.fixture import CleanResponse, BASE_URL
 
 
 def test_choose_and_ignore_task(memory: Memory, task_key_generator: TaskKeyGeneratorForTest,
@@ -30,7 +30,7 @@ def test_choose_and_ignore_task(memory: Memory, task_key_generator: TaskKeyGener
     memory.save(todolist.to_snapshot())
 
     # when
-    response = app.post(f'/todo/{todolist.name}/reset')
+    response = app.post(f'{BASE_URL}/{todolist.name}/reset')
 
     # then
     assert fvp_session_set.by() == FvpSnapshot(OrderedDict[TaskKey, TaskKey]({}))

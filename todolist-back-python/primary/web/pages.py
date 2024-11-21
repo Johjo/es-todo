@@ -15,7 +15,6 @@ from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskNa
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, TaskPresentation
 from primary.controller.write.todolist import TodolistWriteController
-from test.primary.controller.write.conftest import dependencies
 
 bottle_app = Bottle()
 
@@ -28,43 +27,50 @@ class BottleConfig:
 bottle_config = BottleConfig(dependencies=Dependencies.create_empty())
 
 
-@bottle_app.route("/")
+@bottle_app.route("/<user_id>/todo")
+@bottle_app.route("/todo") # todo remove
+@bottle_app.route("/") # todo remove
 @view("index")
-def index():
+def index(user_id: str = "any_user"):
     controller = TodolistReadController(bottle_config.dependencies)
     return {"todolist_name_set": controller.all_todolist_by_name()}
 
 
-@bottle_app.post("/todo")
-def create_todolist():
+@bottle_app.post("/<user_id>/todo")
+@bottle_app.post("/todo")  # todo remove
+def create_todolist(user_id: str = "any_user"):
     todolist_name = get_string_from_request_post("name")
-    TodolistWriteController(bottle_config.dependencies).create_todolist(todolist_name)
+    TodolistWriteController(bottle_config.dependencies).create_todolist(TodolistName(todolist_name))
     return redirect_to_todolist(todolist_name)
 
 
-@bottle_app.route("/todo/<todolist_name>/import")
+@bottle_app.route("/<user_id>/todo/<todolist_name>/import")
+@bottle_app.route("/todo/<todolist_name>/import")  # todo remove
 @view("import")
-def show_import(todolist_name):
+def show_import(todolist_name, user_id: str = "any_user"):
     return base_value(todolist_name)
 
 
-@bottle_app.route("/todo/<todolist_name>/calendar")
+@bottle_app.route("/<user_id>/todo/<todolist_name>/calendar")
+@bottle_app.route("/todo/<todolist_name>/calendar")  # todo remove
 @view("calendar")
-def show_calendar(todolist_name):
+def show_calendar(todolist_name, user_id: str = "any_user"):
     tasks = TodolistReadController(bottle_config.dependencies).all_tasks_postponed_task(todolist_name)
     return {**base_value(todolist_name),
             "tasks":tasks}
 
 
-@bottle_app.post("/todo/<todolist_name>/import")
-def import_task(todolist_name):
+@bottle_app.post("/<user_id>/todo/<todolist_name>/import")
+@bottle_app.post("/todo/<todolist_name>/import")  # todo remove
+def import_task(todolist_name, user_id: str = "any_user"):
     markdown_import = get_string_from_request_post("markdown_import")
     TodolistWriteController(bottle_config.dependencies).import_many_tasks_from_markdown(todolist_name, markdown_import)
     return redirect_to_todolist(todolist_name)
 
 
-@bottle_app.route("/todo/<todolist_name>")
-def show_todolist(todolist_name: str) -> str:
+@bottle_app.route("/<user_id>/todo/<todolist_name>")
+@bottle_app.route("/todo/<todolist_name>")  # todo remove
+def show_todolist(todolist_name: str, user_id: str = "any_user") -> str:
     task_filter = WhichTaskFilter(todolist_name=TodolistName(todolist_name),
                                   include_context=tuple(request.query.getall('include_context')),
                                   exclude_context=tuple(request.query.getall('exclude_context')),
@@ -114,8 +120,9 @@ def show_todolist_when_two_tasks(todolist_name: str, choose_the_task: ChooseTheT
                      })
 
 
-@bottle_app.post("/todo/<todolist_name>/item")
-def open_task(todolist_name: str):
+@bottle_app.post("/<user_id>/todo/<todolist_name>/item")
+@bottle_app.post("/todo/<todolist_name>/item")  # todo remove
+def open_task(todolist_name: str, user_id: str = "any_user"):
     task_name = get_string_from_request_post("task_name")
     TodolistWriteController(bottle_config.dependencies).open_task(TodolistName(todolist_name), TaskName(task_name))
     return redirect_to_todolist(todolist_name)
@@ -125,14 +132,16 @@ def redirect_to_todolist(todolist_name) -> str:
     return redirect(f"/todo/{todolist_name}?{request.query_string}")
 
 
-@bottle_app.post("/todo/<todolist_name>/item/<task_key>/close")
-def close_task(todolist_name: str, task_key: str):
+@bottle_app.post("/<user_id>/todo/<todolist_name>/item/<task_key>/close")
+@bottle_app.post("/todo/<todolist_name>/item/<task_key>/close")  # todo remove
+def close_task(task_key: str, todolist_name: str, user_id: str = "any_user"):
     TodolistWriteController(bottle_config.dependencies).close_task(TodolistName(todolist_name), task_key=TaskKey(UUID(task_key)))
     return redirect_to_todolist(todolist_name)
 
 
-@bottle_app.post("/todo/<todolist_name>/item/<task_key>/reword")
-def reword_task(todolist_name: str, task_key: str) -> str:
+@bottle_app.post("/<user_id>/todo/<todolist_name>/item/<task_key>/reword")
+@bottle_app.post("/todo/<todolist_name>/item/<task_key>/reword")  # todo remove
+def reword_task(todolist_name: str, task_key: str, user_id: str = "any_user") -> str:
     controller = TodolistWriteController(bottle_config.dependencies)
     controller.reword_task(todolist_name=TodolistName(todolist_name),
                            task_key=TaskKey(UUID(task_key)),
@@ -141,8 +150,9 @@ def reword_task(todolist_name: str, task_key: str) -> str:
     return redirect_to_todolist(todolist_name)
 
 
-@bottle_app.get("/todo/<todolist_name>/item/<task_key>/reword")
-def display_reword_task(todolist_name: str, task_key: str) -> str:
+@bottle_app.get("/<user_id>/todo/<todolist_name>/item/<task_key>/reword")
+@bottle_app.get("/todo/<todolist_name>/item/<task_key>/reword")  # todo remove
+def display_reword_task(todolist_name: str, task_key: str, user_id: str = "any_user") -> str:
     controller = TodolistReadController(bottle_config.dependencies)
 
     task: TaskPresentation = controller.task_by(todolist_name=todolist_name,
@@ -158,8 +168,9 @@ class PostponeForm(form.Form):
     execution_date = form.DateField(label="Date d'execution")
 
 
-@bottle_app.get("/todo/<todolist_name>/item/<task_key>/postpone")
-def display_postpone_task(todolist_name: str, task_key: str) -> str:
+@bottle_app.get("/<user_id>/todo/<todolist_name>/item/<task_key>/postpone")
+@bottle_app.get("/todo/<todolist_name>/item/<task_key>/postpone")  # todo remove
+def display_postpone_task(todolist_name: str, task_key: str, user_id: str = "any_user") -> str:
     postpone_form = PostponeForm()
     return display_form_postpone_task(todolist_name, task_key, postpone_form)
 
@@ -176,8 +187,9 @@ def display_form_postpone_task(todolist_name, task_key, postpone_form) -> str:
     })
 
 
-@bottle_app.post("/todo/<todolist_name>/item/<task_key>/postpone")
-def postpone(todolist_name: str, task_key: str) -> str:
+@bottle_app.post("/<user_id>/todo/<todolist_name>/item/<task_key>/postpone")
+@bottle_app.post("/todo/<todolist_name>/item/<task_key>/postpone")  # todo remove
+def postpone(todolist_name: str, task_key: str, user_id: str = "any_user") -> str:
     postpone_form = PostponeForm(request.forms)
     if postpone_form.is_valid():
         controller = TodolistWriteController(bottle_config.dependencies)
@@ -190,30 +202,34 @@ def postpone(todolist_name: str, task_key: str) -> str:
     return display_form_postpone_task(todolist_name, task_key, postpone_form)
 
 
-@bottle_app.get("/todo/<todolist_name>/export")
+@bottle_app.get("/<user_id>/todo/<todolist_name>/export")
+@bottle_app.get("/todo/<todolist_name>/export")  # todo remove
 @view("export")
-def display_export_as_markdown(todolist_name: str) -> dict:
+def display_export_as_markdown(todolist_name: str, user_id: str = "any_user", ) -> dict:
     markdown = TodolistReadController(dependencies=bottle_config.dependencies).to_markdown(todolist_name=todolist_name)
 
     return {**base_value(todolist_name), "markdown_export": markdown, }
 
 
-@bottle_app.post('/todo/<todolist_name>/item/choose/<chosen_task>/ignore/<ignored_task>')
-def choose_and_ignore_task(todolist_name, chosen_task, ignored_task):
+@bottle_app.post('/<user_id>/todo/<todolist_name>/item/choose/<chosen_task>/ignore/<ignored_task>')
+@bottle_app.post('/todo/<todolist_name>/item/choose/<chosen_task>/ignore/<ignored_task>')  # todo remove
+def choose_and_ignore_task(todolist_name, chosen_task, ignored_task, user_id: str = "any_user"):
     TodolistWriteController(bottle_config.dependencies).choose_and_ignore_task(chosen_task=chosen_task,
                                                                                ignored_task=ignored_task)
     return redirect_to_todolist(todolist_name)
 
 
-@bottle_app.post('/todo/<todolist_name>/item/<task_key>/cancel_priority')
-def cancel_priority(todolist_name, task_key):
+@bottle_app.post('/<user_id>/todo/<todolist_name>/item/<task_key>/cancel_priority')
+@bottle_app.post('/todo/<todolist_name>/item/<task_key>/cancel_priority')  # todo remove
+def cancel_priority(todolist_name, task_key, user_id: str = "any_user"):
     controller = TodolistWriteController(bottle_config.dependencies)
     controller.cancel_priority(task_key=TaskKey(UUID(task_key)))
     return redirect_to_todolist(todolist_name)
 
 
-@bottle_app.post('/todo/<todolist_name>/reset')
-def reset_all_priorities(todolist_name):
+@bottle_app.post('/<user_id>/todo/<todolist_name>/reset')
+@bottle_app.post('/todo/<todolist_name>/reset')  # todo remove
+def reset_all_priorities(todolist_name, user_id: str = "any_user"):
     controller = TodolistWriteController(bottle_config.dependencies)
     controller.reset_all_priorities()
     return redirect_to_todolist(todolist_name)

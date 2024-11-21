@@ -7,6 +7,7 @@ from hexagon.shared.type import TaskName, TaskOpen
 from infra.memory import Memory
 from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
+from test.primary.web.fixture import BASE_URL
 
 
 def test_display_reword_task(app: TestApp, test_dependencies: Dependencies, memory: Memory, fake: TodolistFaker) -> None:
@@ -19,7 +20,7 @@ def test_display_reword_task(app: TestApp, test_dependencies: Dependencies, memo
     memory.save(todolist.to_snapshot())
 
     # WHEN
-    response = app.get(f'/todo/{todolist.name}/item/{task.to_key()}/reword')
+    response = app.get(f'{BASE_URL}/{todolist.name}/item/{task.to_key()}/reword')
 
     # THEN
     assert response.status == '200 OK'

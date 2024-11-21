@@ -75,3 +75,4 @@ def test_dependencies(memory: Memory, calendar: _CalendarForTest, task_key_gener
     dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: fvp_session_set)
     dependencies = dependencies.feed_adapter(CalendarPort, lambda _: calendar)
     return dependencies
+

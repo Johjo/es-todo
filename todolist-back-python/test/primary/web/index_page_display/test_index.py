@@ -14,7 +14,7 @@ def test_index(memory: Memory, test_dependencies: Dependencies, app: TestApp, fa
     memory.save(fake.a_todolist("1-todolist-1").to_snapshot())
     memory.save(fake.a_todolist("2-todolist-2").to_snapshot())
 
-    response = app.get('/')
+    response = app.get('/any_user/todo')
 
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())

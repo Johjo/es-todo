@@ -5,7 +5,7 @@ from infra.memory import Memory
 from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker, TaskBuilder
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
-from test.primary.web.fixture import CleanResponse
+from test.primary.web.fixture import CleanResponse, BASE_URL
 
 
 def test_import_task(memory: Memory, task_key_generator: TaskKeyGeneratorForTest,
@@ -19,7 +19,7 @@ def test_import_task(memory: Memory, task_key_generator: TaskKeyGeneratorForTest
     task_key_generator.feed(expected_task.to_key())
 
     # when
-    response = app.post(f'/todo/{todolist.to_name()}/import', params={'markdown_import': markdown_from_tasks(expected_task)})
+    response = app.post(f'{BASE_URL}/{todolist.to_name()}/import', params={'markdown_import': markdown_from_tasks(expected_task)})
 
     # then
     assert response.status_code == 302

@@ -6,6 +6,7 @@ from dependencies import Dependencies
 from infra.memory import Memory
 from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
+from test.primary.web.fixture import BASE_URL
 
 
 def test_display_export_as_markdown(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
@@ -14,7 +15,7 @@ def test_display_export_as_markdown(memory: Memory, test_dependencies: Dependenc
     todolist = fake.a_todolist().having(name="todolist").having(tasks=[fake.a_task().having(name="buy milk"), fake.a_task().having(name="buy water")])
     memory.save(todolist.to_snapshot())
 
-    response = app.get(f'/todo/{todolist.name}/export')
+    response = app.get(f'{BASE_URL}/{todolist.name}/export')
 
     assert response.status == '200 OK'
     verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
