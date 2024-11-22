@@ -31,7 +31,7 @@ class BaseTestTodolistSetRead:
         self.feed_todolist(todolist_2)
         self.feed_todolist(todolist_3)
 
-        assert sut.all_by_name() == [todolist_1.to_name(), todolist_2.to_name(), todolist_3.to_name()]
+        assert sut.all_by_name() == sorted([todolist_1.to_name(), todolist_2.to_name(), todolist_3.to_name()])
 
     def test_read_counts_by_context(self, sut: TodolistSetReadPort, fake: TodolistFaker):
         todolist = fake.a_todolist().having(tasks=[fake.a_task().having(name="title #context1 #context2"),

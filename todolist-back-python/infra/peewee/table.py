@@ -2,15 +2,16 @@ from peewee import CharField, UUIDField, BooleanField, Model, DateField  # type:
 
 
 class Task(Model):
+    key = UUIDField(index=True, unique=True)
     todolist_name = CharField(index=True)
-    key = UUIDField(primary_key=True)
     name = CharField()
     is_open = BooleanField()
     execution_date = DateField(null=True)
 
 
 class Todolist(Model):
-    name = CharField(primary_key=True)
+    user_key = CharField(index=True)
+    name = CharField(index=True)
 
 
 class Session(Model):

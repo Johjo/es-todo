@@ -1,7 +1,7 @@
 from peewee import SqliteDatabase  # type: ignore
 
 from infra.peewee.table import Todolist as TodolistActual, Task as TaskActual, Session as FvpSessionActual
-from infra.peewee.table_previous import Todolist as TodolistPrevious, Task as TaskPrevious, \
+from infra.peewee.table import Todolist as TodolistPrevious, Task as TaskPrevious, \
     Session as FvpSessionPrevious
 from migrate import migrate_to_actual
 

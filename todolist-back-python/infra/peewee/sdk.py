@@ -85,7 +85,7 @@ class PeeweeSdk:
 
     @staticmethod
     def _save_todolist(todolist: Todolist, tasks: list[Task]):
-        TodolistRow.create(name=todolist.name)
+        TodolistRow.create(user_key="jonathan.laurent@ytreza.dev", name=todolist.name)
         for task in tasks:
             TaskRow.create(todolist_name=todolist.name, key=task.key, name=task.name, is_open=task.is_open, execution_date=task.execution_date.default_value(None))
 
