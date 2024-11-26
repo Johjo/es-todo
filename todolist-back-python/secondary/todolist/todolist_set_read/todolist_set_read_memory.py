@@ -6,6 +6,7 @@ from dependencies import Dependencies
 from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
 from infra.memory import Memory
 from primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
+from shared.const import USER_KEY
 
 
 class TodolistSetReadInMemory(TodolistSetReadPort):
@@ -51,7 +52,7 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
     @classmethod
     def factory(cls, dependencies: Dependencies)-> 'TodolistSetReadInMemory':
         memory = dependencies.get_infrastructure(Memory)
-        return TodolistSetReadInMemory(memory=memory, user_key=dependencies.get_data(data_name="user_key"))
+        return TodolistSetReadInMemory(memory=memory, user_key=dependencies.get_data(data_name=USER_KEY))
 
 
 

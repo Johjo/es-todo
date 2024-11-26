@@ -4,6 +4,7 @@ from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task
 from hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
 from infra.memory import Memory
+from shared.const import USER_KEY
 from test.fixture import TodolistBuilder
 from test.secondary.fvp.read.which_task.base_test_todolist import BaseTestTodolist
 
@@ -21,7 +22,7 @@ class TodolistMemory(TodolistPort):
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistMemory':
         memory = dependencies.get_infrastructure(Memory)
-        return TodolistMemory(memory=memory, user_key=dependencies.get_data("user_key"))
+        return TodolistMemory(memory=memory, user_key=dependencies.get_data(USER_KEY))
 
 
 class TestTodolistMemory(BaseTestTodolist):
@@ -37,5 +38,5 @@ class TestTodolistMemory(BaseTestTodolist):
         all_dependencies = Dependencies.create_empty()
         all_dependencies = all_dependencies.feed_adapter(TodolistPort, TodolistMemory.factory)
         all_dependencies = all_dependencies.feed_infrastructure(Memory, lambda _: self.memory)
-        all_dependencies = all_dependencies.feed_data(data_name="user_key", value=current_user)
+        all_dependencies = all_dependencies.feed_data(data_name=USER_KEY, value=current_user)
         return all_dependencies

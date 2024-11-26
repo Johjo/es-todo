@@ -17,6 +17,7 @@ from primary.web.pages import bottle_app, bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
 from secondary.todolist.todolist_set_read.todolist_set_read_memory import TodolistSetReadInMemory
+from shared.const import USER_KEY
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.secondary.fvp.read.which_task.test_todolist_memory import TodolistMemory
@@ -74,7 +75,7 @@ def test_dependencies(memory: Memory, calendar: _CalendarForTest, task_key_gener
     dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, TodolistMemory.factory)
     dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: fvp_session_set)
     dependencies = dependencies.feed_adapter(CalendarPort, lambda _: calendar)
-    dependencies = dependencies.feed_data(data_name="user_key", value="todo@user.com")
+    dependencies = dependencies.feed_data(data_name=USER_KEY, value="todo@user.com")
 
     return dependencies
 

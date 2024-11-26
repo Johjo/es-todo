@@ -12,7 +12,7 @@ from test.fixture import TodolistFaker, TodolistBuilder
 
 
 class BaseTestTodolistSet:
-    def test_get_by_when_one_todolist(self, sut: TodolistSetPort, fake: TodolistFaker, current_user: UUID):
+    def test_get_by_when_one_todolist(self, sut: TodolistSetPort, fake: TodolistFaker, current_user: str):
         # given
         expected_todolist = fake.a_todolist()
         self.feed_todolist(user_key=current_user, todolist=expected_todolist)
@@ -23,7 +23,7 @@ class BaseTestTodolistSet:
         # then
         assert actual.value == expected_todolist.to_snapshot()
 
-    def test_get_by_when_two_todolist(self, sut: TodolistSetPort, fake: TodolistFaker, current_user: UUID):
+    def test_get_by_when_two_todolist(self, sut: TodolistSetPort, fake: TodolistFaker, current_user: str):
         # given
         todolist_one = fake.a_todolist()
         todolist_two = fake.a_todolist()

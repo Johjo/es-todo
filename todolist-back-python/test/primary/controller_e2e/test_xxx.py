@@ -14,6 +14,7 @@ from infra.peewee.sdk import SqliteSdk
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, TaskPresentation
 from primary.controller.write.todolist import TodolistWriteController
+from shared.const import USER_KEY
 from start_web_for_test import inject_all_dependencies
 
 
@@ -48,7 +49,7 @@ def create_table(dependencies: Dependencies):
 
 
 def test_xxx(dependencies: Dependencies) -> None:
-    dependencies = dependencies.feed_data("user_key", "user@mail.com")
+    dependencies = dependencies.feed_data(USER_KEY, "user@mail.com")
     write = TodolistWriteController(dependencies)
     read = TodolistReadController(dependencies)
     fvp_read = FinalVersionPerfectedReadController(dependencies)

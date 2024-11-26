@@ -5,6 +5,7 @@ from dependencies import Dependencies
 from hexagon.fvp.read.which_task import TodolistPort
 from infra.peewee.sdk import SqliteSdk
 from secondary.fvp.read.which_task.todolist_peewee import TodolistPeewee
+from shared.const import USER_KEY
 from test.fixture import TodolistBuilder
 from test.secondary.fvp.read.which_task.base_test_todolist import BaseTestTodolist
 
@@ -28,5 +29,5 @@ class TestTodolistPeewee(BaseTestTodolist):
         all_dependencies = Dependencies.create_empty()
         all_dependencies = all_dependencies.feed_adapter(TodolistPort, TodolistPeewee.factory)
         all_dependencies = all_dependencies.feed_infrastructure(Database, lambda _: self._database)
-        all_dependencies= all_dependencies.feed_data(data_name="user_key", value=current_user)
+        all_dependencies= all_dependencies.feed_data(data_name=USER_KEY, value=current_user)
         return all_dependencies

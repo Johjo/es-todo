@@ -6,6 +6,7 @@ from dependencies import Dependencies
 from hexagon.todolist.port import TodolistSetPort
 from infra.memory import Memory
 from secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
+from shared.const import USER_KEY
 from test.fixture import TodolistBuilder
 from test.secondary.todolist.todolist_set.base_test_todolist_set import BaseTestTodolistSet
 
@@ -20,7 +21,7 @@ class TestTodolistSetInMemory(BaseTestTodolistSet):
         all_dependencies = Dependencies.create_empty()
         all_dependencies = all_dependencies.feed_adapter(TodolistSetPort, TodolistSetInMemory.factory)
         all_dependencies = all_dependencies.feed_infrastructure(Memory, lambda _: self.memory)
-        all_dependencies = all_dependencies.feed_data(data_name="user_key", value=current_user)
+        all_dependencies = all_dependencies.feed_data(data_name=USER_KEY, value=current_user)
         return all_dependencies
 
     def feed_todolist(self, user_key: str, todolist: TodolistBuilder) -> None:

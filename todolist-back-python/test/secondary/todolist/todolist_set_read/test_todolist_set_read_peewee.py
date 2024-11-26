@@ -6,6 +6,7 @@ from dependencies import Dependencies
 from infra.peewee.sdk import SqliteSdk
 from primary.controller.read.todolist import TodolistSetReadPort
 from secondary.todolist.todolist_set_peewee import TodolistSetReadPeewee
+from shared.const import USER_KEY
 from test.fixture import TodolistBuilder, TodolistFaker
 from test.secondary.todolist.todolist_set_read.base_test_todolist_set_read import BaseTestTodolistSetRead
 
@@ -28,7 +29,7 @@ class TestTodolistSetReadPeewee(BaseTestTodolistSetRead):
         all_dependencies = Dependencies.create_empty()
         all_dependencies = all_dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadPeewee.factory)
         all_dependencies = all_dependencies.feed_infrastructure(Database, lambda _: self.database)
-        all_dependencies = all_dependencies.feed_data(data_name="user_key", value=current_user)
+        all_dependencies = all_dependencies.feed_data(data_name=USER_KEY, value=current_user)
         return all_dependencies
 
     def feed_todolist(self, user_key: str, todolist: TodolistBuilder) -> None:

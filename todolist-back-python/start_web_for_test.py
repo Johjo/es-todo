@@ -16,6 +16,7 @@ from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_config, bottle_app
 from secondary.fvp.read.which_task.todolist_peewee import TodolistPeewee
 from secondary.todolist.todolist_set_peewee import TodolistSetPeewee, TodolistSetReadPeewee
+from shared.const import USER_KEY
 
 
 class TaskKeyGeneratorRandom(TaskKeyGeneratorPort):
@@ -69,7 +70,7 @@ def inject_all_dependencies(dependencies: Dependencies) -> Dependencies:
     load_dotenv()
     static_path = os.environ["STATIC_PATH"]
     dependencies = dependencies.feed_path("static_path", lambda _: Path(static_path))
-    dependencies = dependencies.feed_data(data_name="user_key", value="jonathan.laurent@ytreza.dev")
+    dependencies = dependencies.feed_data(data_name=USER_KEY, value="jonathan.laurent@ytreza.dev")
 
     return dependencies
 

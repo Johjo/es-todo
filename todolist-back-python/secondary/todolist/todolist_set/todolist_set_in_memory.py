@@ -7,10 +7,11 @@ from hexagon.shared.type import TodolistName
 from hexagon.todolist.aggregate import TodolistSnapshot
 from hexagon.todolist.port import TodolistSetPort
 from infra.memory import Memory
+from shared.const import USER_KEY
 
 
 class TodolistSetInMemory(TodolistSetPort):
-    def __init__(self, memory: Memory, user_key: UUID):
+    def __init__(self, memory: Memory, user_key: str):
         self.memory = memory
         self._user_key = user_key
 
@@ -24,4 +25,4 @@ class TodolistSetInMemory(TodolistSetPort):
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetInMemory':
         return TodolistSetInMemory(
             memory=dependencies.get_infrastructure(Memory),
-            user_key=dependencies.get_data("user_key"))
+            user_key=dependencies.get_data(USER_KEY))

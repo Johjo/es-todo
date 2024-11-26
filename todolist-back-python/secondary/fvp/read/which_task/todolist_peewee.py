@@ -4,6 +4,7 @@ from dependencies import Dependencies
 from hexagon.fvp.aggregate import Task
 from hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
 from infra.peewee.sdk import SqliteSdk
+from shared.const import USER_KEY
 
 
 class TodolistPeewee(TodolistPort):
@@ -19,7 +20,7 @@ class TodolistPeewee(TodolistPort):
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistPeewee':
         return TodolistPeewee(database=dependencies.get_infrastructure(Database),
-                              user_key=dependencies.get_data("user_key"))
+                              user_key=dependencies.get_data(USER_KEY))
 
     @staticmethod
     def match_included_context(task_filter: WhichTaskFilter, task_name: str) -> bool:

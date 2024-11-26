@@ -13,6 +13,7 @@ from hexagon.todolist.port import TodolistSetPort
 from infra.peewee.sdk import SqliteSdk
 from infra.peewee.type import Task as TaskSdk, Todolist as TodolistSdk, TodolistDoesNotExist
 from primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
+from shared.const import USER_KEY
 
 
 def map_to_task_presentation(task: TaskSdk) -> TaskPresentation:
@@ -53,7 +54,7 @@ class TodolistSetPeewee(TodolistSetPort):
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetPeewee':
         return TodolistSetPeewee(database=dependencies.get_infrastructure(Database),
-                                 user_key=dependencies.get_data(data_name="user_key"))
+                                 user_key=dependencies.get_data(data_name=USER_KEY))
 
 
 class TodolistSetReadPeewee(TodolistSetReadPort):
@@ -95,4 +96,4 @@ class TodolistSetReadPeewee(TodolistSetReadPort):
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetReadPeewee':
-        return TodolistSetReadPeewee(database=dependencies.get_infrastructure(Database), user_key=dependencies.get_data(data_name="user_key"))
+        return TodolistSetReadPeewee(database=dependencies.get_infrastructure(Database), user_key=dependencies.get_data(data_name=USER_KEY))
