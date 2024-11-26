@@ -13,8 +13,10 @@ help:
 	@echo "Please use 'make <target>' where <target> is one of"
 	@echo "start : start server"
 	@echo "update : update from git"
-	@echo "check : check code with mypy
-	@echo "create_table : create table first time
+	@echo "check : check code with mypy"
+	@echo "create_table : create table first time"
+	@echo "freeze : create requirements.txt"
+	@echo "install : install package from requirements.txt"
 
 
 .PHONY: start
@@ -25,6 +27,15 @@ start:
 create_table:
 	python -m pipenv run create_tables.py
 
+.PHONY: freeze
+freeze:
+	python -m pipenv run pip freeze > requirements.txt
+
+.PHONY: install
+install:
+	python -m pipenv run pip install -r requirements.txt
+
+
 .PHONY: update
 update:
 	git pull
@@ -32,3 +43,5 @@ update:
 .PHONY: check
 check:
 	mypy . --strict --disallow-untyped-decorators
+
+
