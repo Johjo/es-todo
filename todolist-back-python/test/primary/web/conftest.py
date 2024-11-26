@@ -75,7 +75,6 @@ def test_dependencies(memory: Memory, calendar: _CalendarForTest, task_key_gener
     dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, TodolistMemory.factory)
     dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: fvp_session_set)
     dependencies = dependencies.feed_adapter(CalendarPort, lambda _: calendar)
-    dependencies = dependencies.feed_data(data_name=USER_KEY, value="todo@user.com")
 
     return dependencies
 

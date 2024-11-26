@@ -1,3 +1,4 @@
+import base64
 from typing import Any
 
 
@@ -12,4 +13,10 @@ class CleanResponse:
         without_localhost = without_protocol.split("/", 1)[1]
         return "/" + without_localhost
 
-BASE_URL = "/any_user/todo"
+BASE_URL = "/todo"
+
+
+def header_with_good_authentication():
+    auth = base64.b64encode(b"test@mail.fr:test@mail.fr").decode('utf-8')
+    headers = {"Authorization": f"Basic {auth}"}
+    return headers

@@ -10,7 +10,7 @@ from primary.web.pages import bottle_config
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
-from test.primary.web.fixture import CleanResponse, BASE_URL
+from test.primary.web.fixture import CleanResponse, BASE_URL, header_with_good_authentication
 
 
 def test_choose_and_ignore_task(memory: Memory, task_key_generator: TaskKeyGeneratorForTest,
@@ -29,10 +29,10 @@ def test_choose_and_ignore_task(memory: Memory, task_key_generator: TaskKeyGener
             task_1.to_key(): task_3.to_key()})))
 
     todolist = fake.a_todolist().having(tasks=[task_1, task_2, task_3])
-    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
+    memory.save(user_key="test@mail.fr", todolist=todolist.to_snapshot())
 
     # WHEN
-    response = app.post(f'{BASE_URL}/{todolist.name}/item/{task_3.to_key()}/cancel_priority')
+    response = app.post(f'{BASE_URL}/{todolist.name}/item/{task_3.to_key()}/cancel_priority', headers=header_with_good_authentication())
 
     # THEN
     assert fvp_session_set.by() == FvpSnapshot(OrderedDict[TaskKey, TaskKey]({task_2.to_key(): task_1.to_key()}))

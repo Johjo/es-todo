@@ -8,7 +8,7 @@ from start_web_for_test import inject_all_dependencies
 def sut() -> Dependencies:
     dependencies = Dependencies.create_empty()
     dependencies = dependencies.feed_path("sqlite_database_path", lambda _: ":memory:")
-    dependencies = dependencies.feed_data(data_name=USER_KEY, value="todo@user.com")
+    dependencies = dependencies.feed_data(data_name=USER_KEY, value="any value")
     dependencies = inject_all_dependencies(dependencies)
     return dependencies
 

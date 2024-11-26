@@ -70,7 +70,6 @@ def inject_all_dependencies(dependencies: Dependencies) -> Dependencies:
     load_dotenv()
     static_path = os.environ["STATIC_PATH"]
     dependencies = dependencies.feed_path("static_path", lambda _: Path(static_path))
-    dependencies = dependencies.feed_data(data_name=USER_KEY, value="jonathan.laurent@ytreza.dev")
 
     return dependencies
 
