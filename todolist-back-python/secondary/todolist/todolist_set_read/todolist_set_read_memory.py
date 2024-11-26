@@ -24,7 +24,7 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
                                 execution_date=task.execution_date.default_value(None))
 
     def all_by_name(self) -> list[TodolistName]:
-        return sorted([TodolistName(name) for name in self.memory.all_todolist_by_name()])
+        return sorted([TodolistName(name) for name in self.memory.all_todolist_by_name(user_key=self._user_key)])
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
         tasks = self.memory.all_tasks(user_key=self._user_key, todolist_name=todolist_name)

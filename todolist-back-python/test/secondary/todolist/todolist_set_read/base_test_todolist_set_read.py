@@ -30,6 +30,7 @@ class BaseTestTodolistSetRead:
         self.feed_todolist(user_key=current_user, todolist=todolist_1)
         self.feed_todolist(user_key=current_user, todolist=todolist_2)
         self.feed_todolist(user_key=current_user, todolist=todolist_3)
+        self.feed_todolist(user_key=fake.a_user_key(), todolist=fake.a_todolist())
 
         assert sut.all_by_name() == sorted([todolist_1.to_name(), todolist_2.to_name(), todolist_3.to_name()])
 
@@ -42,6 +43,7 @@ class BaseTestTodolistSetRead:
                                                                         is_open=False),
                                                    ])
         self.feed_todolist(user_key=current_user, todolist=todolist)
+        self.feed_todolist(user_key=fake.a_user_key(), todolist=fake.a_todolist(todolist.name).having(tasks=[fake.a_task().having(name="title #context1 #context2")]))
 
         assert sut.counts_by_context(todolist.name) == [("#context1", 1), ("#context2", 3), ("#con_text3", 1),
                                                         ("@context4", 1), ("@con-text5", 1)]

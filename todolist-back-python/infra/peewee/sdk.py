@@ -30,20 +30,20 @@ class SqliteSdk:
                     execution_date=Some(datetime.strptime(execution_date, "%Y-%m-%d").date()) if execution_date is not None else Nothing)
         return task
 
-    def task_by(self, todolist_name: str, task_key: UUID) -> Task:
+    def task_by(self, todolist_name: str, task_key: str) -> Task:
         cursor = self._database.cursor()
         cursor.execute("SELECT key, Task.name as name, is_open, execution_date FROM Task INNER JOIN Todolist on Task.todolist_id = Todolist.id WHERE todolist.name = ? and key = ?", (todolist_name, str(task_key)))
         fetchone = cursor.fetchone()
         return self.to_task(fetchone)
 
-    def all_todolist(self) -> list[Todolist]:
+    def all_todolist(self, user_key: str) -> list[Todolist]:
         cursor = self._database.cursor()
-        cursor.execute("SELECT name from Todolist ORDER BY name")
+        cursor.execute("SELECT name from Todolist WHERE user_key = ? ORDER BY name", (user_key, ))
         return [Todolist.from_row(row) for row in cursor.fetchall()]
 
     def all_open_tasks(self, user_key: str, todolist_name: str):
         cursor = self._database.cursor()
-        cursor.execute("SELECT key, Task.name as name, is_open, execution_date FROM Task INNER JOIN Todolist on Task.todolist_id = Todolist.id WHERE Todolist.name = ? and is_open = ?", (todolist_name, True))
+        cursor.execute("SELECT key, Task.name as name, is_open, execution_date FROM Task INNER JOIN Todolist on Task.todolist_id = Todolist.id WHERE Todolist.user_key = ? and Todolist.name = ? and is_open = ?", (user_key, todolist_name, True))
         return [self.to_task(row) for row in cursor.fetchall()]
 
     def todolist_by(self, user_key: str, todolist_name: str) -> Todolist:

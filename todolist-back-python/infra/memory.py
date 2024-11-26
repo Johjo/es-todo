@@ -24,8 +24,8 @@ class Memory:
         task = [task for task in all_tasks if task.key == task_key][0]
         return task
 
-    def all_todolist_by_name(self) -> list[str]:
-        return [name for (user_key, name) in self.all_todolist.keys()]
+    def all_todolist_by_name(self, user_key: str) -> list[str]:
+        return [name for (todolist_user_key, name) in self.all_todolist.keys() if todolist_user_key == user_key]
 
     def all_tasks(self, user_key: str, todolist_name: str) -> list[TaskSnapshot]:
         if (user_key, todolist_name) not in self.all_todolist:

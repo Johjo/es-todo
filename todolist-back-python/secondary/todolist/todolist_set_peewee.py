@@ -77,7 +77,7 @@ class TodolistSetReadPeewee(TodolistSetReadPort):
         return map_to_task_presentation(task)
 
     def all_by_name(self) -> list[TodolistName]:
-        all_todolist: list[TodolistSdk] = self._sdk.all_todolist()
+        all_todolist: list[TodolistSdk] = self._sdk.all_todolist(user_key=self._user_key)
         return [TodolistName(todolist.name) for todolist in all_todolist]
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
