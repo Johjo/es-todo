@@ -3,13 +3,14 @@ from peewee import Database  # type: ignore
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSessionSetPort, FvpSnapshot
 from hexagon.shared.type import TaskKey
-from infra.peewee.sdk import PeeweeSdk, FvpSession as FvpSessionSdk
+from infra.peewee.sdk import SqliteSdk
+from infra.peewee.type import FvpSession as FvpSessionSdk
 
 
 class SessionPeewee(FvpSessionSetPort):
     def __init__(self, database: Database):
         self._database : Database = database
-        self._sdk = PeeweeSdk(database)
+        self._sdk = SqliteSdk(database)
 
     def save(self, session: FvpSnapshot) -> None:
         self._sdk.upsert_fvp_session(

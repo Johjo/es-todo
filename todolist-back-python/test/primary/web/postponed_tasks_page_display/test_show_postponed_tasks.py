@@ -15,7 +15,7 @@ def test_show_postponed_tasks(memory: Memory, calendar: _CalendarForTest, test_d
     bottle_config.dependencies = test_dependencies
     calendar.feed_today(date(2019,10, 13))
     todolist = fake.a_todolist(name="my_todolist").having(tasks=[fake.a_task(1).having(name="buy the milk", execution_date=date(2020,10, 13)), fake.a_task(2).having(name="buy the water", execution_date=date(2020,10, 14))])
-    memory.save(todolist.to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
     response = app.get('/any_user/todo/my_todolist/calendar')
 
     assert response.status == '200 OK'

@@ -15,7 +15,7 @@ def test_import_task(memory: Memory, task_key_generator: TaskKeyGeneratorForTest
     expected_task = fake.a_task()
 
     todolist = fake.a_todolist()
-    memory.save(todolist.to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
     task_key_generator.feed(expected_task.to_key())
 
     # when
@@ -24,7 +24,7 @@ def test_import_task(memory: Memory, task_key_generator: TaskKeyGeneratorForTest
     # then
     assert response.status_code == 302
     assert CleanResponse(response).location() == f"/todo/{todolist.to_name()}"
-    assert expected_task.to_snapshot() in memory.by(todolist.to_name()).value.tasks
+    assert expected_task.to_snapshot() in memory.by(user_key="todo@user.com", todolist_name=todolist.to_name()).value.tasks
 
 
 def markdown_from_tasks(*expected_tasks: TaskBuilder) -> str:

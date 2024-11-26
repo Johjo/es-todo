@@ -17,7 +17,7 @@ def test_display_reword_task(app: TestApp, test_dependencies: Dependencies, memo
     task = fake.a_task(1).having(name=TaskName("initial name"), is_open=TaskOpen(True))
     todolist = fake.a_todolist(name="todolist").having(tasks=[task])
 
-    memory.save(todolist.to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
 
     # WHEN
     response = app.get(f'{BASE_URL}/{todolist.name}/item/{task.to_key()}/reword')

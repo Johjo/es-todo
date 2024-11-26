@@ -1,5 +1,6 @@
 import re
 from typing import cast
+from uuid import UUID
 
 from expression import Option, Nothing, Some
 from peewee import Database  # type: ignore
@@ -9,7 +10,8 @@ from hexagon.shared.type import TodolistName, TodolistContext, TodolistContextCo
     TaskExecutionDate
 from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
 from hexagon.todolist.port import TodolistSetPort
-from infra.peewee.sdk import PeeweeSdk, Task as TaskSdk, Todolist as TodolistSdk, TodolistDoesNotExist
+from infra.peewee.sdk import SqliteSdk
+from infra.peewee.type import Task as TaskSdk, Todolist as TodolistSdk, TodolistDoesNotExist
 from primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
 
 
@@ -21,14 +23,15 @@ def map_to_task_presentation(task: TaskSdk) -> TaskPresentation:
 
 
 class TodolistSetPeewee(TodolistSetPort):
-    def __init__(self, database: Database):
-        self._sdk = PeeweeSdk(database)
+    def __init__(self, database: Database, user_key: str):
+        self._sdk = SqliteSdk(database)
+        self._user_key = user_key
 
 
     def by(self, todolist_name: TodolistName) -> Option[TodolistSnapshot]:
         try:
-            todolist = self._sdk.todolist_by(todolist_name=todolist_name)
-            tasks = self._sdk.all_tasks(todolist_name)
+            todolist = self._sdk.todolist_by(user_key=self._user_key, todolist_name=todolist_name)
+            tasks = self._sdk.all_tasks(user_key=self._user_key, todolist_name=todolist_name)
             return Some(self._to_todolist_snapshot(todolist, tasks))
         except TodolistDoesNotExist:
             return Nothing
@@ -43,27 +46,29 @@ class TodolistSetPeewee(TodolistSetPort):
                             execution_date=cast(Option[TaskExecutionDate], task.execution_date))
 
     def save_snapshot(self, todolist: TodolistSnapshot) -> None:
-        self._sdk.upsert_todolist(todolist=TodolistSdk(name=todolist.name),
+        self._sdk.upsert_todolist(user_key=self._user_key, todolist=TodolistSdk(name=todolist.name),
                                   tasks=[TaskSdk(key=task.key, name=task.name, is_open=task.is_open,
                                                  execution_date=task.execution_date) for task in todolist.tasks])
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetPeewee':
-        return TodolistSetPeewee(dependencies.get_infrastructure(Database))
+        return TodolistSetPeewee(database=dependencies.get_infrastructure(Database),
+                                 user_key=dependencies.get_data(data_name="user_key"))
 
 
 class TodolistSetReadPeewee(TodolistSetReadPort):
     def all_tasks_postponed_task(self, todolist_name: str):
-        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=todolist_name)
+        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(user_key=self._user_key, todolist_name=todolist_name)
         all_tasks = [map_to_task_presentation(task) for task in all_tasks_sdk if
                      task.is_open and task.execution_date != Nothing]
         return sorted(all_tasks, key=lambda task: task.execution_date)
 
-    def __init__(self, database: Database):
-        self._sdk = PeeweeSdk(database)
+    def __init__(self, database: Database, user_key: str):
+        self._user_key = user_key
+        self._sdk = SqliteSdk(database)
 
     def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
-        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(todolist_name=task_filter.todolist_name)
+        all_tasks_sdk: list[TaskSdk] = self._sdk.all_tasks(user_key=self._user_key, todolist_name=task_filter.todolist_name)
         return [map_to_task_presentation(task) for task in all_tasks_sdk if task_filter.include(task_name=task.name)]
 
     def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
@@ -75,7 +80,7 @@ class TodolistSetReadPeewee(TodolistSetReadPort):
         return [TodolistName(todolist.name) for todolist in all_todolist]
 
     def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        all_tasks_sdk: list[TaskSdk] = self._sdk.all_open_tasks(todolist_name=todolist_name)
+        all_tasks_sdk: list[TaskSdk] = self._sdk.all_open_tasks(user_key=self._user_key, todolist_name=todolist_name)
         counts_by_context: dict[str, int] = {}
         for task in all_tasks_sdk:
             contexts = self._extract_context_from_name(task)
@@ -90,4 +95,4 @@ class TodolistSetReadPeewee(TodolistSetReadPort):
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetReadPeewee':
-        return TodolistSetReadPeewee(dependencies.get_infrastructure(Database))
+        return TodolistSetReadPeewee(database=dependencies.get_infrastructure(Database), user_key=dependencies.get_data(data_name="user_key"))

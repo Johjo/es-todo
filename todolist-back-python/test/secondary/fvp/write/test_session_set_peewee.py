@@ -3,7 +3,8 @@ from peewee import Database, SqliteDatabase
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from infra.peewee.sdk import PeeweeSdk, FvpSession as FvpSessionSdk
+from infra.peewee.sdk import SqliteSdk
+from infra.peewee.type import FvpSession as FvpSessionSdk
 from secondary.fvp.write.session_set_peewee import SessionPeewee
 from test.secondary.fvp.test_session_repository_contract_testing import TestSessionRepositoryContractTesting
 
@@ -12,7 +13,7 @@ from test.secondary.fvp.test_session_repository_contract_testing import TestSess
 def peewee_database():
     database = SqliteDatabase(':memory:')
     database.connect()
-    sdk = PeeweeSdk(database)
+    sdk = SqliteSdk(database)
     sdk.create_tables()
     return database
 
@@ -28,7 +29,7 @@ def dependencies(peewee_database: Database) -> Dependencies:
 
 class TestSessionRepositoryPeewee(TestSessionRepositoryContractTesting):
     def feed(self, session: FvpSnapshot) -> None:
-        sdk = PeeweeSdk(self._database)
+        sdk = SqliteSdk(self._database)
         sdk.upsert_fvp_session(
             FvpSessionSdk(priorities=[(ignored, chosen) for ignored, chosen in session.task_priorities.items()]))
 

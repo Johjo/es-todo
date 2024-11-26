@@ -21,12 +21,12 @@ def test_postpone_task(memory: Memory, task_key_generator : TaskKeyGeneratorForT
     expected_task = initial_task.having(execution_date=Some(TaskExecutionDate(today)))
 
     todolist = fake.a_todolist().having(tasks=(initial_task,))
-    memory.save(todolist.to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
 
     response = app.post(f'{BASE_URL}/{todolist.name}/item/{expected_task.key}/postpone', {"execution_date": str(today)})
     assert CleanResponse(response).location() == f"/todo/{todolist.name}"
     assert response.status_code == 302
-    assert memory.by(todolist.name).value == todolist.having(tasks=[expected_task]).to_snapshot()
+    assert memory.by(user_key="todo@user.com", todolist_name=todolist.name).value == todolist.having(tasks=[expected_task]).to_snapshot()
 
 
 def test_display_error_if_date_is_invalid(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
@@ -35,7 +35,7 @@ def test_display_error_if_date_is_invalid(memory: Memory, task_key_generator : T
 
     todolist = fake.a_todolist("todolist").having(tasks=[initial_task])
 
-    memory.save(todolist.to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
 
     response = app.post(f'{BASE_URL}/{todolist.name}/item/{initial_task.key}/postpone', {"execution_date": ""})
 

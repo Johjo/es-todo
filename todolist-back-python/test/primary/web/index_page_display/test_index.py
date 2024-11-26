@@ -11,8 +11,8 @@ from test.fixture import TodolistFaker
 
 def test_index(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     bottle_config.dependencies = test_dependencies
-    memory.save(fake.a_todolist("1-todolist-1").to_snapshot())
-    memory.save(fake.a_todolist("2-todolist-2").to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=fake.a_todolist("1-todolist-1").to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=fake.a_todolist("2-todolist-2").to_snapshot())
 
     response = app.get('/any_user/todo')
 

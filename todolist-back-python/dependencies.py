@@ -7,6 +7,7 @@ class ResourceType(str, Enum):
     adapter = "adapter"
     path = "path"
     infrastructure = "infrastructure"
+    data = "data"
 
 
 @dataclass(frozen=True)
@@ -28,6 +29,9 @@ class Dependencies:
     def feed_infrastructure(self, infrastructure: Any, factory):
         return self._feed(resource_type=ResourceType.infrastructure, resource=infrastructure, factory=factory)
 
+    def feed_data(self, data_name: str, value: Any):
+        return self._feed(resource_type=ResourceType.data, resource=data_name, factory=lambda _: value)
+
     def _feed(self, resource_type: ResourceType, resource: Any, factory: Any) -> 'Dependencies':
         return replace(self, factory={**self.factory, (resource_type, resource): factory})
 
@@ -48,6 +52,8 @@ class Dependencies:
     def get_path(self, path_name: str) -> Any:
         return self._get_resource(resource_type=ResourceType.path, resource=path_name)
 
+    def get_data(self, data_name) -> Any:
+        return self._get_resource(resource_type=ResourceType.data, resource=data_name)
 
 
     def _get_resource(self, resource_type: ResourceType, resource) -> Any:
@@ -58,4 +64,3 @@ class Dependencies:
     @classmethod
     def create_empty(cls) -> 'Dependencies':
         return Dependencies()
-

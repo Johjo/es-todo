@@ -1,111 +1,105 @@
-from dataclasses import dataclass
-from datetime import date
-from typing import cast
+from datetime import datetime
+from typing import Any
 from uuid import UUID
 
-from expression import Option, Nothing, Some
+from expression import Nothing, Some
 from peewee import Database, DoesNotExist  # type: ignore
 
-from hexagon.shared.type import TodolistName, TaskKey, TaskName, TaskOpen, TaskExecutionDate
-from infra.peewee.table import Task as TaskRow, Todolist as TodolistRow, Session as SessionRow
+from infra.peewee.type import Task, Todolist, FvpSession, TodolistDoesNotExist
+from test.hexagon.fvp.read.test_which_task import todolist_name
 
 
-@dataclass(frozen=True, eq=True)
-class Task:
-    key: UUID
-    name: str
-    is_open: bool
-    execution_date: Option[date]
-
-    @classmethod
-    def from_row(cls, row: TaskRow) -> 'Task':
-        return Task(
-            key=TaskKey(cast(UUID, row.key)),
-            name=TaskName(cast(str, row.name)),
-            is_open=TaskOpen(cast(bool, row.is_open)),
-            execution_date=Some(TaskExecutionDate(cast(date, row.execution_date))) if row.execution_date else Nothing)
-
-
-@dataclass(frozen=True, eq=True)
-class Todolist:
-    name: str
-
-    @classmethod
-    def from_row(cls, row: TodolistRow) -> 'Todolist':
-        name: str = cast(str, row.name)
-        return Todolist(name=TodolistName(name))
-
-
-@dataclass(frozen=True, eq=True)
-class FvpSession:
-    priorities: list[tuple[UUID, UUID]]
-
-
-
-class TodolistDoesNotExist(Exception):
-    pass
-
-
-class PeeweeSdk:
+class SqliteSdk:
     def __init__(self, database: Database):
         self._database = database
 
-    def all_tasks(self, todolist_name: str) -> list[Task]:
-        with self._database.bind_ctx([TaskRow]):
-            return [Task.from_row(row) for row in TaskRow.select().where(TaskRow.todolist_name == todolist_name)]
+    def all_tasks(self, user_key: str, todolist_name: str) -> list[Task]:
+        cursor = self._database.cursor()
+        todolist_id : int
+        cursor.execute(
+            "SELECT key, Task.name as name, is_open, execution_date from Task INNER JOIN Todolist on Task.todolist_id = Todolist.id WHERE todolist.user_key = ? and todolist.name = ?",
+            (user_key, todolist_name,))
+        return [self.to_task(row) for row in cursor.fetchall()]
+
+    @staticmethod
+    def to_task(row: Any) -> Task:
+        execution_date = row[3]
+        task = Task(key=UUID(row[0]),
+                    name=row[1],
+                    is_open=row[2] == 1,
+                    execution_date=Some(datetime.strptime(execution_date, "%Y-%m-%d").date()) if execution_date is not None else Nothing)
+        return task
 
     def task_by(self, todolist_name: str, task_key: UUID) -> Task:
-        with self._database.bind_ctx([TaskRow]):
-            row = TaskRow.get(TaskRow.todolist_name == todolist_name, TaskRow.key == task_key)
-            return Task.from_row(row)
+        cursor = self._database.cursor()
+        cursor.execute("SELECT key, Task.name as name, is_open, execution_date FROM Task INNER JOIN Todolist on Task.todolist_id = Todolist.id WHERE todolist.name = ? and key = ?", (todolist_name, str(task_key)))
+        fetchone = cursor.fetchone()
+        return self.to_task(fetchone)
 
     def all_todolist(self) -> list[Todolist]:
-        with self._database.bind_ctx([TodolistRow, TaskRow]):
-            query = TodolistRow.select(TodolistRow.name).execute()
-            return [Todolist.from_row(row) for row in query]
+        cursor = self._database.cursor()
+        cursor.execute("SELECT name from Todolist ORDER BY name")
+        return [Todolist.from_row(row) for row in cursor.fetchall()]
 
-    def all_open_tasks(self, todolist_name):
-        with self._database.bind_ctx([TaskRow]):
-            query = TaskRow.select().where(TaskRow.todolist_name == todolist_name, TaskRow.is_open)
-            return [Task.from_row(row) for row in query]
+    def all_open_tasks(self, user_key: str, todolist_name: str):
+        cursor = self._database.cursor()
+        cursor.execute("SELECT key, Task.name as name, is_open, execution_date FROM Task INNER JOIN Todolist on Task.todolist_id = Todolist.id WHERE Todolist.name = ? and is_open = ?", (todolist_name, True))
+        return [self.to_task(row) for row in cursor.fetchall()]
 
-    def todolist_by(self, todolist_name: str) -> Todolist:
-        with self._database.bind_ctx([TodolistRow, TaskRow]):
-            try:
-                row = TodolistRow.get(TodolistRow.name == todolist_name)
-                return Todolist.from_row(row)
-            except DoesNotExist:
-                raise TodolistDoesNotExist()
+    def todolist_by(self, user_key: str, todolist_name: str) -> Todolist:
+        cursor = self._database.cursor()
+        cursor.execute("SELECT name from Todolist where name = ? and user_key = ?", (todolist_name, user_key))
+        row = cursor.fetchone()
+        if not row:
+            raise TodolistDoesNotExist()
+        return Todolist.from_row(row)
 
-    def upsert_todolist(self, todolist: Todolist, tasks: list[Task]):
-        with self._database.bind_ctx([TodolistRow, TaskRow]):
-            with self._database.atomic():
-                self._delete_previous_todolist(todolist.name)
-                self._save_todolist(todolist, tasks=tasks)
+    def upsert_todolist(self, user_key: str, todolist: Todolist, tasks: list[Task]):
+        self._delete_previous_todolist(user_key=user_key, todolist_name=todolist.name)
+        self._save_todolist(user_key=user_key, todolist_name=todolist.name, tasks=tasks)
 
-    @staticmethod
-    def _save_todolist(todolist: Todolist, tasks: list[Task]):
-        TodolistRow.create(user_key="jonathan.laurent@ytreza.dev", name=todolist.name)
+    def _save_todolist(self, user_key: str, todolist_name: str, tasks: list[Task]):
+        cursor = self._database.cursor()
+        cursor.execute("INSERT into Todolist (user_key, name) VALUES (?, ?) ", (user_key, todolist_name,))
+        todolist_id = self._todolist_id(user_key, todolist_name)
         for task in tasks:
-            TaskRow.create(todolist_name=todolist.name, key=task.key, name=task.name, is_open=task.is_open, execution_date=task.execution_date.default_value(None))
+            cursor.execute("INSERT into TASK (todolist_id, key, name, is_open, execution_date) VALUES (?, ?, ?, ?, ?)",
+                           (todolist_id, str(task.key), task.name, task.is_open, task.execution_date.default_value(None)))
 
-    @staticmethod
-    def _delete_previous_todolist(todolist_name: str) -> None:
-        TodolistRow.delete().where(TodolistRow.name == todolist_name).execute()
-        TaskRow.delete().where(TaskRow.todolist_name == todolist_name).execute()
+    def _todolist_id(self, user_key: str, todolist_name: str) -> int:
+        cursor = self._database.cursor()
+        cursor.execute("SELECT id from Todolist where user_key=? and name=?", (user_key, todolist_name))
+        todolist_id: int = cursor.fetchone()[0]
+        return todolist_id
+
+    def _delete_previous_todolist(self, user_key: str, todolist_name: str) -> None:
+        cursor = self._database.cursor()
+        cursor.execute("SELECT id from Todolist where user_key=? and name=?", (user_key, todolist_name))
+        row = cursor.fetchone()
+        if row:
+            todolist_id : int = row[0]
+            cursor.execute("DELETE from Todolist where id = ?", (todolist_id, ))
+            cursor.execute("DELETE from Task where todolist_id = ?", (todolist_id, ))
+
 
     def create_tables(self) -> None:
-        created_table = [TodolistRow, TaskRow, SessionRow]
-        with self._database.bind_ctx(created_table):
-            self._database.create_tables(created_table)
+        cursor = self._database.cursor()
+        cursor.execute("CREATE TABLE Todolist(id INTEGER PRIMARY KEY AUTOINCREMENT, name, user_key)")
+        cursor.execute("CREATE INDEX todolist_name_idx ON Todolist (name);")
+
+        cursor.execute("CREATE TABLE Task(id INTEGER PRIMARY KEY AUTOINCREMENT, todolist_id, key, name, is_open, execution_date)")
+
+        cursor.execute("CREATE TABLE Session(id INTEGER PRIMARY KEY AUTOINCREMENT, ignored_task_key, chosen_task_key)")
+
 
     def upsert_fvp_session(self, fvp_session: FvpSession) -> None:
-        with self._database.bind_ctx([SessionRow]):
-            with self._database.atomic():
-                SessionRow.delete().execute()
-                for ignored, chosen in fvp_session.priorities:
-                    SessionRow.create(ignored=ignored, chosen=chosen)
+        cursor = self._database.cursor()
+        cursor.execute("DELETE FROM Session")
+        for ignored, chosen in fvp_session.priorities:
+            cursor.execute("INSERT INTO Session(ignored_task_key, chosen_task_key) VALUES (?, ?)", (str(ignored), str(chosen)))
 
     def fvp_session_by(self) -> FvpSession:
-        with self._database.bind_ctx([SessionRow]):
-            return FvpSession(priorities=[(session.ignored, session.chosen) for session in SessionRow.select()])
+        cursor = self._database.cursor()
+        cursor.execute("SELECT ignored_task_key, chosen_task_key FROM Session")
+        rows = cursor.fetchall()
+        return FvpSession(priorities=[(UUID(session[0]), UUID(session[1])) for session in rows])

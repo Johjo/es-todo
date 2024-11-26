@@ -3,12 +3,14 @@ from uuid import UUID
 
 import pytest
 from dateutil.utils import today
+from peewee import Database
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import ChooseTheTask, DoTheTask, NothingToDo
 from hexagon.fvp.read.which_task import WhichTaskFilter
 from hexagon.shared.type import TaskKey, TaskExecutionDate, TodolistName, TaskName, TaskOpen
 from hexagon.todolist.port import TaskKeyGeneratorPort
+from infra.peewee.sdk import SqliteSdk
 from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
 from primary.controller.read.todolist import TodolistReadController, TaskPresentation
 from primary.controller.write.todolist import TodolistWriteController
@@ -39,7 +41,14 @@ def dependencies(task_key_generator: TaskKeyGeneratorPort) -> Dependencies:
     return dependencies
 
 
+@pytest.fixture(autouse=True)
+def create_table(dependencies: Dependencies):
+    sdk = SqliteSdk(database=dependencies.get_infrastructure(Database))
+    sdk.create_tables()
+
+
 def test_xxx(dependencies: Dependencies) -> None:
+    dependencies = dependencies.feed_data("user_key", "user@mail.com")
     write = TodolistWriteController(dependencies)
     read = TodolistReadController(dependencies)
     fvp_read = FinalVersionPerfectedReadController(dependencies)

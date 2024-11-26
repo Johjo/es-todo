@@ -9,7 +9,7 @@ from dependencies import Dependencies
 from hexagon.fvp.read.which_task import TodolistPort
 from hexagon.shared.type import TaskKey
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
-from infra.peewee.sdk import PeeweeSdk
+from infra.peewee.sdk import SqliteSdk
 from primary.controller.dependencies import inject_use_cases
 from primary.controller.read.final_version_perfected import CalendarPort
 from primary.controller.read.todolist import TodolistSetReadPort
@@ -57,8 +57,6 @@ def inject_adapter(dependencies: Dependencies) -> Dependencies:
 def inject_infrastructure(dependencies: Dependencies) -> Dependencies:
     path = dependencies.get_path("sqlite_database_path")
     database = SqliteDatabase(path)
-    sdk = PeeweeSdk(database)
-    sdk.create_tables()
     dependencies = dependencies.feed_infrastructure(Database, lambda _: database)
     return dependencies
 
@@ -71,6 +69,7 @@ def inject_all_dependencies(dependencies: Dependencies) -> Dependencies:
     load_dotenv()
     static_path = os.environ["STATIC_PATH"]
     dependencies = dependencies.feed_path("static_path", lambda _: Path(static_path))
+    dependencies = dependencies.feed_data(data_name="user_key", value="jonathan.laurent@ytreza.dev")
 
     return dependencies
 

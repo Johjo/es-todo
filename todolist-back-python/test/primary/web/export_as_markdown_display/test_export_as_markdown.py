@@ -13,7 +13,7 @@ def test_display_export_as_markdown(memory: Memory, test_dependencies: Dependenc
     bottle_config.dependencies = test_dependencies
 
     todolist = fake.a_todolist().having(name="todolist").having(tasks=[fake.a_task().having(name="buy milk"), fake.a_task().having(name="buy water")])
-    memory.save(todolist.to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
 
     response = app.get(f'{BASE_URL}/{todolist.name}/export')
 

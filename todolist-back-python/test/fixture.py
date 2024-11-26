@@ -6,9 +6,9 @@ from uuid import UUID, uuid4
 from expression import Option, Nothing, Some
 from faker import Faker
 
+import infra.peewee.type
 from hexagon.shared.type import TaskKey, TaskName, TodolistName, TaskOpen, TaskExecutionDate
 from hexagon.todolist.aggregate import TaskSnapshot, TodolistSnapshot
-from infra.peewee import sdk
 from primary.controller.read.todolist import TaskPresentation, TaskFilter
 
 
@@ -63,8 +63,8 @@ class TaskBuilder:
             return cast(Option[TaskExecutionDate], self.execution_date)
         return Some(TaskExecutionDate(self.execution_date))
 
-    def to_peewee_sdk(self) -> sdk.Task:
-        return sdk.Task(key=self.to_key(), name=self.to_name(), is_open=self.to_open(), execution_date=self.to_execution_date())
+    def to_peewee_sdk(self) -> infra.peewee.type.Task:
+        return infra.peewee.type.Task(key=self.to_key(), name=self.to_name(), is_open=self.to_open(), execution_date=self.to_execution_date())
 
 
 @dataclass(frozen=True)
@@ -88,8 +88,8 @@ class TodolistBuilder:
             raise Exception("todolist.name must be set")
         return TodolistName(self.name)
 
-    def to_peewee_sdk(self) -> sdk.Todolist:
-        return sdk.Todolist(name=self.to_name())
+    def to_peewee_sdk(self) -> infra.peewee.type.Todolist:
+        return infra.peewee.type.Todolist(name=self.to_name())
 
 
 @dataclass(frozen=True)
@@ -140,3 +140,9 @@ class TodolistFaker:
         if not after:
             after = date(1930, 10, 17)
         return cast(date, self.fake.date_between(start_date=after, end_date=before))
+
+    def many_task(self, number_of_task: int) -> list[TaskBuilder]:
+        return [self.a_task() for _ in range(number_of_task)]
+
+    def a_user_key(self) -> str:
+        return self.fake.email()

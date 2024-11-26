@@ -20,11 +20,13 @@ class TestTodolistSetReadMemory(BaseTestTodolistSetRead):
         self.memory = Memory()
 
     @pytest.fixture
-    def dependencies(self) -> Dependencies:
+    def dependencies(self, current_user: str) -> Dependencies:
         all_dependencies = Dependencies.create_empty()
         all_dependencies = all_dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadInMemory.factory)
         all_dependencies = all_dependencies.feed_infrastructure(Memory, lambda _: self.memory)
+        all_dependencies = all_dependencies.feed_data(data_name="user_key", value=current_user)
+
         return all_dependencies
 
-    def feed_todolist(self, todolist: TodolistBuilder):
-        self.memory.save(todolist.to_snapshot())
+    def feed_todolist(self, user_key:str, todolist: TodolistBuilder):
+        self.memory.save(user_key=user_key, todolist=todolist.to_snapshot())

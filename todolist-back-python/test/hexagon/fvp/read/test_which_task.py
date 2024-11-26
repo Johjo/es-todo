@@ -23,12 +23,12 @@ class TodolistForTest(TodolistPort):
 
 
 @pytest.fixture
-def sut(fvp_session_set: FvpSessionSetForTest, todolist: TodolistForTest):
-    return WhichTaskQuery(todolist, fvp_session_set)
+def sut(fvp_session_set: FvpSessionSetForTest, todolist_name: TodolistForTest):
+    return WhichTaskQuery(todolist_name, fvp_session_set)
 
 
 @pytest.fixture
-def todolist():
+def todolist_name():
     return TodolistForTest()
 
 
@@ -58,17 +58,17 @@ def fake() -> FvpFaker:
     return FvpFaker(Faker())
 
 
-def test_which_task_without_tasks(sut: WhichTaskQuery, todolist: TodolistForTest, fake: FvpFaker):
+def test_which_task_without_tasks(sut: WhichTaskQuery, todolist_name: TodolistForTest, fake: FvpFaker):
     task_filter = fake.a_which_task_filter()
-    todolist.feed(task_filter)
+    todolist_name.feed(task_filter)
     assert sut.which_task(task_filter) == NothingToDo()
 
 
-def test_which_task_with_one_task(sut: WhichTaskQuery, todolist: TodolistForTest, fake: FvpFaker):
+def test_which_task_with_one_task(sut: WhichTaskQuery, todolist_name: TodolistForTest, fake: FvpFaker):
     # GIVEN
     expected_task = replace(fake.a_task(1))
     task_filter = fake.a_which_task_filter()
-    todolist.feed(task_filter, expected_task)
+    todolist_name.feed(task_filter, expected_task)
 
     # WHEN
 
@@ -76,22 +76,22 @@ def test_which_task_with_one_task(sut: WhichTaskQuery, todolist: TodolistForTest
     assert sut.which_task(task_filter) == DoTheTask(key=expected_task.key)
 
 
-def test_which_task_with_two_tasks(sut: WhichTaskQuery, todolist: TodolistForTest, fake: FvpFaker):
+def test_which_task_with_two_tasks(sut: WhichTaskQuery, todolist_name: TodolistForTest, fake: FvpFaker):
     primary_task = replace(fake.a_task(1))
     secondary_task = replace(fake.a_task(2))
     task_filter = fake.a_which_task_filter()
-    todolist.feed(task_filter, primary_task, secondary_task)
+    todolist_name.feed(task_filter, primary_task, secondary_task)
 
     assert sut.which_task(task_filter) == ChooseTheTask(main_task_key=primary_task.key, secondary_task_key=secondary_task.key)
 
 
-def test_load_existing_session(sut: WhichTaskQuery, todolist: TodolistForTest, fvp_session_set: FvpSessionSetForTest,
+def test_load_existing_session(sut: WhichTaskQuery, todolist_name: TodolistForTest, fvp_session_set: FvpSessionSetForTest,
                                fake: FvpFaker):
     chosen_task = replace(fake.a_task(1))
     ignored_task = replace(fake.a_task(2))
     task_filter = fake.a_which_task_filter()
 
     fvp_session_set.feed(FvpSnapshot.from_primitive_dict({ignored_task.key: chosen_task.key}))
-    todolist.feed(task_filter, chosen_task, ignored_task)
+    todolist_name.feed(task_filter, chosen_task, ignored_task)
 
     assert sut.which_task(task_filter) == DoTheTask(key=chosen_task.key)

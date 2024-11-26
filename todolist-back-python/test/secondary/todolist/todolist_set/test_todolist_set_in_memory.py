@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import pytest
 
 from dependencies import Dependencies
@@ -14,11 +16,12 @@ class TestTodolistSetInMemory(BaseTestTodolistSet):
         self.memory = Memory()
 
     @pytest.fixture
-    def dependencies(self) -> Dependencies:
+    def dependencies(self, current_user: str) -> Dependencies:
         all_dependencies = Dependencies.create_empty()
         all_dependencies = all_dependencies.feed_adapter(TodolistSetPort, TodolistSetInMemory.factory)
         all_dependencies = all_dependencies.feed_infrastructure(Memory, lambda _: self.memory)
+        all_dependencies = all_dependencies.feed_data(data_name="user_key", value=current_user)
         return all_dependencies
 
-    def feed_todolist(self, todolist: TodolistBuilder) -> None:
-        self.memory.save(todolist.to_snapshot())
+    def feed_todolist(self, user_key: str, todolist: TodolistBuilder) -> None:
+        self.memory.save(user_key=user_key, todolist=todolist.to_snapshot())

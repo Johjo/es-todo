@@ -9,31 +9,33 @@ from test.secondary.fvp.read.which_task.base_test_todolist import BaseTestTodoli
 
 
 class TodolistMemory(TodolistPort):
-    def __init__(self, memory: Memory):
+    def __init__(self, memory: Memory, user_key:str):
         self.memory = memory
+        self._user_key = user_key
 
     def all_open_tasks(self, task_filter: WhichTaskFilter) -> list[Task]:
-        tasks = [task for task in self.memory.all_tasks(todolist_name=task_filter.todolist_name) if task.is_open]
+        tasks = [task for task in self.memory.all_tasks(user_key=self._user_key, todolist_name=task_filter.todolist_name) if task.is_open]
         return [Task(key=task.key) for task in tasks if
                 task_filter.include(task.name, task.execution_date)]
 
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistMemory':
         memory = dependencies.get_infrastructure(Memory)
-        return TodolistMemory(memory)
+        return TodolistMemory(memory=memory, user_key=dependencies.get_data("user_key"))
 
 
-class TestTodolistPeewee(BaseTestTodolist):
+class TestTodolistMemory(BaseTestTodolist):
     @pytest.fixture(autouse=True)
     def before_each(self):
         self.memory = Memory()
 
-    def feed_todolist(self, todolist: TodolistBuilder) -> None:
-        self.memory.save(todolist.to_snapshot())
+    def feed_todolist(self, user_key: str, todolist: TodolistBuilder) -> None:
+        self.memory.save(user_key=user_key, todolist=todolist.to_snapshot())
 
     @pytest.fixture
-    def dependencies(self) -> Dependencies:
+    def dependencies(self, current_user: str) -> Dependencies:
         all_dependencies = Dependencies.create_empty()
         all_dependencies = all_dependencies.feed_adapter(TodolistPort, TodolistMemory.factory)
         all_dependencies = all_dependencies.feed_infrastructure(Memory, lambda _: self.memory)
+        all_dependencies = all_dependencies.feed_data(data_name="user_key", value=current_user)
         return all_dependencies

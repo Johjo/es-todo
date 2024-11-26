@@ -17,7 +17,7 @@ def test_display_postpone_task(app: TestApp, test_dependencies: Dependencies, me
     initial_task = fake.a_task(1).having(name=TaskName("initial name"))
 
     todolist = fake.a_todolist(name="todolist").having(tasks=[initial_task])
-    memory.save(todolist.to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
 
     # WHEN
     response = app.get(f'{BASE_URL}/{todolist.name}/item/{initial_task.key}/postpone')

@@ -15,13 +15,13 @@ def test_reword_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTes
     expected_task = initial_task.having(name="reworded")
 
     todolist = fake.a_todolist().having(tasks=[initial_task])
-    memory.save(todolist.to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
 
     # when
     response = app.post(f'{BASE_URL}/{todolist.to_name()}/item/{expected_task.to_key()}/reword', {"new_name": expected_task.to_name()})
 
     # then
-    assert expected_task.to_snapshot() in memory.by(todolist.to_name()).value.tasks
+    assert expected_task.to_snapshot() in memory.by(user_key="todo@user.com", todolist_name=todolist.to_name()).value.tasks
     assert CleanResponse(response).location() == f"/todo/{todolist.to_name()}"
     assert response.status_code == 302
 

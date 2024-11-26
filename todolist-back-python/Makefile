@@ -14,10 +14,16 @@ help:
 	@echo "start : start server"
 	@echo "update : update from git"
 	@echo "check : check code with mypy
+	@echo "create_table : create table first time
+
 
 .PHONY: start
 start:
 	python -m pipenv run start_web_for_test.py
+
+.PHONY: create_table
+create_table:
+	python -m pipenv run create_tables.py
 
 .PHONY: update
 update:

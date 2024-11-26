@@ -13,7 +13,7 @@ def test_display_import(memory: Memory, test_dependencies: Dependencies, app: Te
     bottle_config.dependencies = test_dependencies
 
     todolist = fake.a_todolist("my_todolist")
-    memory.save(todolist.to_snapshot())
+    memory.save(user_key="todo@user.com", todolist=todolist.to_snapshot())
     response = app.get(f'{BASE_URL}/{todolist.name}/import')
 
     assert response.status == '200 OK'
