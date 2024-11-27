@@ -1,4 +1,3 @@
-from uuid import UUID
 
 import pytest
 from dateutil.utils import today
@@ -7,7 +6,7 @@ from faker import Faker
 
 from dependencies import Dependencies
 from hexagon.todolist.port import TodolistSetPort
-from secondary.todolist.todolist_set_peewee import TodolistSetPeewee
+from secondary.todolist.todolist_set.todolist_set_sqlite import TodolistSetSqlite
 from test.fixture import TodolistFaker, TodolistBuilder
 
 
@@ -37,8 +36,6 @@ class BaseTestTodolistSet:
 
     def test_get_by_when_todolist_has_tasks(self, sut: TodolistSetPort, fake: TodolistFaker, current_user: str):
         # given
-        # feed une todolist du même user mais autre nom de todolist
-        # feed une todolist autre user mais même nom de todolist
         expected_todolist = fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task().having(execution_date=today().date())])
         other_user_todolist = fake.a_todolist(name=expected_todolist.to_name()).having(tasks=fake.many_task(2))
 
@@ -76,7 +73,7 @@ class BaseTestTodolistSet:
         assert sut.by(expected_todolist.name).value == expected_todolist.to_snapshot()
 
     @staticmethod
-    def test_update_todolist(sut: TodolistSetPeewee, fake: TodolistFaker):
+    def test_update_todolist(sut: TodolistSetSqlite, fake: TodolistFaker):
         # given
         initial_todolist = fake.a_todolist().having(tasks=[fake.a_task(), fake.a_task()])
         sut.save_snapshot(todolist=initial_todolist.to_snapshot())

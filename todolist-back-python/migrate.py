@@ -1,17 +1,12 @@
-from peewee import DateField, Database, SqliteDatabase, CharField, IntegerField  # type: ignore
-from playhouse.migrate import SqliteMigrator, migrate  # type: ignore
+import sqlite3
 
-def migrate_to_actual(database: Database):
-    # migrator = SqliteMigrator(database)
-    migrate(
-    )
-
-
+def migrate_to_actual(connection: sqlite3.Connection):
+    pass
 
 def main():
-    path = "./todolist.db.sqlite"
-    database = SqliteDatabase(path)
+    database = sqlite3.connect("./todolist.db.sqlite")
     migrate_to_actual(database)
+
 
 if __name__ == "__main__":
     main()

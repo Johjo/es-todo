@@ -1,16 +1,16 @@
-from peewee import Database  # type: ignore
+import sqlite3
+
 
 from dependencies import Dependencies
 from hexagon.fvp.aggregate import FvpSessionSetPort, FvpSnapshot
 from hexagon.shared.type import TaskKey
-from infra.peewee.sdk import SqliteSdk
-from infra.peewee.type import FvpSession as FvpSessionSdk
+from infra.sqlite.sdk import SqliteSdk
+from infra.sqlite.type import FvpSession as FvpSessionSdk
 
 
-class SessionPeewee(FvpSessionSetPort):
-    def __init__(self, database: Database):
-        self._database : Database = database
-        self._sdk = SqliteSdk(database)
+class SessionSqlite(FvpSessionSetPort):
+    def __init__(self, connection: sqlite3.Connection):
+        self._sdk = SqliteSdk(connection)
 
     def save(self, session: FvpSnapshot) -> None:
         self._sdk.upsert_fvp_session(
@@ -21,5 +21,5 @@ class SessionPeewee(FvpSessionSetPort):
         return FvpSnapshot.from_primitive_dict({TaskKey(ignored): TaskKey(chosen) for (ignored, chosen) in session.priorities})
 
     @classmethod
-    def factory(cls, dependencies: Dependencies) -> 'SessionPeewee':
-        return SessionPeewee(dependencies.get_infrastructure(Database))
+    def factory(cls, dependencies: Dependencies) -> 'SessionSqlite':
+        return SessionSqlite(dependencies.get_infrastructure(sqlite3.Connection))

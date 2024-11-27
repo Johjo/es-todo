@@ -1,22 +1,20 @@
 import os
+import sqlite3
 from datetime import date, datetime
 from pathlib import Path
 from uuid import uuid4
-
-from peewee import Database, SqliteDatabase
 
 from dependencies import Dependencies
 from hexagon.fvp.read.which_task import TodolistPort
 from hexagon.shared.type import TaskKey
 from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
-from infra.peewee.sdk import SqliteSdk
 from primary.controller.dependencies import inject_use_cases
 from primary.controller.read.final_version_perfected import CalendarPort
 from primary.controller.read.todolist import TodolistSetReadPort
 from primary.web.pages import bottle_config, bottle_app
-from secondary.fvp.read.which_task.todolist_peewee import TodolistPeewee
-from secondary.todolist.todolist_set_peewee import TodolistSetPeewee, TodolistSetReadPeewee
-from shared.const import USER_KEY
+from secondary.fvp.read.which_task.todolist_sqlite import TodolistSqlite
+from secondary.todolist.todolist_set.todolist_set_sqlite import TodolistSetSqlite
+from secondary.todolist.todolist_set_read.todolist_set_read_sqlite import TodolistSetReadSqlite
 
 
 class TaskKeyGeneratorRandom(TaskKeyGeneratorPort):
@@ -26,10 +24,10 @@ class TaskKeyGeneratorRandom(TaskKeyGeneratorPort):
 
 
 def inject_final_version_perfected(dependencies: Dependencies) -> Dependencies:
-    from secondary.fvp.write.session_set_peewee import SessionPeewee
+    from secondary.fvp.write.session_set_sqlite import SessionSqlite
     from hexagon.fvp.aggregate import FvpSessionSetPort
 
-    dependencies = dependencies.feed_adapter(FvpSessionSetPort, SessionPeewee.factory)
+    dependencies = dependencies.feed_adapter(FvpSessionSetPort, SessionSqlite.factory)
     return dependencies
 
 
@@ -43,13 +41,13 @@ class Calendar(CalendarPort):
 
 
 def inject_adapter(dependencies: Dependencies) -> Dependencies:
-    dependencies = dependencies.feed_adapter(TodolistSetPort, TodolistSetPeewee.factory)
-    dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadPeewee.factory)
+    dependencies = dependencies.feed_adapter(TodolistSetPort, TodolistSetSqlite.factory)
+    dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadSqlite.factory)
     dependencies = inject_final_version_perfected(dependencies)
 
     task_key_generator = TaskKeyGeneratorRandom()
     dependencies = dependencies.feed_adapter(TaskKeyGeneratorPort, lambda _: task_key_generator)
-    dependencies = dependencies.feed_adapter(TodolistPort, TodolistPeewee.factory)
+    dependencies = dependencies.feed_adapter(TodolistPort, TodolistSqlite.factory)
     dependencies = dependencies.feed_adapter(CalendarPort, Calendar.factory)
 
     return dependencies
@@ -57,8 +55,8 @@ def inject_adapter(dependencies: Dependencies) -> Dependencies:
 
 def inject_infrastructure(dependencies: Dependencies) -> Dependencies:
     path = dependencies.get_path("sqlite_database_path")
-    database = SqliteDatabase(path)
-    dependencies = dependencies.feed_infrastructure(Database, lambda _: database)
+    database = sqlite3.connect(path)
+    dependencies = dependencies.feed_infrastructure(sqlite3.Connection, lambda _: database)
     return dependencies
 
 

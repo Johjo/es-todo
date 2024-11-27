@@ -1,4 +1,3 @@
-from uuid import UUID
 
 from expression import Option
 

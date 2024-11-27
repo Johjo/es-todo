@@ -1,10 +1,10 @@
-from peewee import SqliteDatabase
+import sqlite3
 
-from infra.peewee.sdk import SqliteSdk
+from infra.sqlite.sdk import SqliteSdk
 
 
 def main():
-    sdk = SqliteSdk(SqliteDatabase("./todolist.db.sqlite"))
+    sdk = SqliteSdk(sqlite3.connect("./todolist.db.sqlite"))
     sdk.create_tables()
 
 if __name__ == "__main__":
