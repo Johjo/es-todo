@@ -1,10 +1,10 @@
 
 from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 from secondary.fvp.simple_session_repository import FvpSessionSetForTest
-from test.secondary.fvp.test_session_repository_contract_testing import TestSessionRepositoryContractTesting
+from test.secondary.fvp.write.base_test_session_set import BaseTestSessionSet
 
 
-class TestSimpleSessionRepository(TestSessionRepositoryContractTesting):
+class TestSimpleSessionSet(BaseTestSessionSet):
     def _create_sut(self) -> FvpSessionSetPort:
         self._sut = FvpSessionSetForTest()
         return self._sut
