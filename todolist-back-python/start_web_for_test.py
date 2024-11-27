@@ -55,7 +55,7 @@ def inject_adapter(dependencies: Dependencies) -> Dependencies:
 
 def inject_infrastructure(dependencies: Dependencies) -> Dependencies:
     path = dependencies.get_path("sqlite_database_path")
-    database = sqlite3.connect(path)
+    database = sqlite3.connect(path, isolation_level=None)
     dependencies = dependencies.feed_infrastructure(sqlite3.Connection, lambda _: database)
     return dependencies
 
