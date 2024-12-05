@@ -15,7 +15,7 @@ def sut(todolist_set: TodolistSetForTest) -> PostPoneTask:
     return PostPoneTask(todolist_set)
 
 
-def test_postpone_task(sut: PostPoneTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+def test_save_postponed_task(sut: PostPoneTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
     task = fake.a_task()
     todolist = fake.a_todolist().having(tasks=(task,))
     todolist_set.feed(todolist)
@@ -48,21 +48,10 @@ def test_tell_ok_when_postpone_task(sut: PostPoneTask, todolist_set: TodolistSet
     todolist = fake.a_todolist().having(tasks=[task])
     todolist_set.feed(todolist)
 
-    today = datetime.today()
-    response = sut.execute(todolist.name, TaskKey(task.to_key()), TaskExecutionDate(today))
-
-    assert response == Ok(None)
-
-
-def test_emit_event_when_task_is_postponed(sut: PostPoneTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
-    task = fake.a_task()
-    todolist = fake.a_todolist().having(tasks=[task])
-    todolist_set.feed(todolist)
-
     execution_date = fake.a_date()
     response = sut.execute(todolist.name, TaskKey(task.to_key()), TaskExecutionDate(execution_date))
 
-    assert response == Ok([TaskPostponedEvent(task_key=task.to_key(), execution_date=execution_date)])
+    assert response == Ok((TaskPostponedEvent(task_key=task.to_key(), execution_date=execution_date), ))
 
 
 def test_tell_error_when_task_not_found(sut: PostPoneTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):

@@ -9,18 +9,16 @@ from hexagon.todolist.todolist_repository import TodolistRepository
 
 class PostPoneTask:
     def __init__(self, todolist_set: TodolistSetPort):
-        self._todolist_set = todolist_set
+        self._repository = TodolistRepository(todolist_set)
 
     def execute(self, todolist_name: TodolistName, key: TaskKey, execution_date: TaskExecutionDate):
         def update(todolist: Result[TodolistAggregate, str]) -> Result[TodolistAggregate, str]:
             return todolist.bind(lambda t: t.postpone_task(key, execution_date))
 
-        repository = TodolistRepository(self._todolist_set)
-
         return pipe(todolist_name,
-                    repository.load_aggregate,
+                    self._repository.load_todolist,
                     update,
-                    repository.save_aggregate)
+                    self._repository.save_todolist)
 
     @staticmethod
     def factory(dependencies: Dependencies) -> 'PostPoneTask':
