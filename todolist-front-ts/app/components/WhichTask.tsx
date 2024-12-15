@@ -4,23 +4,9 @@ import {Task} from "@/app/components/Task";
 import React from "react";
 
 export function WhichTask() {
-    const tasks = useSelector((root: RootState) => root.todolist.tasks);
-    if (tasks.length === 0) {
-        return <>Rien à faire</>;
-    }
+    const state = useSelector((root: RootState) => root.todolistPage.whichTasks);
 
-    if (tasks.length === 1) {
-        return <Task name={tasks[0].name}/>;
-    }
-
-    return <>
-        <div>
-            <Task name={tasks[0].name}/>
-            <button>Choisir cette tâche</button>
-        </div>
-        <div>
-            <Task name={tasks[1].name}/>
-            <button>Choisir cette tâche</button>
-        </div>
-    </>;
+    return (<>
+        {state.status == "loading" && <div>Chargement des tâches...</div>}
+    </>)
 }
