@@ -46,7 +46,7 @@ export const todolistPageSlice = createSlice({
                     state.whichTasks = {status: "idle", type: "only one task"};
                     break;
 
-                case 2:
+                default:
                     state.whichTasks = {status: "idle", type: "two tasks"};
                     break;
             }

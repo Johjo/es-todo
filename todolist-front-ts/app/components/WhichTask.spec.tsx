@@ -43,4 +43,19 @@ describe("WhichTask", () => {
         expect(screen.getByText('Buy the water')).toBeInTheDocument();
     });
 
+    it("should propose to choose the task when many tasks", () => {
+        const {store} = renderWithProvider(<WhichTask/>);
+        act(() => {
+            store.dispatch(WhichTaskFetched({
+                tasks: [
+                    {key: v4(), name: 'Buy the milk'},
+                    {key: v4(), name: 'Buy the water'},
+                    {key: v4(), name: 'Buy the eggs'},
+                ]
+            }));
+        });
+        expect(screen.getByText('Buy the milk')).toBeInTheDocument();
+        expect(screen.getByText('Buy the water')).toBeInTheDocument();
+    });
+
 });
