@@ -4,7 +4,7 @@ import { counterSlice } from "./features/counter/counterSlice";
 import { quotesApiSlice } from "./features/quotes/quotesApiSlice";
 import {todolistSlice} from "@/lib/todolist.slice";
 import {todolistPageSlice} from "@/lib/todolistPage.slice";
-import {WhichTasksGateway} from "@/xxx/loadTodolistPage.spec";
+import {NumberOfTaskGateway, WhichTasksGateway} from "@/xxx/loadTodolistPage.spec";
 
 
 
@@ -18,8 +18,8 @@ export type RootState = ReturnType<typeof rootReducer>;
 // creating unique store instances, which is particularly important for
 // server-side rendering (SSR) scenarios. In SSR, separate store instances
 export interface Dependencies {
-  whichTasksGateway: WhichTasksGateway
-
+  whichTasksGateway: WhichTasksGateway,
+  numberOfTaskGateway: NumberOfTaskGateway,
 }
 
 // are needed for each request to prevent cross-request state pollution.

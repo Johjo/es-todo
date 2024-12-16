@@ -5,8 +5,9 @@ type LoadTodolistPageFn = () => any;
 
 export const LoadTodolistPage: LoadTodolistPageFn = (): AppThunk =>
     async (dispatch: AppDispatch, getState: () => RootState, dependencies: Dependencies) => {
-        dependencies.whichTasksGateway.get().then(() => {dispatch(WhichTaskFetched({tasks: []}))});
+        dependencies.whichTasksGateway.get().then((task: any[]) => {dispatch(WhichTaskFetched({tasks: task}))});
+        dependencies.numberOfTaskGateway.get().then((numberOfTasks: number) => {dispatch(NumberOfTasksFetched({numberOfTasks: numberOfTasks}))});
 
-        dispatch(TasksContextFetched());
-        dispatch(NumberOfTasksFetched({numberOfTasks: 0}));
+        // dispatch(TasksContextFetched());
+
     };
