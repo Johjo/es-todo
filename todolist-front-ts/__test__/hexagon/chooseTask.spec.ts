@@ -1,10 +1,6 @@
 import {ChooseAndIgnoreTask} from "@/hexagon/chooseTask/chooseTask.usecase";
 import {AppStore, AppThunk, makeStore} from "@/lib/store";
 
-const thunkFunction = (dispatch, getState) => {
-    // logic here that can dispatch actions or read state
-}
-
 export type ChooseAndIgnoreTaskFn = () => any;
 
 export const chooseAndIgnoreTask: ChooseAndIgnoreTaskFn = (): AppThunk =>

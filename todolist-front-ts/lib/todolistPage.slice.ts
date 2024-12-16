@@ -1,13 +1,15 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 
-export type WhichTasksLoaded = {status: "idle", type: "nothing to do" | "only one task" | "two tasks"}
+export type WhichTasksLoaded = { status: "idle", type: "nothing to do" | "only one task" | "two tasks" }
 export type NumberOfTaskLoaded = { status: "idle", numberOfTasks: number };
+export type TaskContextLoaded = { status: "idle", context: string[] };
+export type Loading = { status: "loading" };
 
 export type TodolistPageState = {
-    whichTasks: { status: "loading" }  | WhichTasksLoaded,
-    tasksContext: { status: "loading" | "idle" },
-    numberOfTasks: { status: "loading" } | NumberOfTaskLoaded,
+    whichTasks: Loading | WhichTasksLoaded,
+    tasksContext: Loading | TaskContextLoaded,
+    numberOfTasks: Loading | NumberOfTaskLoaded,
 }
 
 let initialState: TodolistPageState = {
@@ -50,7 +52,7 @@ export const todolistPageSlice = createSlice({
             }
         },
         TasksContextFetched(state) {
-            state.tasksContext = {status: "idle"};
+            state.tasksContext = {status: "idle", context: []};
         },
         NumberOfTasksFetched(state, action: PayloadAction<NumberOfTasksPayload>) {
             state.numberOfTasks = {status: "idle", numberOfTasks: action.payload.numberOfTasks};
@@ -59,6 +61,5 @@ export const todolistPageSlice = createSlice({
     selectors: {},
 })
 
-export let reducer = todolistPageSlice.reducer;
 export const {WhichTaskFetched, TasksContextFetched, NumberOfTasksFetched} = todolistPageSlice.actions;
 export const {} = todolistPageSlice.selectors;
