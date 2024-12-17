@@ -1,71 +1,7 @@
 import {AppStore, makeStore} from "@/lib/store";
-import {TodolistPageState} from "@/lib/todolistPage.slice";
-import {LoadTodolistPage} from "@/xxx/loadTodolistPage";
+import {Task, TodolistPageState} from "@/lib/todolistPage.slice";
+import {ContextGateway, LoadTodolistPage, NumberOfTaskGateway, WhichTasksGateway} from "@/xxx/loadTodolistPage";
 import {wait} from "next/dist/lib/wait";
-
-export interface WhichTasksGateway {
-    get(): Promise<any>;
-}
-
-class WhichTasksGatewayForTest implements WhichTasksGateway {
-    private response: any[] | undefined = undefined;
-
-    async get(): Promise<any> {
-        while (this.response === undefined) {
-            await tic();
-        }
-        return this.response
-    }
-
-    feed(tasks: any[]) {
-        this.response = tasks;
-    }
-}
-
-export interface NumberOfTaskGateway {
-    get(): Promise<number>;
-}
-
-
-export type NoResponse = "no response";
-
-function tic() {
-    return wait(10);
-}
-
-class NumberOfTaskGatewayForTest implements NumberOfTaskGateway {
-    private response: number | undefined;
-
-    async get(): Promise<number> {
-        while (this.response === undefined) {
-            await tic();
-        }
-        return this.response
-    }
-
-    feed(numberOfTasks: number) {
-        this.response = numberOfTasks;
-    }
-}
-
-export interface ContextGateway {
-    get(): Promise<any>;
-}
-
-class ContextGatewayForTest implements ContextGateway {
-    private response: string[] | undefined;
-
-    async get(): Promise<any> {
-        while (this.response === undefined) {
-            await tic();
-        }
-        return this.response
-    }
-
-    feed(context: string[]) {
-        this.response = context;
-    }
-}
 
 describe('LoadTodolistPage', () => {
     let store: AppStore;
@@ -142,7 +78,7 @@ describe('LoadTodolistPage', () => {
 
         // WHEN
         await store.dispatch(LoadTodolistPage())
-        whichTasksGateway.feed([{id: 1, name: "task1"}]);
+        whichTasksGateway.feed([{key: "key", name: "task1"}]);
         await tic();
 
         // THEN
@@ -150,7 +86,11 @@ describe('LoadTodolistPage', () => {
 
         expect(otherState).toStrictEqual({...otherInitialState});
         expect(todolistPage).toStrictEqual<TodolistPageState>({
-            whichTasks: {status: "idle", type: "only one task"},
+            whichTasks: {
+                status: "idle",
+                type: "only one task",
+                task: {key: "key", name: "task1"}
+            },
             tasksContext: {status: "loading"},
             numberOfTasks: {status: "loading"},
         });
@@ -161,7 +101,7 @@ describe('LoadTodolistPage', () => {
 
         // WHEN
         await store.dispatch(LoadTodolistPage())
-        whichTasksGateway.feed([{id: 1, name: "task1"}, {id: 2, name: "task2"}]);
+        whichTasksGateway.feed([{key: "key1", name: "task1"}, {key: "key2", name: "task2"}]);
         await tic();
 
         // THEN
@@ -169,7 +109,12 @@ describe('LoadTodolistPage', () => {
 
         expect(otherState).toStrictEqual({...otherInitialState});
         expect(todolistPage).toStrictEqual<TodolistPageState>({
-            whichTasks: {status: "idle", type: "two tasks"},
+            whichTasks: {
+                status: "idle",
+                type: "two tasks",
+                mainTask: {key: "key1", name: "task1"},
+                secondTask: {key: "key2", name: "task2"}
+            },
             tasksContext: {status: "loading"},
             numberOfTasks: {status: "loading"},
         });
@@ -235,3 +180,52 @@ describe('LoadTodolistPage', () => {
         });
     });
 }, 100);
+
+class WhichTasksGatewayForTest implements WhichTasksGateway {
+    private response: any[] | undefined = undefined;
+
+    async get(): Promise<any> {
+        while (this.response === undefined) {
+            await tic();
+        }
+        return this.response
+    }
+
+    feed(tasks: Task[]) {
+        this.response = tasks;
+    }
+}
+
+function tic() {
+    return wait(10);
+}
+
+class NumberOfTaskGatewayForTest implements NumberOfTaskGateway {
+    private response: number | undefined;
+
+    async get(): Promise<number> {
+        while (this.response === undefined) {
+            await tic();
+        }
+        return this.response
+    }
+
+    feed(numberOfTasks: number) {
+        this.response = numberOfTasks;
+    }
+}
+
+class ContextGatewayForTest implements ContextGateway {
+    private response: string[] | undefined;
+
+    async get(): Promise<any> {
+        while (this.response === undefined) {
+            await tic();
+        }
+        return this.response
+    }
+
+    feed(context: string[]) {
+        this.response = context;
+    }
+}

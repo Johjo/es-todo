@@ -16,24 +16,16 @@ export const LoadTodolistPage: LoadTodolistPageFn = (): AppThunk =>
         dependencies.contextGateway.get().then((context: string[]) => {
             dispatch(TasksContextFetched({context: context}))
         });
-
-
-        // dependencies.whichTasksGateway.get().then((task: any[]) => {
-        //     dispatch(WhichTaskFetched({tasks: task}))
-        // });
-        //
-        //
-        // dependencies.whichTasksGateway.get().then((task: any[]) => {
-        //     dispatch(WhichTaskFetched({tasks: task}))
-        // });
-        // const response = await dependencies.numberOfTaskGateway.get();
-        // if (response !== "no response") {
-        //     dispatch(NumberOfTasksFetched({numberOfTasks: response}))
-        // }
-        //
-        // dependencies.contextGateway.get().then((context: string[]) => {
-        //     dispatch(TasksContextFetched({context: context}))
-        // });
-        // dispatch(TasksContextFetched());
-
     };
+
+export interface WhichTasksGateway {
+    get(): Promise<any>;
+}
+
+export interface NumberOfTaskGateway {
+    get(): Promise<number>;
+}
+
+export interface ContextGateway {
+    get(): Promise<any>;
+}

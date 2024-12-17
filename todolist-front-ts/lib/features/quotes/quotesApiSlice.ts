@@ -28,7 +28,7 @@ export const quotesApiSlice = createApi({
       query: (limit = 10) => `?limit=${limit}`,
       // `providesTags` determines which 'tag' is attached to the
       // cached data returned by the query.
-      providesTags: (result, error, id) => [{ type: "Quotes", id }],
+      providesTags: (result, error, id) => [{ type: "Quotes", id: key }],
     }),
   }),
 });

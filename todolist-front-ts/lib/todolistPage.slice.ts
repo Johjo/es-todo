@@ -1,7 +1,10 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
+export type WhichTasksLoaded = { status: "idle" } & (WithNoTask | WithOneTask | WithTwoTasks)
+export type WithNoTask = { type: "nothing to do" }
+export type WithOneTask = { type: "only one task", task: Task }
+export type WithTwoTasks = { type: "two tasks", mainTask: Task, secondTask: Task }
 
-export type WhichTasksLoaded = { status: "idle", type: "nothing to do" | "only one task" | "two tasks" }
 export type NumberOfTaskLoaded = { status: "idle", numberOfTasks: number };
 export type TaskContextLoaded = { status: "idle", context: string[] };
 export type Loading = { status: "loading" };
@@ -20,7 +23,7 @@ let initialState: TodolistPageState = {
 
 type TaskKey = string;
 
-type Task = {
+export type Task = {
     key: TaskKey,
     name: string,
 }
@@ -44,14 +47,26 @@ export const todolistPageSlice = createSlice({
         WhichTaskFetched(state, action: PayloadAction<WhichTaskPayload>) {
             switch (action.payload.tasks.length) {
                 case 0:
-                    state.whichTasks = {status: "idle", type: "nothing to do"};
+                    state.whichTasks = {
+                        status: "idle",
+                        type: "nothing to do"};
                     break;
+
                 case 1:
-                    state.whichTasks = {status: "idle", type: "only one task"};
+                    state.whichTasks = {
+                        status: "idle",
+                        type: "only one task",
+                        task: action.payload.tasks[0]
+                    };
                     break;
 
                 default:
-                    state.whichTasks = {status: "idle", type: "two tasks"};
+                    state.whichTasks = {
+                        status: "idle",
+                        type: "two tasks",
+                        mainTask: action.payload.tasks[0],
+                        secondTask: action.payload.tasks[1]
+                    };
                     break;
             }
         },

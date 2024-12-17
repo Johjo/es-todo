@@ -4,7 +4,8 @@ import { counterSlice } from "./features/counter/counterSlice";
 import { quotesApiSlice } from "./features/quotes/quotesApiSlice";
 import {todolistSlice} from "@/lib/todolist.slice";
 import {todolistPageSlice} from "@/lib/todolistPage.slice";
-import {ContextGateway, NumberOfTaskGateway, WhichTasksGateway} from "@/xxx/loadTodolistPage.spec";
+
+import {ContextGateway, NumberOfTaskGateway, WhichTasksGateway} from "@/xxx/loadTodolistPage";
 
 
 

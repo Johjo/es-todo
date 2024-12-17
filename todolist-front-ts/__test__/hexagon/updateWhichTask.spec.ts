@@ -22,7 +22,7 @@ describe('updateWhichTask', () => {
     });
 
     it('Should return one task when only one task', async () => {
-        const expected: Task[] = [{id: 1, name: "buy the milk"}];
+        const expected: Task[] = [{key: 1, name: "buy the milk"}];
         const todolist = new TodolistForTest();
         todolist.feed(expected[0]);
         const sut = new WhichTask.Query(todolist);
@@ -32,7 +32,7 @@ describe('updateWhichTask', () => {
     });
 
     it('Can return two tasks', async () => {
-        const expected: Task[] = [{id: 1, name: "buy the milk"}, {id: 2, name: "buy the eggs"}];
+        const expected: Task[] = [{key: 1, name: "buy the milk"}, {key: 2, name: "buy the eggs"}];
         const todolist = new TodolistForTest();
         todolist.feed(expected[0]);
         todolist.feed(expected[1]);
