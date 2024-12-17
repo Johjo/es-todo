@@ -9,17 +9,31 @@ export const LoadTodolistPage: LoadTodolistPageFn = (): AppThunk =>
             dispatch(WhichTaskFetched({tasks: task}))
         });
 
-
-        dependencies.whichTasksGateway.get().then((task: any[]) => {
-            dispatch(WhichTaskFetched({tasks: task}))
-        });
-        dependencies.numberOfTaskGateway.get().then((numberOfTasks: number) => {
-            dispatch(NumberOfTasksFetched({numberOfTasks: numberOfTasks}))
+        dependencies.numberOfTaskGateway.get().then((task: number) => {
+            dispatch(NumberOfTasksFetched({numberOfTasks: task}))
         });
 
         dependencies.contextGateway.get().then((context: string[]) => {
             dispatch(TasksContextFetched({context: context}))
         });
+
+
+        // dependencies.whichTasksGateway.get().then((task: any[]) => {
+        //     dispatch(WhichTaskFetched({tasks: task}))
+        // });
+        //
+        //
+        // dependencies.whichTasksGateway.get().then((task: any[]) => {
+        //     dispatch(WhichTaskFetched({tasks: task}))
+        // });
+        // const response = await dependencies.numberOfTaskGateway.get();
+        // if (response !== "no response") {
+        //     dispatch(NumberOfTasksFetched({numberOfTasks: response}))
+        // }
+        //
+        // dependencies.contextGateway.get().then((context: string[]) => {
+        //     dispatch(TasksContextFetched({context: context}))
+        // });
         // dispatch(TasksContextFetched());
 
     };

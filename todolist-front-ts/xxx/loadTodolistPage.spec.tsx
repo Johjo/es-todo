@@ -1,5 +1,5 @@
 import {AppStore, makeStore} from "@/lib/store";
-import {NumberOfTasksFetched, TodolistPageState, WhichTaskFetched} from "@/lib/todolistPage.slice";
+import {TodolistPageState} from "@/lib/todolistPage.slice";
 import {LoadTodolistPage} from "@/xxx/loadTodolistPage";
 import {wait} from "next/dist/lib/wait";
 
@@ -8,58 +8,43 @@ export interface WhichTasksGateway {
 }
 
 class WhichTasksGatewayForTest implements WhichTasksGateway {
-    private resultExpected: boolean = false;
-    private tasks: any[] = [];
+    private response: any[] | undefined = undefined;
 
     async get(): Promise<any> {
-        if (this.resultExpected) {
-            return this.tasks
-        } else {
-            console.log("waiting WhichTasksGatewayForTest")
-            await wait(10000)
-            console.log("waiting done")
-
+        while (this.response === undefined) {
+            await tic();
         }
+        return this.response
     }
 
-    markAsOngoing() {
-        this.resultExpected = false;
+    feed(tasks: any[]) {
+        this.response = tasks;
     }
-
-    markAsCompleted(tasks: any[]) {
-        this.resultExpected = true;
-        this.tasks = tasks;
-    }
-
-
 }
 
 export interface NumberOfTaskGateway {
-    get(): Promise<any>;
+    get(): Promise<number>;
 }
 
 
+export type NoResponse = "no response";
+
+function tic() {
+    return wait(10);
+}
+
 class NumberOfTaskGatewayForTest implements NumberOfTaskGateway {
-    private resultExpected: boolean = false;
-    private numberOfTasks: number = 0;
+    private response: number | undefined;
 
-    async get(): Promise<any> {
-        if (this.resultExpected) {
-            return this.numberOfTasks
-        } else {
-            console.log("waiting")
-            await wait(10000)
-            console.log("waiting done")
+    async get(): Promise<number> {
+        while (this.response === undefined) {
+            await tic();
         }
+        return this.response
     }
 
-    markAsOngoing() {
-        this.resultExpected = false;
-    }
-
-    markAsCompleted(numberOfTasks: number) {
-        this.resultExpected = true;
-        this.numberOfTasks = numberOfTasks;
+    feed(numberOfTasks: number) {
+        this.response = numberOfTasks;
     }
 }
 
@@ -68,26 +53,17 @@ export interface ContextGateway {
 }
 
 class ContextGatewayForTest implements ContextGateway {
-    private resultExpected: boolean = false;
-    private context: string[] = [];
+    private response: string[] | undefined;
 
     async get(): Promise<any> {
-        if (this.resultExpected) {
-            return this.context
-        } else {
-            console.log("waiting ContextGatewayForTest")
-            await wait(10000)
-            console.log("waiting done")
+        while (this.response === undefined) {
+            await tic();
         }
+        return this.response
     }
 
-    markAsOngoing() {
-        this.resultExpected = false;
-    }
-
-    markAsCompleted(context: string[]) {
-        this.resultExpected = true;
-        this.context = context;
+    feed(context: string[]) {
+        this.response = context;
     }
 }
 
@@ -135,14 +111,20 @@ describe('LoadTodolistPage', () => {
             tasksContext: {status: "loading"},
             numberOfTasks: {status: "loading"},
         });
+
+        whichTasksGateway.feed([]);
+
+        // FINISH
+        whichTasksGateway.feed([]);
     });
 
     it('should tell there is no task', async () => {
         // GIVEN
-        whichTasksGateway.markAsCompleted([]);
 
         // WHEN
         await store.dispatch(LoadTodolistPage())
+        whichTasksGateway.feed([]);
+        await tic();
 
         // THEN
         const {todolistPage, ...otherState} = store.getState();
@@ -157,10 +139,11 @@ describe('LoadTodolistPage', () => {
 
     it('should tell there is one task', async () => {
         // GIVEN
-        whichTasksGateway.markAsCompleted([{id: 1, name: "task1"}]);
 
         // WHEN
         await store.dispatch(LoadTodolistPage())
+        whichTasksGateway.feed([{id: 1, name: "task1"}]);
+        await tic();
 
         // THEN
         const {todolistPage, ...otherState} = store.getState();
@@ -175,10 +158,11 @@ describe('LoadTodolistPage', () => {
 
     it('should tell there is two tasks', async () => {
         // GIVEN
-        whichTasksGateway.markAsCompleted([{id: 1, name: "task1"}, {id: 2, name: "task2"}]);
 
         // WHEN
         await store.dispatch(LoadTodolistPage())
+        whichTasksGateway.feed([{id: 1, name: "task1"}, {id: 2, name: "task2"}]);
+        await tic();
 
         // THEN
         const {todolistPage, ...otherState} = store.getState();
@@ -193,10 +177,12 @@ describe('LoadTodolistPage', () => {
 
     it('should tell number of task', async () => {
         // GIVEN
-        numberOfTaskGateway.markAsCompleted(17);
+
 
         // WHEN
         await store.dispatch(LoadTodolistPage())
+        numberOfTaskGateway.feed(17);
+        await tic();
 
         // THEN
         const {todolistPage, ...otherState} = store.getState();
@@ -209,12 +195,34 @@ describe('LoadTodolistPage', () => {
         });
     });
 
-    it('should tell context', async () => {
+    it('should tell context and number of task', async () => {
         // GIVEN
-        contextGateway.markAsCompleted(["#context1", "#context2"]);
 
         // WHEN
         await store.dispatch(LoadTodolistPage())
+
+        numberOfTaskGateway.feed(17);
+        contextGateway.feed(["#context1", "#context2"]);
+        await tic();
+
+        // THEN
+        const {todolistPage, ...otherState} = store.getState();
+
+        expect(otherState).toStrictEqual({...otherInitialState});
+        expect(todolistPage).toStrictEqual<TodolistPageState>({
+            whichTasks: {status: "loading"},
+            tasksContext: {status: "idle", context: ["#context1", "#context2"]},
+            numberOfTasks: {status: "idle", numberOfTasks: 17},
+        });
+    });
+
+    it('should tell context', async () => {
+        // GIVEN
+        // WHEN
+
+        await store.dispatch(LoadTodolistPage())
+        contextGateway.feed(["#context1", "#context2"]);
+        await tic();
 
         // THEN
         const {todolistPage, ...otherState} = store.getState();
@@ -226,4 +234,4 @@ describe('LoadTodolistPage', () => {
             numberOfTasks: {status: "loading"},
         });
     });
-});
+}, 100);
