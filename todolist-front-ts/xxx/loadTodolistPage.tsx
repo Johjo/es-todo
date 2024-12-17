@@ -1,5 +1,5 @@
 import {AppDispatch, AppThunk, Dependencies, RootState} from "@/lib/store";
-import {NumberOfTasksFetched, WhichTaskFetched} from "@/lib/todolistPage.slice";
+import {NumberOfTasksFetched, TasksContextFetched, WhichTaskFetched} from "@/lib/todolistPage.slice";
 
 type LoadTodolistPageFn = () => any;
 
@@ -8,10 +8,18 @@ export const LoadTodolistPage: LoadTodolistPageFn = (): AppThunk =>
         dependencies.whichTasksGateway.get().then((task: any[]) => {
             dispatch(WhichTaskFetched({tasks: task}))
         });
+
+
+        dependencies.whichTasksGateway.get().then((task: any[]) => {
+            dispatch(WhichTaskFetched({tasks: task}))
+        });
         dependencies.numberOfTaskGateway.get().then((numberOfTasks: number) => {
             dispatch(NumberOfTasksFetched({numberOfTasks: numberOfTasks}))
         });
 
+        dependencies.contextGateway.get().then((context: string[]) => {
+            dispatch(TasksContextFetched({context: context}))
+        });
         // dispatch(TasksContextFetched());
 
     };

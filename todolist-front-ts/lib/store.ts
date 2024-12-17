@@ -4,7 +4,7 @@ import { counterSlice } from "./features/counter/counterSlice";
 import { quotesApiSlice } from "./features/quotes/quotesApiSlice";
 import {todolistSlice} from "@/lib/todolist.slice";
 import {todolistPageSlice} from "@/lib/todolistPage.slice";
-import {NumberOfTaskGateway, WhichTasksGateway} from "@/xxx/loadTodolistPage.spec";
+import {ContextGateway, NumberOfTaskGateway, WhichTasksGateway} from "@/xxx/loadTodolistPage.spec";
 
 
 
@@ -20,6 +20,7 @@ export type RootState = ReturnType<typeof rootReducer>;
 export interface Dependencies {
   whichTasksGateway: WhichTasksGateway,
   numberOfTaskGateway: NumberOfTaskGateway,
+  contextGateway: ContextGateway,
 }
 
 // are needed for each request to prevent cross-request state pollution.

@@ -33,6 +33,10 @@ type NumberOfTasksPayload = {
     numberOfTasks: number;
 }
 
+type TasksContextPayload = {
+    context: string[];
+}
+
 export const todolistPageSlice = createSlice({
     name: "todolistPage",
     initialState,
@@ -51,8 +55,8 @@ export const todolistPageSlice = createSlice({
                     break;
             }
         },
-        TasksContextFetched(state) {
-            state.tasksContext = {status: "idle", context: []};
+        TasksContextFetched(state, action: PayloadAction<TasksContextPayload>) {
+            state.tasksContext = {status: "idle", context: action.payload.context};
         },
         NumberOfTasksFetched(state, action: PayloadAction<NumberOfTasksPayload>) {
             state.numberOfTasks = {status: "idle", numberOfTasks: action.payload.numberOfTasks};

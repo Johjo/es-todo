@@ -9,7 +9,7 @@ export interface WhichTasksGateway {
 
 class WhichTasksGatewayForTest implements WhichTasksGateway {
     private resultExpected: boolean = false;
-    private tasks: any[];
+    private tasks: any[] = [];
 
     async get(): Promise<any> {
         if (this.resultExpected) {
@@ -63,17 +63,47 @@ class NumberOfTaskGatewayForTest implements NumberOfTaskGateway {
     }
 }
 
+export interface ContextGateway {
+    get(): Promise<any>;
+}
+
+class ContextGatewayForTest implements ContextGateway {
+    private resultExpected: boolean = false;
+    private context: string[] = [];
+
+    async get(): Promise<any> {
+        if (this.resultExpected) {
+            return this.context
+        } else {
+            console.log("waiting ContextGatewayForTest")
+            await wait(10000)
+            console.log("waiting done")
+        }
+    }
+
+    markAsOngoing() {
+        this.resultExpected = false;
+    }
+
+    markAsCompleted(context: string[]) {
+        this.resultExpected = true;
+        this.context = context;
+    }
+}
+
 describe('LoadTodolistPage', () => {
     let store: AppStore;
     let otherInitialState: Omit<AppStore['getState'], 'todolistPage'>;
     let whichTasksGateway: WhichTasksGatewayForTest;
     let numberOfTaskGateway: NumberOfTaskGatewayForTest;
+    let contextGateway: ContextGatewayForTest;
 
     beforeEach(() => {
         whichTasksGateway = new WhichTasksGatewayForTest();
         numberOfTaskGateway = new NumberOfTaskGatewayForTest();
+        contextGateway = new ContextGatewayForTest();
 
-        store = makeStore({whichTasksGateway, numberOfTaskGateway});
+        store = makeStore({whichTasksGateway, numberOfTaskGateway, contextGateway});
         const {todolistPage: _, ...rest} = store.getState();
         otherInitialState = rest;
     });
@@ -176,6 +206,24 @@ describe('LoadTodolistPage', () => {
             whichTasks: {status: "loading"},
             tasksContext: {status: "loading"},
             numberOfTasks: {status: "idle", numberOfTasks: 17},
+        });
+    });
+
+    it('should tell context', async () => {
+        // GIVEN
+        contextGateway.markAsCompleted(["#context1", "#context2"]);
+
+        // WHEN
+        await store.dispatch(LoadTodolistPage())
+
+        // THEN
+        const {todolistPage, ...otherState} = store.getState();
+
+        expect(otherState).toStrictEqual({...otherInitialState});
+        expect(todolistPage).toStrictEqual<TodolistPageState>({
+            whichTasks: {status: "loading"},
+            tasksContext: {status: "idle", context: ["#context1", "#context2"]},
+            numberOfTasks: {status: "loading"},
         });
     });
 });
