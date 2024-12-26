@@ -2,6 +2,7 @@ from dataclasses import dataclass, replace
 
 from expression import Result, Error, Ok, Option, Some
 
+from hexagon.shared.event import Event, TaskPostponedEvent
 from hexagon.shared.type import TaskKey, TodolistName, TaskName, TaskExecutionDate, TaskOpen
 
 
@@ -48,14 +49,15 @@ class Task:
 class TodolistAggregate:
     name: TodolistName
     tasks: tuple[Task, ...]
+    events: tuple[Event, ...]
 
     @classmethod
     def create(cls, todolist_name) -> 'TodolistAggregate':
-        return TodolistAggregate(name=todolist_name, tasks=())
+        return TodolistAggregate(name=todolist_name, tasks=(), events=())
 
     @classmethod
     def from_snapshot(cls, snapshot: TodolistSnapshot) -> 'TodolistAggregate':
-        return TodolistAggregate(name=snapshot.name, tasks=(*[Task.from_snapshot(task) for task in snapshot.tasks],))
+        return TodolistAggregate(name=snapshot.name, tasks=(*[Task.from_snapshot(task) for task in snapshot.tasks],), events=())
 
     def to_snapshot(self) -> TodolistSnapshot:
         return TodolistSnapshot(self.name, tasks=tuple([task.to_snapshot() for task in self.tasks]))
@@ -81,4 +83,9 @@ class TodolistAggregate:
         if not [task for task in self.tasks if task.key == key]:
             return Error(f"The task '{key}' does not exist")
 
-        return Ok(replace(self, tasks=tuple([task.postpone(execution_date) if task.key == key else task for task in self.tasks])))
+        tasks = tuple([task.postpone(execution_date) if task.key == key else task for task in self.tasks])
+        events = self.events + (TaskPostponedEvent(task_key=key, execution_date=execution_date), )
+        return Ok(replace(self, tasks=tasks, events=events))
+
+    def uncommited_events(self) -> tuple[Event, ...]:
+        return self.events
