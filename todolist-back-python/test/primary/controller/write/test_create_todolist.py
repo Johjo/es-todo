@@ -1,6 +1,6 @@
 import pytest
 
-from primary.controller.write.todolist import TodolistWriteController
+from src.primary.controller.write.todolist import TodolistWriteController
 from test.primary.controller.write.conftest import TodolistSetForTest
 
 

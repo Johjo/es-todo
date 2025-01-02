@@ -2,11 +2,11 @@ from collections import OrderedDict
 from uuid import uuid4
 
 from test.fixture import a_task_key
-from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
+from src.hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 
 
-from hexagon.fvp.aggregate import FvpSnapshot
-from secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.hexagon.fvp.aggregate import FvpSnapshot
+from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
 
 
 def test_reset_session():

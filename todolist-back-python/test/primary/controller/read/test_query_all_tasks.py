@@ -1,7 +1,7 @@
 import pytest
 
-from dependencies import Dependencies
-from primary.controller.read.todolist import TodolistSetReadPort, TodolistReadController, TaskPresentation, \
+from src.dependencies import Dependencies
+from src.primary.controller.read.todolist import TodolistSetReadPort, TodolistReadController, TaskPresentation, \
     TaskFilter
 from test.fixture import TodolistFaker, TaskFilterBuilder, TaskBuilder
 from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented

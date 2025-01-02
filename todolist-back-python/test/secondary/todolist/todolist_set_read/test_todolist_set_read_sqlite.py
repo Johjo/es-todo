@@ -3,11 +3,11 @@ import sqlite3
 import pytest
 from faker import Faker
 
-from dependencies import Dependencies
-from infra.sqlite.sdk import SqliteSdk
-from primary.controller.read.todolist import TodolistSetReadPort
-from secondary.todolist.todolist_set_read.todolist_set_read_sqlite import TodolistSetReadSqlite
-from shared.const import USER_KEY
+from src.dependencies import Dependencies
+from src.infra.sqlite.sdk import SqliteSdk
+from src.primary.controller.read.todolist import TodolistSetReadPort
+from src.secondary.todolist.todolist_set_read.todolist_set_read_sqlite import TodolistSetReadSqlite
+from src.shared.const import USER_KEY
 from test.fixture import TodolistBuilder, TodolistFaker
 from test.secondary.todolist.todolist_set_read.base_test_todolist_set_read import BaseTestTodolistSetRead
 

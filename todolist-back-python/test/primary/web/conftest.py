@@ -4,19 +4,19 @@ from bottle import Bottle
 from faker import Faker
 from webtest import TestApp  # type: ignore
 
-from dependencies import Dependencies
-from hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
-from hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
-from hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, \
+from src.dependencies import Dependencies
+from src.hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
+from src.hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todolist
+from src.hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, \
     TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
-from infra.memory import Memory
-from primary.controller.dependencies import inject_use_cases
-from primary.controller.read.final_version_perfected import CalendarPort
-from primary.controller.read.todolist import TodolistSetReadPort
-from primary.web.pages import bottle_app, bottle_config
-from secondary.fvp.simple_session_repository import FvpSessionSetForTest
-from secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
-from secondary.todolist.todolist_set_read.todolist_set_read_memory import TodolistSetReadInMemory
+from src.infra.memory import Memory
+from src.primary.controller.dependencies import inject_use_cases
+from src.primary.controller.read.final_version_perfected import CalendarPort
+from src.primary.controller.read.todolist import TodolistSetReadPort
+from src.primary.web.pages import bottle_app, bottle_config
+from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
+from src.secondary.todolist.todolist_set_read.todolist_set_read_memory import TodolistSetReadInMemory
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.secondary.fvp.read.which_task.test_todolist_memory import TodolistMemory

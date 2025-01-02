@@ -1,6 +1,6 @@
 
-from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
-from primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
+from src.hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
+from src.primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
 
 
 class TodolistSetReadPortNotImplemented(TodolistSetReadPort):

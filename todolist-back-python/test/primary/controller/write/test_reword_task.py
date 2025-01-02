@@ -1,5 +1,5 @@
 
-from primary.controller.write.todolist import TodolistWriteController
+from src.primary.controller.write.todolist import TodolistWriteController
 from test.fixture import TodolistFaker
 from test.primary.controller.write.conftest import TodolistSetForTest
 

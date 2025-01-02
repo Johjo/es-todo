@@ -4,17 +4,17 @@ from datetime import date, datetime
 from pathlib import Path
 from uuid import uuid4
 
-from dependencies import Dependencies
-from hexagon.fvp.read.which_task import TodolistPort
-from hexagon.shared.type import TaskKey
-from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
-from primary.controller.dependencies import inject_use_cases
-from primary.controller.read.final_version_perfected import CalendarPort
-from primary.controller.read.todolist import TodolistSetReadPort
-from primary.web.pages import bottle_config, bottle_app
-from secondary.fvp.read.which_task.todolist_sqlite import TodolistSqlite
-from secondary.todolist.todolist_set.todolist_set_sqlite import TodolistSetSqlite
-from secondary.todolist.todolist_set_read.todolist_set_read_sqlite import TodolistSetReadSqlite
+from src.dependencies import Dependencies
+from src.hexagon.fvp.read.which_task import TodolistPort
+from src.hexagon.shared.type import TaskKey
+from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from src.primary.controller.dependencies import inject_use_cases
+from src.primary.controller.read.final_version_perfected import CalendarPort
+from src.primary.controller.read.todolist import TodolistSetReadPort
+from src.primary.web.pages import bottle_config, bottle_app
+from src.secondary.fvp.read.which_task.todolist_sqlite import TodolistSqlite
+from src.secondary.todolist.todolist_set.todolist_set_sqlite import TodolistSetSqlite
+from src.secondary.todolist.todolist_set_read.todolist_set_read_sqlite import TodolistSetReadSqlite
 
 
 class TaskKeyGeneratorRandom(TaskKeyGeneratorPort):
@@ -24,8 +24,8 @@ class TaskKeyGeneratorRandom(TaskKeyGeneratorPort):
 
 
 def inject_final_version_perfected(dependencies: Dependencies) -> Dependencies:
-    from secondary.fvp.write.session_set_sqlite import SessionSqlite
-    from hexagon.fvp.aggregate import FvpSessionSetPort
+    from src.secondary.fvp.write.session_set_sqlite import SessionSqlite
+    from src.hexagon.fvp.aggregate import FvpSessionSetPort
 
     dependencies = dependencies.feed_adapter(FvpSessionSetPort, SessionSqlite.factory)
     return dependencies
@@ -74,15 +74,16 @@ def inject_all_dependencies(dependencies: Dependencies) -> Dependencies:
 
 def start() -> None:
     from dotenv import load_dotenv
-    dependencies = bottle_config.dependencies
-    dependencies = dependencies.feed_path("sqlite_database_path", lambda _: Path("./todolist.db.sqlite"))
-    dependencies = inject_all_dependencies(dependencies)
-    bottle_config.dependencies = dependencies
     load_dotenv()
+    print(os.environ["HELLO"])
     host = os.environ["HOST"]
     port = os.environ["PORT"]
+    database_path = os.environ["DATABASE_PATH"]
+    dependencies = bottle_config.dependencies
+    dependencies = dependencies.feed_path("sqlite_database_path", lambda _: Path(database_path))
+    dependencies = inject_all_dependencies(dependencies)
+    bottle_config.dependencies = dependencies
     bottle_app.run(reloader=True, host=host, port=port, debug=True)
-
 
 if __name__ == '__main__':
     start()

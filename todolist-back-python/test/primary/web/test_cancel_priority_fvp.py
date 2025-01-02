@@ -2,12 +2,12 @@ from collections import OrderedDict
 
 from webtest import TestApp  # type: ignore
 
-from dependencies import Dependencies
-from hexagon.fvp.aggregate import FvpSnapshot
-from hexagon.shared.type import TaskKey
-from infra.memory import Memory
-from primary.web.pages import bottle_config
-from secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.dependencies import Dependencies
+from src.hexagon.fvp.aggregate import FvpSnapshot
+from src.hexagon.shared.type import TaskKey
+from src.infra.memory import Memory
+from src.primary.web.pages import bottle_config
+from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.primary.web.fixture import CleanResponse, BASE_URL, header_with_good_authentication

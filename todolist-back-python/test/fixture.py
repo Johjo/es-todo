@@ -6,10 +6,10 @@ from uuid import UUID, uuid4
 from expression import Option, Nothing, Some
 from faker import Faker
 
-import infra.sqlite.type
-from hexagon.shared.type import TaskKey, TaskName, TodolistName, TaskOpen, TaskExecutionDate
-from hexagon.todolist.aggregate import TaskSnapshot, TodolistSnapshot
-from primary.controller.read.todolist import TaskPresentation, TaskFilter
+import src.infra.sqlite.type
+from src.hexagon.shared.type import TaskKey, TaskName, TodolistName, TaskOpen, TaskExecutionDate
+from src.hexagon.todolist.aggregate import TaskSnapshot, TodolistSnapshot
+from src.primary.controller.read.todolist import TaskPresentation, TaskFilter
 
 
 def a_task_key(index: TaskKey | UUID | int | None = None) -> TaskKey:
@@ -63,8 +63,8 @@ class TaskBuilder:
             return cast(Option[TaskExecutionDate], self.execution_date)
         return Some(TaskExecutionDate(self.execution_date))
 
-    def to_sqlite_sdk(self) -> infra.sqlite.type.Task:
-        return infra.sqlite.type.Task(key=self.to_key(), name=self.to_name(), is_open=self.to_open(), execution_date=self.to_execution_date())
+    def to_sqlite_sdk(self) -> src.infra.sqlite.type.Task:
+        return src.infra.sqlite.type.Task(key=self.to_key(), name=self.to_name(), is_open=self.to_open(), execution_date=self.to_execution_date())
 
 
 @dataclass(frozen=True)
@@ -88,8 +88,8 @@ class TodolistBuilder:
             raise Exception("todolist.name must be set")
         return TodolistName(self.name)
 
-    def to_sqlite_sdk(self) -> infra.sqlite.type.Todolist:
-        return infra.sqlite.type.Todolist(name=self.to_name())
+    def to_sqlite_sdk(self) -> src.infra.sqlite.type.Todolist:
+        return src.infra.sqlite.type.Todolist(name=self.to_name())
 
 
 @dataclass(frozen=True)

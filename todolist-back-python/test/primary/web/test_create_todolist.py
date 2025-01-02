@@ -1,7 +1,7 @@
 from webtest import TestApp  # type: ignore
 
-from dependencies import Dependencies
-from primary.web.pages import bottle_config
+from src.dependencies import Dependencies
+from src.primary.web.pages import bottle_config
 from test.primary.web.fixture import CleanResponse, header_with_good_authentication
 
 

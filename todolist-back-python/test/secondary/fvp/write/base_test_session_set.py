@@ -3,9 +3,9 @@ from collections import OrderedDict
 
 import pytest
 
-from hexagon.shared.type import TaskKey
+from src.hexagon.shared.type import TaskKey
 from test.fixture import a_task_key
-from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 
 
 class BaseTestSessionSet(ABC):

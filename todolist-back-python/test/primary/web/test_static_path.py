@@ -1,8 +1,8 @@
 
 from webtest import TestApp  # type: ignore
 
-from dependencies import Dependencies
-from primary.web.pages import bottle_config
+from src.dependencies import Dependencies
+from src.primary.web.pages import bottle_config
 
 
 def test_display_import(test_dependencies: Dependencies, app: TestApp) -> None:

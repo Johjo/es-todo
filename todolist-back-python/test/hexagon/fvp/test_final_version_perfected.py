@@ -3,7 +3,7 @@ from collections import OrderedDict
 import pytest
 
 from test.fixture import a_task_key
-from hexagon.fvp.aggregate import Task, NothingToDo, DoTheTask, ChooseTheTask, FinalVersionPerfectedSession, \
+from src.hexagon.fvp.aggregate import Task, NothingToDo, DoTheTask, ChooseTheTask, FinalVersionPerfectedSession, \
     FvpSnapshot
 
 

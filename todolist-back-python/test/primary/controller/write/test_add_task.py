@@ -1,6 +1,6 @@
 
-from dependencies import Dependencies
-from primary.controller.write.todolist import TodolistWriteController
+from src.dependencies import Dependencies
+from src.primary.controller.write.todolist import TodolistWriteController
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.primary.controller.write.conftest import TodolistSetForTest

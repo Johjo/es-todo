@@ -1,8 +1,8 @@
 from expression import Option, Nothing, Some
 
-from hexagon.shared.type import TaskKey, TodolistName
-from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
-from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from src.hexagon.shared.type import TaskKey, TodolistName
+from src.hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
+from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from test.fixture import TaskBuilder, TodolistBuilder
 
 

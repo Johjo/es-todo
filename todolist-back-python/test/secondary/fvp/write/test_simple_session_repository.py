@@ -1,6 +1,6 @@
 
-from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.secondary.fvp.write.base_test_session_set import BaseTestSessionSet
 
 

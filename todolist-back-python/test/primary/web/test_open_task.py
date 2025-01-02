@@ -1,10 +1,10 @@
 
 from webtest import TestApp  # type: ignore
 
-from hexagon.shared.type import TaskOpen
-from dependencies import Dependencies
-from infra.memory import Memory
-from primary.web.pages import bottle_config
+from src.hexagon.shared.type import TaskOpen
+from src.dependencies import Dependencies
+from src.infra.memory import Memory
+from src.primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.primary.web.fixture import CleanResponse, BASE_URL, header_with_good_authentication

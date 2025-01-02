@@ -1,7 +1,7 @@
 from collections import OrderedDict
 
-from hexagon.fvp.aggregate import FvpSessionSetPort, FvpSnapshot
-from hexagon.shared.type import TaskKey
+from src.hexagon.fvp.aggregate import FvpSessionSetPort, FvpSnapshot
+from src.hexagon.shared.type import TaskKey
 
 
 class FvpSessionSetForTest(FvpSessionSetPort):

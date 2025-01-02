@@ -1,11 +1,11 @@
 import pytest
 from expression import Option, Some, Nothing
 
-from dependencies import Dependencies
-from hexagon.todolist.aggregate import TodolistSnapshot
-from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
-from primary.controller.dependencies import inject_use_cases
-from primary.controller.write.todolist import TodolistWriteController
+from src.dependencies import Dependencies
+from src.hexagon.todolist.aggregate import TodolistSnapshot
+from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from src.primary.controller.dependencies import inject_use_cases
+from src.primary.controller.write.todolist import TodolistWriteController
 from test.fixture import TodolistBuilder
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 

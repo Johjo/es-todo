@@ -4,11 +4,11 @@ from datetime import date
 import pytest
 from faker import Faker
 
-from dependencies import Dependencies
-from hexagon.fvp.aggregate import DoTheTask, FvpSnapshot, FvpSessionSetPort
-from hexagon.fvp.read.which_task import TodolistPort
-from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController, CalendarPort
-from secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.dependencies import Dependencies
+from src.hexagon.fvp.aggregate import DoTheTask, FvpSnapshot, FvpSessionSetPort
+from src.hexagon.fvp.read.which_task import TodolistPort
+from src.primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController, CalendarPort
+from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
 from test.hexagon.fvp.read.test_which_task import TodolistForTest, FvpFaker
 
 

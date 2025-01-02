@@ -20,13 +20,24 @@
     - web -> controller -> use case -> adapter : test e2e (peu / lent) (on traverse tout)
 
 # controller creation
-# step 1 : copy use case test
-# step 2 : remove fixture
-# step 3 : introduce dependencies
-# step 4 : pass adapter from dependencies
-# step 5 : create use case factory from dependencies
-# step 6 : feed dependencies with use case factory
-# step 7 : move use case factory to method inject use case
-# step 8 : create controller
-# step 9 : extract method using use case
-# step 10 : move method to controller
+1. step 1 : copy use case test
+2. step 2 : remove fixture
+3. step 3 : introduce dependencies
+4. step 4 : pass adapter from dependencies
+5. step 5 : create use case factory from dependencies
+6. step 6 : feed dependencies with use case factory
+7. step 7 : move use case factory to method inject use case
+8. step 8 : create controller
+9. step 9 : extract method using use case
+10. step 10 : move method to controller
+
+Créer une image Docker
+```
+docker build -t todolist-back .
+```
+
+Lancer une image Docker
+
+```
+docker run -p 8091:80 -v C:\Projets\python\todo\es-todo\todolist-back-python\db:db todolist-back 
+```

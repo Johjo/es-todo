@@ -3,8 +3,8 @@ from datetime import date
 import pytest
 from dateutil.utils import today
 
-from dependencies import Dependencies
-from primary.controller.read.todolist import TodolistSetReadPort, TaskFilter, Include, Exclude, Word
+from src.dependencies import Dependencies
+from src.primary.controller.read.todolist import TodolistSetReadPort, TaskFilter, Include, Exclude, Word
 from test.fixture import TodolistFaker, TodolistBuilder
 
 

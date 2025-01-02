@@ -1,11 +1,11 @@
 import pytest
 from faker import Faker
 
-from dependencies import Dependencies
-from infra.memory import Memory
-from primary.controller.read.todolist import TodolistSetReadPort
-from secondary.todolist.todolist_set_read.todolist_set_read_memory import TodolistSetReadInMemory
-from shared.const import USER_KEY
+from src.dependencies import Dependencies
+from src.infra.memory import Memory
+from src.primary.controller.read.todolist import TodolistSetReadPort
+from src.secondary.todolist.todolist_set_read.todolist_set_read_memory import TodolistSetReadInMemory
+from src.shared.const import USER_KEY
 from test.fixture import TodolistFaker, TodolistBuilder
 from test.secondary.todolist.todolist_set_read.base_test_todolist_set_read import BaseTestTodolistSetRead
 

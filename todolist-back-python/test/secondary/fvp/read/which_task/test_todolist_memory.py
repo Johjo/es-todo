@@ -1,10 +1,10 @@
 import pytest
 
-from dependencies import Dependencies
-from hexagon.fvp.aggregate import Task
-from hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
-from infra.memory import Memory
-from shared.const import USER_KEY
+from src.dependencies import Dependencies
+from src.hexagon.fvp.aggregate import Task
+from src.hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
+from src.infra.memory import Memory
+from src.shared.const import USER_KEY
 from test.fixture import TodolistBuilder
 from test.secondary.fvp.read.which_task.base_test_todolist import BaseTestTodolist
 

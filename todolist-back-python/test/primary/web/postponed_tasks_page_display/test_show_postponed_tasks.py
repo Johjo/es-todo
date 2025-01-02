@@ -4,9 +4,9 @@ from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp  # type: ignore
 
-from dependencies import Dependencies
-from infra.memory import Memory
-from primary.web.pages import bottle_config
+from src.dependencies import Dependencies
+from src.infra.memory import Memory
+from src.primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
 from test.primary.web._test_double.calendar_for_test import _CalendarForTest
 from test.primary.web.fixture import header_with_good_authentication

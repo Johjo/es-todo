@@ -2,13 +2,13 @@ from typing import OrderedDict
 
 import pytest
 
-from dependencies import Dependencies
-from hexagon.shared.type import TaskKey
-from primary.controller.write.todolist import TodolistWriteController
+from src.dependencies import Dependencies
+from src.hexagon.shared.type import TaskKey
+from src.primary.controller.write.todolist import TodolistWriteController
 from test.fixture import a_task_key
-from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
-from secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
+from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
 
 
 @pytest.fixture

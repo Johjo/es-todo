@@ -3,10 +3,10 @@ from datetime import date
 import pytest
 from faker import Faker
 
-from dependencies import Dependencies
-from hexagon.fvp.aggregate import Task
-from hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
-from secondary.fvp.read.which_task.todolist_sqlite import TodolistSqlite
+from src.dependencies import Dependencies
+from src.hexagon.fvp.aggregate import Task
+from src.hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
+from src.secondary.fvp.read.which_task.todolist_sqlite import TodolistSqlite
 from test.fixture import TodolistFaker, TodolistBuilder
 
 

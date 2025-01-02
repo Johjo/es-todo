@@ -1,11 +1,11 @@
 
 import pytest
 
-from dependencies import Dependencies
-from hexagon.todolist.port import TodolistSetPort
-from infra.memory import Memory
-from secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
-from shared.const import USER_KEY
+from src.dependencies import Dependencies
+from src.hexagon.todolist.port import TodolistSetPort
+from src.infra.memory import Memory
+from src.secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
+from src.shared.const import USER_KEY
 from test.fixture import TodolistBuilder
 from test.secondary.todolist.todolist_set.base_test_todolist_set import BaseTestTodolistSet
 

@@ -2,11 +2,11 @@ import sqlite3
 
 import pytest
 
-from dependencies import Dependencies
-from hexagon.todolist.port import TodolistSetPort
-from infra.sqlite.sdk import SqliteSdk
-from secondary.todolist.todolist_set.todolist_set_sqlite import TodolistSetSqlite
-from shared.const import USER_KEY
+from src.dependencies import Dependencies
+from src.hexagon.todolist.port import TodolistSetPort
+from src.infra.sqlite.sdk import SqliteSdk
+from src.secondary.todolist.todolist_set.todolist_set_sqlite import TodolistSetSqlite
+from src.shared.const import USER_KEY
 from test.fixture import TodolistBuilder
 from test.secondary.todolist.todolist_set.base_test_todolist_set import BaseTestTodolistSet
 

@@ -2,8 +2,8 @@ from datetime import datetime
 
 from expression import Some
 
-from hexagon.shared.type import TaskExecutionDate
-from primary.controller.write.todolist import TodolistWriteController
+from src.hexagon.shared.type import TaskExecutionDate
+from src.primary.controller.write.todolist import TodolistWriteController
 from test.fixture import TodolistFaker
 from test.primary.controller.write.conftest import TodolistSetForTest
 
