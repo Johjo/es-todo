@@ -1,6 +1,7 @@
 import pytest
 
 from src.dependencies import Dependencies
+from src.primary.controller.write.todolist import TodolistWriteController
 from src.shared.const import USER_KEY
 from start_web_for_test import inject_all_dependencies
 
@@ -47,3 +48,7 @@ def test_import_many_task_use_case(sut: Dependencies) -> None:
 def test_which_task_query_use_case(sut: Dependencies) -> None:
     from src.hexagon.fvp.read.which_task import WhichTaskQuery
     assert isinstance(sut.get_use_case(WhichTaskQuery), WhichTaskQuery)
+
+def test_write_controller(sut: Dependencies) -> None:
+    controller = TodolistWriteController(dependencies=sut)
+    assert isinstance(controller, TodolistWriteController)

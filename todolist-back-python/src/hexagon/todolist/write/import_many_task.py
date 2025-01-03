@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
-from expression import Result, Nothing
+from expression import Result, Nothing, Option
 
 from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskKey, TaskName, TaskOpen
+from src.hexagon.shared.type import TaskKey, TaskName, TaskOpen, TaskExecutionDate
 from src.hexagon.todolist.aggregate import TodolistAggregate, TaskSnapshot
 from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from src.hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
@@ -14,9 +14,10 @@ from src.hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistA
 class TaskImported:
     name: TaskName
     is_open: TaskOpen
+    execution_date: Option[TaskExecutionDate]
 
     def to_snapshot(self, key: TaskKey) -> TaskSnapshot:
-        return TaskSnapshot(key=key, name=self.name, is_open=self.is_open, execution_date=Nothing)
+        return TaskSnapshot(key=key, name=self.name, is_open=self.is_open, execution_date=self.execution_date)
 
 
 class ExternalTodoListPort(ABC):

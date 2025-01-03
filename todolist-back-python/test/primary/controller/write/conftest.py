@@ -5,9 +5,9 @@ from src.dependencies import Dependencies
 from src.hexagon.todolist.aggregate import TodolistSnapshot
 from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from src.primary.controller.dependencies import inject_use_cases
-from src.primary.controller.write.todolist import TodolistWriteController
+from src.primary.controller.write.todolist import TodolistWriteController, DateTimeProviderPort
 from test.fixture import TodolistBuilder
-from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
+from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest, DateTimeProviderForTest
 
 
 class TodolistSetForTest(TodolistSetPort):
@@ -38,15 +38,23 @@ def todolist_set() -> TodolistSetForTest:
     return TodolistSetForTest()
 
 @pytest.fixture
-def dependencies(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest) -> Dependencies:
+def dependencies(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest,
+                 datetime_provider: DateTimeProviderForTest) -> Dependencies:
     dependencies = inject_use_cases(Dependencies.create_empty())
     dependencies = dependencies.feed_adapter(TodolistSetPort, lambda _: todolist_set)
     dependencies = dependencies.feed_adapter(TaskKeyGeneratorPort, lambda _: task_key_generator)
+    dependencies = dependencies.feed_adapter(DateTimeProviderPort, lambda _: datetime_provider)
     return dependencies
 
 @pytest.fixture
 def task_key_generator() -> TaskKeyGeneratorForTest:
     return TaskKeyGeneratorForTest()
+
+
+@pytest.fixture
+def datetime_provider() -> DateTimeProviderForTest:
+    return DateTimeProviderForTest()
+
 
 @pytest.fixture
 def sut(dependencies: Dependencies) -> TodolistWriteController:

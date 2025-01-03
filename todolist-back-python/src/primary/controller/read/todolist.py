@@ -127,6 +127,8 @@ class TodolistReadController:
 
 def to_markdown(tasks: list[TaskPresentation]) -> str:
     def task_to_markdown(task: TaskPresentation) -> str:
-        return f"- [{" " if task.is_open else "x"}] {task.name}"
+        text = f"- [{" " if task.is_open else "x"}] {task.name}"
+        execution_date = f"{{execution_date={task.execution_date}}}" if task.execution_date else ""
+        return text + execution_date
 
     return "\n".join([task_to_markdown(task) for task in tasks])

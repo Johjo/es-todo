@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from expression import Option, Nothing, Some
 
 from src.hexagon.shared.type import TaskKey, TodolistName
 from src.hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
 from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from src.primary.controller.write.todolist import DateTimeProviderPort
 from test.fixture import TaskBuilder, TodolistBuilder
 
 
@@ -45,3 +48,16 @@ class TaskKeyGeneratorForTest(TaskKeyGeneratorPort):
             return item.key
 
         return item
+
+
+class DateTimeProviderForTest(DateTimeProviderPort):
+    def __init__(self) -> None:
+        self._today : datetime | None = None
+
+    def now(self) -> datetime:
+        if self._today is None:
+            raise Exception("today must be fed before getting it")
+        return self._today
+
+    def feed(self, today: datetime):
+        self._today = today

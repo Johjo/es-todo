@@ -1,5 +1,5 @@
 import pytest
-from expression import Ok, Error
+from expression import Ok, Error, Nothing
 
 from src.hexagon.todolist.write.import_many_task import ImportManyTask, ExternalTodoListPort, TaskImported
 from test.fixture import TodolistFaker, TaskBuilder
@@ -38,7 +38,7 @@ def test_import_many_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
                           external_todolist: ExternalTodolistForTest, fake: TodolistFaker,
                           task_key_generator: TaskKeyGeneratorForTest):
     task_1 = fake.a_task(1)
-    task_2 = fake.a_task(2)
+    task_2 = fake.a_task(2).having(execution_date=fake.a_date())
     expected_tasks = [task_1, task_2]
 
     external_todolist.feed(*to_imported_task_list(expected_tasks))
@@ -103,4 +103,4 @@ def to_imported_task_list(expected_tasks: list[TaskBuilder]) -> list[TaskImporte
 
 
 def to_imported_task(task: TaskBuilder) -> TaskImported:
-    return TaskImported(name=task.to_name(), is_open=task.to_open())
+    return TaskImported(name=task.to_name(), is_open=task.to_open(), execution_date=task.to_execution_date())

@@ -90,7 +90,17 @@ b'<html>
 
     <h2> buy the milk </h2>
 
-        <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/reword?">Renommer</a> <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/postpone?">Reporter</a>
+        <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/reword?">Renommer</a>
+
+        <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/postpone?">Reporter</a>
+
+        <form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000001/tomorrow?" method="post">
+
+            <input type="submit" value="Demain">
+
+        </form>
+
+
 
     </div>
 
@@ -126,7 +136,17 @@ b'<html>
 
     <h2> buy the water </h2>
 
-        <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/reword?">Renommer</a> <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/postpone?">Reporter</a>
+        <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/reword?">Renommer</a>
+
+        <a href="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/postpone?">Reporter</a>
+
+        <form action="/todo/my_todolist/item/00000000-0000-0000-0000-000000000002/tomorrow?" method="post">
+
+            <input type="submit" value="Demain">
+
+        </form>
+
+
 
     </div>
 
