@@ -1,3 +1,6 @@
+from abc import ABC, abstractmethod
+from datetime import datetime, timedelta
+
 from src.dependencies import Dependencies
 from src.hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 from src.hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName
@@ -12,9 +15,17 @@ from src.hexagon.todolist.write.reword_task import RewordTask
 from src.secondary.todolist.markdown_todolist import MarkdownTodolist
 
 
+class DateTimeProviderPort(ABC):
+    @abstractmethod
+    def now(self) -> datetime:
+        pass
+
+
 class TodolistWriteController:
     def __init__(self, dependencies: Dependencies) -> None:
         self.dependencies = dependencies
+        self._datetime_provider = dependencies.get_adapter(DateTimeProviderPort)
+
 
     def create_todolist(self, todolist_name: TodolistName) -> None:
         use_case: TodolistCreate = self.dependencies.get_use_case(TodolistCreate)
@@ -52,3 +63,8 @@ class TodolistWriteController:
     def postpone_task(self, name: TodolistName, key: TaskKey, execution_date: TaskExecutionDate):
         use_case: PostPoneTask = self.dependencies.get_use_case(PostPoneTask)
         use_case.execute(todolist_name=name, key=key, execution_date=execution_date)
+
+    def postpone_task_to_tomorrow(self, name : TodolistName, key: TaskKey) -> None:
+        tomorrow = self._datetime_provider.now() + timedelta(days=1)
+        use_case: PostPoneTask = self.dependencies.get_use_case(PostPoneTask)
+        use_case.execute(todolist_name=name, key=key, execution_date=TaskExecutionDate(tomorrow.date()))

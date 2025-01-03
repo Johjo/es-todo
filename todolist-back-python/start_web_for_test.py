@@ -11,7 +11,9 @@ from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
 from src.primary.controller.dependencies import inject_use_cases
 from src.primary.controller.read.final_version_perfected import CalendarPort
 from src.primary.controller.read.todolist import TodolistSetReadPort
+from src.primary.controller.write.todolist import DateTimeProviderPort
 from src.primary.web.pages import bottle_config, bottle_app
+from src.secondary.datetime_provider import DateTimeProvider
 from src.secondary.fvp.read.which_task.todolist_sqlite import TodolistSqlite
 from src.secondary.todolist.todolist_set.todolist_set_sqlite import TodolistSetSqlite
 from src.secondary.todolist.todolist_set_read.todolist_set_read_sqlite import TodolistSetReadSqlite
@@ -49,6 +51,7 @@ def inject_adapter(dependencies: Dependencies) -> Dependencies:
     dependencies = dependencies.feed_adapter(TaskKeyGeneratorPort, lambda _: task_key_generator)
     dependencies = dependencies.feed_adapter(TodolistPort, TodolistSqlite.factory)
     dependencies = dependencies.feed_adapter(CalendarPort, Calendar.factory)
+    dependencies = dependencies.feed_adapter(DateTimeProviderPort, DateTimeProvider.factory)
 
     return dependencies
 

@@ -218,6 +218,26 @@ def postpone(todolist_name: str, task_key: str) -> str:
     return display_form_postpone_task(todolist_name, task_key, postpone_form)
 
 
+@bottle_app.post("/todo/<todolist_name>/item/<task_key>/tomorrow")
+@auth_basic(is_authenticated_user)
+def postpone_to_tomorrow(todolist_name: str, task_key: str) -> str:
+    controller = TodolistWriteController(bottle_config.dependencies)
+    controller.postpone_task_to_tomorrow(name=TodolistName(todolist_name), key=TaskKey(UUID(task_key)))
+    return redirect_to_todolist(todolist_name)
+
+    # bottle_config.dependencies = authenticate(dependencies=bottle_config.dependencies, user=request.auth[0])
+    # postpone_form = PostponeForm(request.forms)
+    # if postpone_form.is_valid():
+    #     controller = TodolistWriteController(bottle_config.dependencies)
+    #     date_as_str = request.forms.getunicode("execution_date")
+    #     controller.postpone_task(
+    #         name=TodolistName(todolist_name),
+    #         key=TaskKey(UUID(task_key)),
+    #         execution_date=TaskExecutionDate(datetime.strptime(date_as_str, "%Y-%m-%d").date()))
+    #     return redirect_to_todolist(todolist_name)
+    # return display_form_postpone_task(todolist_name, task_key, postpone_form)
+
+
 @bottle_app.get("/todo/<todolist_name>/export")
 @view("export")
 @auth_basic(is_authenticated_user)
