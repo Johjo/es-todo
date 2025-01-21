@@ -1,10 +1,8 @@
 import re
-from datetime import datetime, date
-from re import Match
+from datetime import datetime
 from typing import Tuple
 
-from expression import Nothing, Some, Option, Result, pipe
-from expression.collections import Seq
+from expression import Nothing, Some, Option
 
 from src.hexagon.shared.type import TaskName, TaskOpen, TaskExecutionDate
 from src.hexagon.todolist.write.import_many_task import ExternalTodoListPort, TaskImported

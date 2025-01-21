@@ -1,5 +1,7 @@
 from datetime import datetime
 
+import pytest
+
 from src.hexagon.shared.type import TaskOpen
 from src.primary.controller.read.todolist import to_markdown
 from test.fixture import TodolistFaker
@@ -13,10 +15,21 @@ def test_convert_one_task(fake: TodolistFaker):
     assert to_markdown([task]) == f"- [ ] {task.name}"
 
 
-def test_convert_many_tasks_old(fake: TodolistFaker):
+def test_convert_many_tasks(fake: TodolistFaker):
     task_1 = fake.a_task().having(name="task 1", is_open=TaskOpen(True)).to_presentation()
     task_2 = fake.a_task().having(name="task 2", is_open=TaskOpen(False), execution_date=datetime(2020, 6, 17).date()).to_presentation()
     task_3 = fake.a_task().having(name="task 3", is_open=TaskOpen(True)).to_presentation()
+    assert to_markdown([task_1, task_2, task_3]) == "- [ ] task 1\n- [x] task 2{execution_date=2020-06-17}\n- [ ] task 3"
+
+@pytest.mark.parametrize("end_of_line", [
+    "\r",
+    "\r\n",
+    "\n",
+])
+def test_clean_task_with_unexpected_end_of_line(fake: TodolistFaker, end_of_line: str):
+    task_1 = fake.a_task().having(name="task 1" + end_of_line, is_open=TaskOpen(True)).to_presentation()
+    task_2 = fake.a_task().having(name="task 2" + end_of_line, is_open=TaskOpen(False), execution_date=datetime(2020, 6, 17).date()).to_presentation()
+    task_3 = fake.a_task().having(name="task 3" + end_of_line, is_open=TaskOpen(True)).to_presentation()
     assert to_markdown([task_1, task_2, task_3]) == "- [ ] task 1\n- [x] task 2{execution_date=2020-06-17}\n- [ ] task 3"
 
 
