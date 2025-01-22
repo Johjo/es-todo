@@ -7,7 +7,7 @@ from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 from src.infra.sqlite.sdk import SqliteSdk
 from src.infra.sqlite.type import FvpSession as FvpSessionSdk
 from src.secondary.fvp.write.session_set_sqlite import SessionSqlite
-from test.secondary.fvp.write.base_test_session_set import BaseTestSessionSet
+from test.secondary.fvp.write.base_test_session_set import BaseTestFvpSessionSet
 
 
 @pytest.fixture()
@@ -27,7 +27,7 @@ def dependencies(connection: sqlite3.Connection) -> Dependencies:
 
 
 
-class TestSessionSetSqlite(BaseTestSessionSet):
+class TestFvpSessionSetSqlite(BaseTestFvpSessionSet):
     def feed(self, session: FvpSnapshot) -> None:
         sdk = SqliteSdk(self._connection)
         sdk.upsert_fvp_session(

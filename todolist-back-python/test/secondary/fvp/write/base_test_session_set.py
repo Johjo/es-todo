@@ -8,7 +8,7 @@ from test.fixture import a_task_key
 from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 
 
-class BaseTestSessionSet(ABC):
+class BaseTestFvpSessionSet(ABC):
     def test_by(self, sut: FvpSessionSetPort) -> None:
         expected = FvpSnapshot(OrderedDict[TaskKey, TaskKey]({a_task_key(1): a_task_key(1), a_task_key(2): a_task_key(0)}))
         self.feed(expected)
