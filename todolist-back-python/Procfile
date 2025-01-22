@@ -1,1 +1,2 @@
 web: python start_web_for_test.py
+postdeploy: python src/create_tables.py
