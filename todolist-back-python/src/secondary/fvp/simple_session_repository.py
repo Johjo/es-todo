@@ -4,7 +4,7 @@ from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 from src.hexagon.shared.type import TaskKey
 
 
-class FvpSessionSetForTest(FvpSessionSetPort):
+class FvpSessionSetInMemory(FvpSessionSetPort):
     def __init__(self) -> None:
         self.snapshot: FvpSnapshot | None = None
 

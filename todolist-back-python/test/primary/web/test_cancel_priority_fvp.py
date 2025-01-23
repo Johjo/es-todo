@@ -7,14 +7,14 @@ from src.hexagon.fvp.aggregate import FvpSnapshot
 from src.hexagon.shared.type import TaskKey
 from src.infra.memory import Memory
 from src.primary.web.pages import bottle_config
-from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.primary.web.fixture import CleanResponse, BASE_URL, header_with_good_authentication
 
 
 def test_choose_and_ignore_task(memory: Memory, task_key_generator: TaskKeyGeneratorForTest,
-                                fvp_session_set: FvpSessionSetForTest, test_dependencies: Dependencies, app: TestApp,
+                                fvp_session_set: FvpSessionSetInMemory, test_dependencies: Dependencies, app: TestApp,
                                 fake: TodolistFaker) -> None:
 
     # GIVEN

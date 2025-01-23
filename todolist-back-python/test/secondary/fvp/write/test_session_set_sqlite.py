@@ -28,15 +28,15 @@ def dependencies(connection: sqlite3.Connection) -> Dependencies:
 
 
 class TestFvpSessionSetSqlite(BaseTestFvpSessionSet):
+    @pytest.fixture(autouse=True)
+    def before_each(self, connection: sqlite3.Connection, dependencies: Dependencies) -> None:
+        self.dependencies = dependencies
+        self._connection = connection
+
     def feed(self, session: FvpSnapshot) -> None:
         sdk = SqliteSdk(self._connection)
         sdk.upsert_fvp_session(
             FvpSessionSdk(priorities=[(ignored, chosen) for ignored, chosen in session.task_priorities.items()]))
-
-    @pytest.fixture(autouse=True)
-    def setup(self, connection: sqlite3.Connection, dependencies: Dependencies) -> None:
-        self.dependencies = dependencies
-        self._connection = connection
 
     def _create_sut(self) -> FvpSessionSetPort:
         return self.dependencies.get_adapter(FvpSessionSetPort)

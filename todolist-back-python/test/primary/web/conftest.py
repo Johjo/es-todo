@@ -16,7 +16,7 @@ from src.primary.controller.read.todolist import TodolistSetReadPort
 from src.primary.controller.write.todolist import DateTimeProviderPort
 from src.primary.web.pages import bottle_app, bottle_config
 from src.secondary.fvp.read.which_task.todolist_memory import TodolistMemory
-from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
 from src.secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
 from src.secondary.todolist.todolist_set_read.todolist_set_read_memory import TodolistSetReadInMemory
 from test.fixture import TodolistFaker
@@ -58,8 +58,8 @@ def datetime_provider() -> DateTimeProviderForTest:
 
 
 @pytest.fixture
-def fvp_session_set() -> FvpSessionSetForTest:
-    return FvpSessionSetForTest()
+def fvp_session_set() -> FvpSessionSetInMemory:
+    return FvpSessionSetInMemory()
 
 @pytest.fixture
 def memory() -> Memory:
@@ -73,7 +73,7 @@ def calendar() -> _CalendarForTest:
 @pytest.fixture
 def test_dependencies(memory: Memory, calendar: _CalendarForTest, datetime_provider: DateTimeProviderForTest,
                       task_key_generator: OpenTask_Port_TaskKeyGenerator,
-                      fvp_session_set: FvpSessionSetForTest) -> Dependencies:
+                      fvp_session_set: FvpSessionSetInMemory) -> Dependencies:
     dependencies = inject_use_cases(bottle_config.dependencies)
     dependencies = dependencies.feed_infrastructure(Memory, lambda _: memory)
     dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, TodolistSetInMemory.factory)

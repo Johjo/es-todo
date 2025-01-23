@@ -8,13 +8,13 @@ from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
 from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from src.hexagon.shared.type import TaskKey
 from src.primary.controller.write.todolist import TodolistWriteController
-from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
 from test.fixture import TodolistFaker
 
 
 @pytest.fixture
 def set_of_fvp_sessions():
-    return FvpSessionSetForTest()
+    return FvpSessionSetInMemory()
 
 
 @pytest.fixture

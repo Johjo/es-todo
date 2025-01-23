@@ -6,12 +6,12 @@ from src.hexagon.shared.type import TaskKey
 from test.fixture import a_task_key
 from src.hexagon.fvp.aggregate import FvpSnapshot
 from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
-from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
 
 
 @pytest.fixture
 def fvp_sessions_set():
-    return FvpSessionSetForTest()
+    return FvpSessionSetInMemory()
 
 
 @pytest.fixture

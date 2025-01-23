@@ -8,7 +8,7 @@ from src.dependencies import Dependencies
 from src.hexagon.fvp.aggregate import DoTheTask, FvpSnapshot, FvpSessionSetPort
 from src.hexagon.fvp.read.which_task import TodolistPort
 from src.primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController, CalendarPort
-from src.secondary.fvp.simple_session_repository import FvpSessionSetForTest
+from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
 from test.hexagon.fvp.read.test_which_task import TodolistForTest, FvpFaker
 
 
@@ -19,7 +19,7 @@ def todolist():
 
 @pytest.fixture
 def fvp_session_set():
-    return FvpSessionSetForTest()
+    return FvpSessionSetInMemory()
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def calendar() -> _CalendarForTest:
 
 
 def test_which_task_when_two_and_one_chosen(dependencies: Dependencies, todolist: TodolistForTest,
-                                            fvp_session_set: FvpSessionSetForTest, calendar: _CalendarForTest,
+                                            fvp_session_set: FvpSessionSetInMemory, calendar: _CalendarForTest,
                                             fake: FvpFaker, faker: Faker):
     # GIVEN
     ignored_task = replace(fake.a_task(2))
