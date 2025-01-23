@@ -1,6 +1,7 @@
 import sqlite3
 
 import pytest
+from typing_extensions import override
 
 from src.dependencies import Dependencies
 from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
@@ -18,19 +19,9 @@ def connection():
     return connection
 
 
-@pytest.fixture
-def dependencies(connection: sqlite3.Connection) -> Dependencies:
-    dependencies = Dependencies.create_empty()
-    dependencies = dependencies.feed_adapter(FvpSessionSetPort, SessionSqlite.factory)
-    dependencies = dependencies.feed_infrastructure(sqlite3.Connection, lambda _: connection)
-    return dependencies
-
-
-
 class TestFvpSessionSetSqlite(BaseTestFvpSessionSet):
     @pytest.fixture(autouse=True)
-    def before_each(self, connection: sqlite3.Connection, dependencies: Dependencies) -> None:
-        self.dependencies = dependencies
+    def before_each(self, connection: sqlite3.Connection) -> None:
         self._connection = connection
 
     def feed(self, session: FvpSnapshot) -> None:
@@ -38,5 +29,10 @@ class TestFvpSessionSetSqlite(BaseTestFvpSessionSet):
         sdk.upsert_fvp_session(
             FvpSessionSdk(priorities=[(ignored, chosen) for ignored, chosen in session.task_priorities.items()]))
 
-    def _create_sut(self) -> FvpSessionSetPort:
-        return self.dependencies.get_adapter(FvpSessionSetPort)
+    @pytest.fixture
+    @pytest.mark.usefixtures
+    def dependencies(self) -> Dependencies:
+        dependencies = Dependencies.create_empty()
+        dependencies = dependencies.feed_adapter(FvpSessionSetPort, SessionSqlite.factory)
+        dependencies = dependencies.feed_infrastructure(sqlite3.Connection, lambda _: self._connection)
+        return dependencies

@@ -3,6 +3,7 @@ from collections import OrderedDict
 
 import pytest
 
+from src.dependencies import Dependencies
 from src.hexagon.shared.type import TaskKey
 from test.fixture import a_task_key
 from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
@@ -34,16 +35,15 @@ class BaseTestFvpSessionSet(ABC):
         sut.save(expected)
         assert sut.by() == expected
 
-
-
     @abstractmethod
     def feed(self, snapshot: FvpSnapshot) -> None:
         pass
 
     @pytest.fixture
-    def sut(self) -> FvpSessionSetPort:
-        return self._create_sut()
+    def sut(self, dependencies: Dependencies) -> FvpSessionSetPort:
+        return dependencies.get_adapter(FvpSessionSetPort)
 
-    @abstractmethod
-    def _create_sut(self) -> FvpSessionSetPort:
-        pass
+    @pytest.fixture
+    def dependencies(self) -> Dependencies:
+        raise NotImplementedError()
+
