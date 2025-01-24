@@ -5,7 +5,7 @@ from src.infra.memory import Memory
 from src.shared.const import USER_KEY
 
 
-class TodolistMemory(TodolistPort):
+class TodolistInMemory(TodolistPort):
     def __init__(self, memory: Memory, user_key:str):
         self.memory = memory
         self._user_key = user_key
@@ -16,6 +16,6 @@ class TodolistMemory(TodolistPort):
                 task_filter.include(task.name, task.execution_date)]
 
     @classmethod
-    def factory(cls, dependencies: Dependencies) -> 'TodolistMemory':
+    def factory(cls, dependencies: Dependencies) -> 'TodolistInMemory':
         memory = dependencies.get_infrastructure(Memory)
-        return TodolistMemory(memory=memory, user_key=dependencies.get_data(USER_KEY))
+        return TodolistInMemory(memory=memory, user_key=dependencies.get_data(USER_KEY))

@@ -10,8 +10,6 @@ class Memory:
         self.all_todolist: dict[tuple[str, str], TodolistSnapshot] = {}
 
     def by(self, user_key: str, todolist_name: str) -> Option[TodolistSnapshot]:
-        print(self.all_todolist)
-        print(user_key, todolist_name)
         if (user_key, todolist_name) not in self.all_todolist:
             return Nothing
         return Some(self.all_todolist[(user_key, todolist_name)])

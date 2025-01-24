@@ -23,3 +23,4 @@ class CalendarPort(ABC):
     @abstractmethod
     def today(self) -> date:
         pass
+

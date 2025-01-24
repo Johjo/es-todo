@@ -10,12 +10,12 @@ from src.hexagon.fvp.read.which_task import TodolistPort as WhichTask_Port_Todol
 from src.hexagon.todolist.port import TodolistSetPort as Todolist_Port_TodolistSet, \
     TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
 from src.infra.memory import Memory
-from src.primary.controller.dependencies import inject_use_cases
+from src.primary.controller.use_case_dependencies import inject_use_cases
 from src.primary.controller.read.final_version_perfected import CalendarPort
 from src.primary.controller.read.todolist import TodolistSetReadPort
 from src.primary.controller.write.todolist import DateTimeProviderPort
 from src.primary.web.pages import bottle_app, bottle_config
-from src.secondary.fvp.read.which_task.todolist_memory import TodolistMemory
+from src.secondary.fvp.read.which_task.todolist_memory import TodolistInMemory
 from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
 from src.secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
 from src.secondary.todolist.todolist_set_read.todolist_set_read_memory import TodolistSetReadInMemory
@@ -79,7 +79,7 @@ def test_dependencies(memory: Memory, calendar: _CalendarForTest, datetime_provi
     dependencies = dependencies.feed_adapter(Todolist_Port_TodolistSet, TodolistSetInMemory.factory)
     dependencies = dependencies.feed_adapter(TodolistSetReadPort, TodolistSetReadInMemory.factory)
     dependencies = dependencies.feed_adapter(OpenTask_Port_TaskKeyGenerator, lambda _: task_key_generator)
-    dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, TodolistMemory.factory)
+    dependencies = dependencies.feed_adapter(WhichTask_Port_Todolist, TodolistInMemory.factory)
     dependencies = dependencies.feed_adapter(FinalVersionPerfected_Port_SessionSet, lambda _: fvp_session_set)
     dependencies = dependencies.feed_adapter(CalendarPort, lambda _: calendar)
     dependencies = dependencies.feed_adapter(DateTimeProviderPort, lambda _: datetime_provider)

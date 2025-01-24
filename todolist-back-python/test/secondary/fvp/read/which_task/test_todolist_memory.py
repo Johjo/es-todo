@@ -1,6 +1,6 @@
 import pytest
 
-from src.secondary.fvp.read.which_task.todolist_memory import TodolistMemory
+from src.secondary.fvp.read.which_task.todolist_memory import TodolistInMemory
 from src.dependencies import Dependencies
 from src.hexagon.fvp.read.which_task import TodolistPort
 from src.infra.memory import Memory
@@ -20,7 +20,7 @@ class TestTodolistMemory(BaseTestTodolist):
     @pytest.fixture
     def dependencies(self, current_user: str) -> Dependencies:
         all_dependencies = Dependencies.create_empty()
-        all_dependencies = all_dependencies.feed_adapter(TodolistPort, TodolistMemory.factory)
+        all_dependencies = all_dependencies.feed_adapter(TodolistPort, TodolistInMemory.factory)
         all_dependencies = all_dependencies.feed_infrastructure(Memory, lambda _: self.memory)
         all_dependencies = all_dependencies.feed_data(data_name=USER_KEY, value=current_user)
         return all_dependencies

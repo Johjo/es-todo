@@ -20,3 +20,4 @@ class TaskKeyGeneratorPort(ABC):
     @abstractmethod
     def generate(self) -> TaskKey:
         pass
+

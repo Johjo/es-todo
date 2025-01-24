@@ -4,7 +4,7 @@ from expression import Option, Some, Nothing
 from src.dependencies import Dependencies
 from src.hexagon.todolist.aggregate import TodolistSnapshot
 from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
-from src.primary.controller.dependencies import inject_use_cases
+from src.primary.controller.use_case_dependencies import inject_use_cases
 from src.primary.controller.write.todolist import TodolistWriteController, DateTimeProviderPort
 from test.fixture import TodolistBuilder
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest, DateTimeProviderForTest

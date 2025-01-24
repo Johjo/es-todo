@@ -15,7 +15,7 @@ from src.primary.controller.read.final_version_perfected import FinalVersionPerf
 from src.primary.controller.read.todolist import TodolistReadController, TaskPresentation
 from src.primary.controller.write.todolist import TodolistWriteController
 from src.shared.const import USER_KEY
-from start_web_for_test import inject_all_dependencies
+from src.primary.prod_dependencies import inject_all_dependencies
 
 
 class TaskKeyGeneratorIncremental(TaskKeyGeneratorPort):
