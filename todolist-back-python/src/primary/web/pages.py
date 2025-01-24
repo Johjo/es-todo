@@ -254,10 +254,10 @@ def authenticate(dependencies: Dependencies, user: str) -> Dependencies:
 
 @bottle_app.post('/todo/<todolist_name>/item/choose/<chosen_task>/ignore/<ignored_task>')
 @auth_basic(is_authenticated_user)
-def choose_and_ignore_task(todolist_name, chosen_task, ignored_task):
+def choose_and_ignore_task(todolist_name: str, chosen_task:  str, ignored_task:str):
     bottle_config.dependencies = authenticate(dependencies=bottle_config.dependencies, user=request.auth[0])
-    TodolistWriteController(bottle_config.dependencies).choose_and_ignore_task(chosen_task=chosen_task,
-                                                                               ignored_task=ignored_task)
+    TodolistWriteController(bottle_config.dependencies).choose_and_ignore_task(chosen_task=TaskKey(UUID(chosen_task)),
+                                                                               ignored_task=TaskKey(UUID(ignored_task)))
     return redirect_to_todolist(todolist_name)
 
 
