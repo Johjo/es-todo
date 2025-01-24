@@ -20,7 +20,7 @@ class PostPoneTask:
                     update,
                     self._repository.save_todolist)
 
-    @staticmethod
-    def factory(dependencies: Dependencies) -> 'PostPoneTask':
+    @classmethod
+    def factory(cls, dependencies: Dependencies) -> 'PostPoneTask':
         todolist_set = dependencies.get_adapter(TodolistSetPort)
         return PostPoneTask(todolist_set)

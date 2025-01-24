@@ -62,11 +62,15 @@ def inject_all_dependencies(dependencies: Dependencies) -> Dependencies:
     dependencies = inject_use_cases(dependencies)
     dependencies = inject_adapter(dependencies)
     dependencies = inject_infrastructure(dependencies)
+    dependencies = inject_environment_variable(dependencies)
 
+    return dependencies
+
+
+def inject_environment_variable(dependencies):
     load_dotenv()
-    static_path = os.environ["STATIC_PATH"]
-    dependencies = dependencies.feed_path("static_path", lambda _: Path(static_path))
-
+    dependencies = dependencies.feed_path("static_path", lambda _: Path(os.environ["STATIC_PATH"]))
+    dependencies = dependencies.feed_path("sqlite_database_path", lambda _: Path(os.environ["DATABASE_PATH"]))
     return dependencies
 
 

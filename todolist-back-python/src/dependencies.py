@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field, replace
 from enum import Enum
+from math import factorial
 from typing import Any
 
 class ResourceType(str, Enum):
@@ -55,7 +56,6 @@ class Dependencies:
     def get_data(self, data_name) -> Any:
         return self._get_resource(resource_type=ResourceType.data, resource=data_name)
 
-
     def _get_resource(self, resource_type: ResourceType, resource) -> Any:
         if (resource_type, resource) not in self.factory:
             raise Exception(f"{resource_type.value} for {resource} must be injected first")
@@ -64,3 +64,11 @@ class Dependencies:
     @classmethod
     def create_empty(cls) -> 'Dependencies':
         return Dependencies()
+
+    def describe(self) -> str:
+        def format_item(key):
+            (resource_type, resource_name) = key
+            resource = self._get_resource(resource_type, resource_name)
+            return f"{resource_name}: {resource_type} => {str(type(resource))}"
+
+        return "\n".join([format_item(key) for key in self.factory.keys()])
