@@ -7,8 +7,8 @@ from faker import Faker
 from src.dependencies import Dependencies
 from src.hexagon.fvp.aggregate import DoTheTask, FvpSnapshot, FvpSessionSetPort
 from src.hexagon.fvp.read.which_task import TodolistPort
+from src.infra.fvp_memory import FvpMemory
 from src.primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController, CalendarPort
-from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
 from test.hexagon.fvp.read.test_which_task import TodolistForTest, FvpFaker
 
 
@@ -18,8 +18,8 @@ def todolist():
 
 
 @pytest.fixture
-def fvp_session_set():
-    return FvpSessionSetInMemory()
+def fvp_session_set(dependencies: Dependencies) -> FvpSessionSetPort:
+    return dependencies.get_adapter(FvpSessionSetPort)
 
 
 @pytest.fixture
@@ -46,7 +46,7 @@ def calendar() -> _CalendarForTest:
 
 
 def test_which_task_when_two_and_one_chosen(dependencies: Dependencies, todolist: TodolistForTest,
-                                            fvp_session_set: FvpSessionSetInMemory, calendar: _CalendarForTest,
+                                            fvp_memory: FvpMemory, calendar: _CalendarForTest,
                                             fake: FvpFaker, faker: Faker):
     # GIVEN
     ignored_task = replace(fake.a_task(2))
@@ -55,10 +55,9 @@ def test_which_task_when_two_and_one_chosen(dependencies: Dependencies, todolist
     calendar.feed_today(reference_date)
     task_filter = replace(fake.a_which_task_filter(), reference_date=reference_date)
 
-    fvp_session_set.feed(FvpSnapshot.from_primitive_dict({ignored_task.key: chosen_task.key}))
+    fvp_memory.feed(FvpSnapshot.from_primitive_dict({ignored_task.key: chosen_task.key}))
     todolist.feed(task_filter, chosen_task, ignored_task)
 
-    dependencies = dependencies.feed_adapter(FvpSessionSetPort, lambda _: fvp_session_set)
     dependencies = dependencies.feed_adapter(TodolistPort, lambda _: todolist)
     dependencies = dependencies.feed_adapter(CalendarPort, lambda _: calendar)
 

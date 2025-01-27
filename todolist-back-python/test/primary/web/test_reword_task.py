@@ -8,9 +8,9 @@ from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest
 from test.primary.web.fixture import CleanResponse, BASE_URL, header_with_good_authentication
 
 
-def test_reword_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
+def test_reword_task(memory: Memory, task_key_generator : TaskKeyGeneratorForTest, dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     # given
-    bottle_config.dependencies = test_dependencies
+    bottle_config.dependencies = dependencies
     initial_task = fake.a_task()
     expected_task = initial_task.having(name="reworded")
 

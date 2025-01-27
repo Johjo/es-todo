@@ -6,11 +6,11 @@ from src.hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 
 
 from src.hexagon.fvp.aggregate import FvpSnapshot
-from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
+from test.hexagon.fvp.write.fixture import FvpSessionSetForTest
 
 
 def test_reset_session():
-    set_of_fvp_sessions = FvpSessionSetInMemory()
+    set_of_fvp_sessions = FvpSessionSetForTest()
     set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[uuid4, int]({a_task_key(1): 1, a_task_key(2): 0})))
     sut = ResetFvpSession(set_of_fvp_sessions)
     sut.execute()

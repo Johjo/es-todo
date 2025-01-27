@@ -4,10 +4,15 @@ from expression import Option, Some, Nothing
 from src.dependencies import Dependencies
 from src.hexagon.todolist.aggregate import TodolistSnapshot
 from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from src.infra.fvp_memory import FvpMemory
+from src.infra.memory import Memory
+from src.primary.adapter_in_memory_dependencies import inject_adapter_in_memory
 from src.primary.controller.use_case_dependencies import inject_use_cases
 from src.primary.controller.write.todolist import TodolistWriteController, DateTimeProviderPort
+from src.primary.infrastructure_in_memory_dependencies import inject_infrastructure_in_memory
 from test.fixture import TodolistBuilder
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest, DateTimeProviderForTest
+from test.primary.controller.conftest import memory
 
 
 class TodolistSetForTest(TodolistSetPort):
@@ -39,8 +44,10 @@ def todolist_set() -> TodolistSetForTest:
 
 @pytest.fixture
 def dependencies(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGeneratorForTest,
-                 datetime_provider: DateTimeProviderForTest) -> Dependencies:
+                 datetime_provider: DateTimeProviderForTest, memory: Memory, fvp_memory: FvpMemory) -> Dependencies:
     dependencies = inject_use_cases(Dependencies.create_empty())
+    dependencies = inject_adapter_in_memory(dependencies)
+    dependencies = inject_infrastructure_in_memory(dependencies=dependencies, memory=memory, fvp_memory=fvp_memory)
     dependencies = dependencies.feed_adapter(TodolistSetPort, lambda _: todolist_set)
     dependencies = dependencies.feed_adapter(TaskKeyGeneratorPort, lambda _: task_key_generator)
     dependencies = dependencies.feed_adapter(DateTimeProviderPort, lambda _: datetime_provider)

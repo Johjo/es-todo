@@ -9,8 +9,8 @@ from test.fixture import TodolistFaker
 from test.primary.web.fixture import BASE_URL, header_with_good_authentication
 
 
-def test_display_import(memory: Memory, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
-    bottle_config.dependencies = test_dependencies
+def test_display_import(memory: Memory, dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
+    bottle_config.dependencies = dependencies
 
     todolist = fake.a_todolist("my_todolist")
     memory.save(user_key="test@mail.fr", todolist=todolist.to_snapshot())

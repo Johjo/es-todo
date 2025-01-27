@@ -6,8 +6,8 @@ from faker import Faker
 from src.hexagon.fvp.aggregate import Task, NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot
 from src.hexagon.fvp.read.which_task import TodolistPort, WhichTaskQuery, WhichTaskFilter
 from src.hexagon.shared.type import TodolistName
-from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
 from test.fixture import a_task_key
+from test.hexagon.fvp.write.fixture import FvpSessionSetForTest
 
 
 class TodolistForTest(TodolistPort):
@@ -23,7 +23,7 @@ class TodolistForTest(TodolistPort):
 
 
 @pytest.fixture
-def sut(fvp_session_set: FvpSessionSetInMemory, todolist_name: TodolistForTest):
+def sut(fvp_session_set: FvpSessionSetForTest, todolist_name: TodolistForTest):
     return WhichTaskQuery(todolist_name, fvp_session_set)
 
 
@@ -34,7 +34,7 @@ def todolist_name():
 
 @pytest.fixture
 def fvp_session_set():
-    return FvpSessionSetInMemory()
+    return FvpSessionSetForTest()
 
 
 class FvpFaker:
@@ -85,7 +85,7 @@ def test_which_task_with_two_tasks(sut: WhichTaskQuery, todolist_name: TodolistF
     assert sut.which_task(task_filter) == ChooseTheTask(main_task_key=primary_task.key, secondary_task_key=secondary_task.key)
 
 
-def test_load_existing_session(sut: WhichTaskQuery, todolist_name: TodolistForTest, fvp_session_set: FvpSessionSetInMemory,
+def test_load_existing_session(sut: WhichTaskQuery, todolist_name: TodolistForTest, fvp_session_set: FvpSessionSetForTest,
                                fake: FvpFaker):
     chosen_task = replace(fake.a_task(1))
     ignored_task = replace(fake.a_task(2))

@@ -14,9 +14,9 @@ from test.fixture import TodolistFaker
 from test.primary.web.fixture import CleanResponse, BASE_URL, header_with_good_authentication
 
 
-def test_postpone_task(memory: Memory, datetime_provider: DateTimeProviderForTest, task_key_generator : TaskKeyGeneratorForTest, test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
+def test_postpone_task(memory: Memory, datetime_provider: DateTimeProviderForTest, task_key_generator : TaskKeyGeneratorForTest, dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     # GIVEN
-    bottle_config.dependencies = test_dependencies
+    bottle_config.dependencies = dependencies
     initial_task = fake.a_task()
     today = fake.a_datetime()
     datetime_provider.feed(today)

@@ -1,33 +1,18 @@
 from typing import OrderedDict
 
-import pytest
-
 from src.dependencies import Dependencies
+from src.hexagon.fvp.aggregate import FvpSnapshot
 from src.hexagon.shared.type import TaskKey
+from src.infra.fvp_memory import FvpMemory
 from src.primary.controller.write.todolist import TodolistWriteController
 from test.fixture import a_task_key
-from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
-from src.secondary.fvp.simple_session_repository import FvpSessionSetInMemory
 
 
-@pytest.fixture
-def set_of_fvp_sessions():
-    return FvpSessionSetInMemory()
-
-
-@pytest.fixture
-def sut(set_of_fvp_sessions):
-    return ChooseAndIgnoreTaskFvp(set_of_fvp_sessions)
-
-
-def test_should_choose_and_ignore_when_one_task_already_chosen(set_of_fvp_sessions, dependencies: Dependencies):
-    dependencies = dependencies.feed_adapter(FvpSessionSetPort, lambda _: set_of_fvp_sessions)
-
-    set_of_fvp_sessions.feed(FvpSnapshot(OrderedDict[TaskKey, TaskKey]({a_task_key(2): a_task_key(1)})))
+def test_should_choose_and_ignore_when_one_task_already_chosen(fvp_memory: FvpMemory, dependencies: Dependencies):
+    fvp_memory.feed(FvpSnapshot(OrderedDict[TaskKey, TaskKey]({a_task_key(2): a_task_key(1)})))
 
     sut = TodolistWriteController(dependencies)
     sut.choose_and_ignore_task(chosen_task=a_task_key(1), ignored_task=a_task_key(3))
 
-    assert set_of_fvp_sessions.by() == FvpSnapshot(
+    assert fvp_memory.by() == FvpSnapshot(
         OrderedDict[TaskKey, TaskKey]({a_task_key(2): a_task_key(1), a_task_key(3): a_task_key(1)}))

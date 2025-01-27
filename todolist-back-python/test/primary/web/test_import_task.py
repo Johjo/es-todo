@@ -9,9 +9,9 @@ from test.primary.web.fixture import CleanResponse, BASE_URL, header_with_good_a
 
 
 def test_import_task(memory: Memory, task_key_generator: TaskKeyGeneratorForTest,
-                     test_dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
+                     dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
     # given
-    bottle_config.dependencies = test_dependencies
+    bottle_config.dependencies = dependencies
     expected_task = fake.a_task()
 
     todolist = fake.a_todolist()

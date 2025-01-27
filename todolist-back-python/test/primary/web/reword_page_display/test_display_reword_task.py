@@ -10,9 +10,9 @@ from test.fixture import TodolistFaker
 from test.primary.web.fixture import BASE_URL, header_with_good_authentication
 
 
-def test_display_reword_task(app: TestApp, test_dependencies: Dependencies, memory: Memory, fake: TodolistFaker) -> None:
+def test_display_reword_task(app: TestApp, dependencies: Dependencies, memory: Memory, fake: TodolistFaker) -> None:
     # GIVEN
-    bottle_config.dependencies = test_dependencies
+    bottle_config.dependencies = dependencies
 
     task = fake.a_task(1).having(name=TaskName("initial name"), is_open=TaskOpen(True))
     todolist = fake.a_todolist(name="todolist").having(tasks=[task])
