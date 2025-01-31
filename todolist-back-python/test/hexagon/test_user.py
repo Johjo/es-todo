@@ -1,8 +1,8 @@
-# créer une todolist pour un utilisateur
 # que se passe-t-il si la todolist existe déjà ?
-# que se passe-t-il si le user n'existe pas ?
-# est-ce qu'on peut créer une todolist pour deux users ?
+# est-ce qu'on peut créer une todolist par user quand il y en a deux ?
 # est-ce qu'on gère l'uuid ?
+
+
 from dataclasses import dataclass, replace
 from typing import Tuple
 from uuid import UUID, uuid4
@@ -44,9 +44,7 @@ class UserRepositoryForTest:
     def save(self, snapshot: UserSnapshot) -> None:
         self._snapshot = snapshot
 
-    def by_user(self) -> UserSnapshot:
-        if self._snapshot is None:
-            return UserSnapshot(key=UserKey("mail@mail.com"), todolist=())
+    def by_user(self) -> UserSnapshot | None:
         return self._snapshot
 
 
@@ -56,7 +54,10 @@ class CreateTodolist:
         self._user_repository = user_repository
 
     def execute(self, user_key: UserKey, todolist_name: TodolistName) -> None:
-        user_snapshot = self._user_repository.by_user()
+        user_snapshot: UserSnapshot | None = self._user_repository.by_user()
+        if user_snapshot is None:
+            user_snapshot = UserSnapshot(key=UserKey(user_key), todolist=())
+
         user_snapshot = replace(user_snapshot, todolist=(*user_snapshot.todolist, TodolistSnapshot(
             key=self._todolist_uuid_generator.generate_todolist_key(), name=todolist_name)))
 
@@ -70,12 +71,13 @@ class TestToto:
         # GIVEN
         todolist_uuid: UUID = uuid4()
         todolist_uuid_generator.feed(next_uuid=todolist_uuid)
+        user_key = self.any_user_key()
 
         # WHEN
-        sut.execute(user_key=UserKey("mail@mail.com"), todolist_name=TodolistName("my todolist"))
+        sut.execute(user_key=UserKey(user_key), todolist_name=TodolistName("my todolist"))
 
         # THEN
-        assert user_repository.by_user() == UserSnapshot(key=UserKey("mail@mail.com"),
+        assert user_repository.by_user() == UserSnapshot(key=UserKey(user_key),
                                                          todolist=(TodolistSnapshot(key=TodolistKey(todolist_uuid),
                                                                                     name=TodolistName("my todolist")),))
 
@@ -110,3 +112,8 @@ class TestToto:
     def sut(self, user_repository: UserRepositoryForTest,
             todolist_uuid_generator: TodolistUuidGeneratorForTest) -> CreateTodolist:
         return CreateTodolist(user_repository=user_repository, todolist_uuid_generator=todolist_uuid_generator)
+
+    @staticmethod
+    def any_user_key():
+        return f'mail{uuid4()}@mail.com'
+
