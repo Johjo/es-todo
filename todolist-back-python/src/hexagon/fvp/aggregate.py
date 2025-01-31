@@ -2,7 +2,8 @@ from abc import ABC, abstractmethod
 from collections import OrderedDict
 from dataclasses import dataclass
 
-from src.hexagon.shared.type import TaskKey
+from src.hexagon.shared.type import TaskKey, UserKey
+
 
 @dataclass(frozen=True)
 class Task:
@@ -87,9 +88,9 @@ class FinalVersionPerfectedSession:
 
 class FvpSessionSetPort(ABC):
     @abstractmethod
-    def save(self, snapshot: FvpSnapshot) -> None:
+    def save(self, user_key: UserKey, snapshot: FvpSnapshot) -> None:
         pass
 
     @abstractmethod
-    def by(self) -> FvpSnapshot:
+    def by(self, user_key: UserKey) -> FvpSnapshot:
         pass

@@ -3,7 +3,7 @@ from typing import OrderedDict
 import pytest
 
 from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskKey
+from src.hexagon.shared.type import TaskKey, UserKey
 from src.infra.fvp_memory import FvpMemory
 from src.primary.controller.write.todolist import TodolistWriteController
 from src.secondary.fvp.write.fvp_session_set_in_memory import FvpSessionSetInMemory
@@ -23,10 +23,11 @@ def sut(set_of_fvp_sessions):
 
 
 def test_should_choose_and_ignore_when_one_task_already_chosen(fvp_memory: FvpMemory, dependencies: Dependencies):
-    fvp_memory.feed(FvpSnapshot(OrderedDict[TaskKey, TaskKey]({a_task_key(2): a_task_key(1), a_task_key(1): a_task_key(3)})))
+    user_key = UserKey("the user")
+    fvp_memory.feed(user_key=user_key, snapshot=FvpSnapshot(OrderedDict[TaskKey, TaskKey]({a_task_key(2): a_task_key(1), a_task_key(1): a_task_key(3)})))
 
     sut = TodolistWriteController(dependencies)
-    sut.cancel_priority(a_task_key(3))
+    sut.cancel_priority(user_key=user_key, task_key=a_task_key(3))
 
-    assert fvp_memory.by() == FvpSnapshot(
+    assert fvp_memory.by(user_key=user_key) == FvpSnapshot(
         OrderedDict[TaskKey, TaskKey]({a_task_key(2): a_task_key(1)}))

@@ -49,6 +49,7 @@ def create_table(dependencies: Dependencies):
 
 
 def test_xxx(dependencies: Dependencies) -> None:
+    user_key = "the user"
     dependencies = dependencies.feed_data(USER_KEY, "user@mail.com")
     write = TodolistWriteController(dependencies)
     read = TodolistReadController(dependencies)
@@ -57,7 +58,7 @@ def test_xxx(dependencies: Dependencies) -> None:
     which_task_filter = WhichTaskFilter(todolist_name=todolist_name, reference_date=date(2020, 10, 17))
 
     def which_task() -> NothingToDo | DoTheTask | ChooseTheTask:
-        return fvp_read.which_task(todolist_name=todolist_name,
+        return fvp_read.which_task(user_key=user_key, todolist_name=todolist_name,
                                    include_context=which_task_filter.include_context,
                                    exclude_context=which_task_filter.exclude_context,
                                    task_filter=which_task_filter)
@@ -70,13 +71,14 @@ def test_xxx(dependencies: Dependencies) -> None:
     write.open_task(todolist_name=todolist_name, task_name=TaskName("task 2 #context_2"))
 
     assert read.counts_by_context(todolist_name=todolist_name) == [("#context_1", 1), ("#context_2", 1)]
+
     assert which_task() == ChooseTheTask(main_task_key=TaskKey(UUID(int=1)), secondary_task_key=TaskKey(UUID(int=2)))
 
-    write.choose_and_ignore_task(chosen_task=TaskKey(UUID(int=1)), ignored_task=TaskKey(UUID(int=2)))
+    write.choose_and_ignore_task(user_key=user_key,chosen_task=TaskKey(UUID(int=1)), ignored_task=TaskKey(UUID(int=2)))
 
     assert which_task() == DoTheTask(key=TaskKey(UUID(int=1)))
 
-    write.reset_all_priorities()
+    write.reset_all_priorities(user_key=user_key)
     assert which_task() == ChooseTheTask(main_task_key=TaskKey(UUID(int=1)), secondary_task_key=TaskKey(UUID(int=2)))
 
     write.postpone_task(name=todolist_name, key=TaskKey(UUID(int=1)), execution_date=TaskExecutionDate(today().date()))

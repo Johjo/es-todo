@@ -5,6 +5,7 @@ from typing_extensions import override
 
 from src.dependencies import Dependencies
 from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from src.hexagon.shared.type import UserKey
 from src.infra.sqlite.sdk import SqliteSdk
 from src.infra.sqlite.type import FvpSession as FvpSessionSdk
 from src.secondary.fvp.write.session_set_sqlite import SessionSqlite
@@ -24,13 +25,12 @@ class TestFvpSessionSetSqlite(BaseTestFvpSessionSet):
     def before_each(self, connection: sqlite3.Connection) -> None:
         self._connection = connection
 
-    def feed(self, session: FvpSnapshot) -> None:
+    def feed(self, user_key: str, snapshot: FvpSnapshot) -> None:
         sdk = SqliteSdk(self._connection)
-        sdk.upsert_fvp_session(
-            FvpSessionSdk(priorities=[(ignored, chosen) for ignored, chosen in session.task_priorities.items()]))
+        sdk.upsert_fvp_session(user_key=user_key,
+            fvp_session=FvpSessionSdk(priorities=[(ignored, chosen) for ignored, chosen in snapshot.task_priorities.items()]))
 
     @pytest.fixture
-    @pytest.mark.usefixtures
     def dependencies(self) -> Dependencies:
         dependencies = Dependencies.create_empty()
         dependencies = dependencies.feed_adapter(FvpSessionSetPort, SessionSqlite.factory)

@@ -10,6 +10,7 @@ from src.primary.adapter_in_memory_dependencies import inject_adapter_in_memory
 from src.primary.controller.use_case_dependencies import inject_use_cases
 from src.primary.controller.write.todolist import TodolistWriteController, DateTimeProviderPort
 from src.primary.infrastructure_in_memory_dependencies import inject_infrastructure_in_memory
+from src.shared.const import USER_KEY
 from test.fixture import TodolistBuilder
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest, DateTimeProviderForTest
 from test.primary.controller.conftest import memory
@@ -51,6 +52,8 @@ def dependencies(todolist_set: TodolistSetForTest, task_key_generator: TaskKeyGe
     dependencies = dependencies.feed_adapter(TodolistSetPort, lambda _: todolist_set)
     dependencies = dependencies.feed_adapter(TaskKeyGeneratorPort, lambda _: task_key_generator)
     dependencies = dependencies.feed_adapter(DateTimeProviderPort, lambda _: datetime_provider)
+    dependencies = dependencies.feed_data(data_name=USER_KEY, value="any user")
+
     return dependencies
 
 @pytest.fixture

@@ -1,18 +1,20 @@
 from collections import OrderedDict
 
 from src.hexagon.fvp.aggregate import FvpSnapshot
-from src.hexagon.shared.type import TaskKey
+from src.hexagon.shared.type import TaskKey, UserKey
 
 
 class FvpMemory:
     def __init__(self) -> None:
-        self._snapshot: FvpSnapshot = FvpSnapshot(OrderedDict[TaskKey, TaskKey]())
+        self._snapshots: dict[UserKey, FvpSnapshot] = {}
 
-    def save(self, snapshot: FvpSnapshot):
-        self._snapshot = snapshot
+    def save(self, user_key: UserKey, snapshot: FvpSnapshot):
+        self._snapshots[user_key] = snapshot
 
-    def feed(self, snapshot: FvpSnapshot):
-        self._snapshot = snapshot
+    def feed(self, user_key: UserKey, snapshot: FvpSnapshot):
+        self._snapshots[user_key] = snapshot
 
-    def by(self):
-        return self._snapshot
+    def by(self, user_key: UserKey) -> FvpSnapshot:
+        if user_key not in self._snapshots:
+            return FvpSnapshot(OrderedDict[TaskKey, TaskKey]())
+        return self._snapshots[user_key]

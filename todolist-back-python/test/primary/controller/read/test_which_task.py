@@ -7,6 +7,7 @@ from faker import Faker
 from src.dependencies import Dependencies
 from src.hexagon.fvp.aggregate import DoTheTask, FvpSnapshot, FvpSessionSetPort
 from src.hexagon.fvp.read.which_task import TodolistPort
+from src.hexagon.shared.type import UserKey
 from src.infra.fvp_memory import FvpMemory
 from src.primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController, CalendarPort
 from test.hexagon.fvp.read.test_which_task import TodolistForTest, FvpFaker
@@ -55,14 +56,16 @@ def test_which_task_when_two_and_one_chosen(dependencies: Dependencies, todolist
     calendar.feed_today(reference_date)
     task_filter = replace(fake.a_which_task_filter(), reference_date=reference_date)
 
-    fvp_memory.feed(FvpSnapshot.from_primitive_dict({ignored_task.key: chosen_task.key}))
-    todolist.feed(task_filter, chosen_task, ignored_task)
+    user_key = UserKey("the user")
+    fvp_memory.feed(user_key=user_key, snapshot=FvpSnapshot.from_primitive_dict({ignored_task.key: chosen_task.key}))
+    todolist.feed(user_key, task_filter, chosen_task, ignored_task)
 
     dependencies = dependencies.feed_adapter(TodolistPort, lambda _: todolist)
     dependencies = dependencies.feed_adapter(CalendarPort, lambda _: calendar)
 
     # WHEN
-    actual = FinalVersionPerfectedReadController(dependencies).which_task(todolist_name=task_filter.todolist_name,
+    actual = FinalVersionPerfectedReadController(dependencies).which_task(user_key=user_key,
+                                                                          todolist_name=task_filter.todolist_name,
                                                                           include_context=task_filter.include_context,
                                                                           exclude_context=task_filter.exclude_context,
                                                                           task_filter=task_filter)

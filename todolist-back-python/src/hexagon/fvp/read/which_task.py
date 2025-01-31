@@ -7,7 +7,7 @@ from expression import Option, Nothing
 from src.dependencies import Dependencies
 from src.hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
     FvpSessionSetPort
-from src.hexagon.shared.type import TodolistName
+from src.hexagon.shared.type import TodolistName, UserKey
 from src.shared.filter import TextFilter
 
 
@@ -28,7 +28,7 @@ class WhichTaskFilter:
 
 class TodolistPort(ABC):
     @abstractmethod
-    def all_open_tasks(self, task_filter: WhichTaskFilter) -> list[Task]:
+    def all_open_tasks(self, user_key: UserKey, task_filter: WhichTaskFilter) -> list[Task]:
         pass
 
 
@@ -37,13 +37,13 @@ class WhichTaskQuery:
         self._fvp_sessions_set = fvp_sessions_set
         self._todolist = todolist
 
-    def which_task(self, task_filter: WhichTaskFilter) -> NothingToDo | DoTheTask | ChooseTheTask:
-        session : FinalVersionPerfectedSession= self._get_or_create_session()
-        open_tasks = self._todolist.all_open_tasks(task_filter)
+    def which_task(self, user_key: UserKey, task_filter: WhichTaskFilter) -> NothingToDo | DoTheTask | ChooseTheTask:
+        session : FinalVersionPerfectedSession= self._get_or_create_session(user_key=user_key)
+        open_tasks = self._todolist.all_open_tasks(user_key=user_key, task_filter=task_filter)
         return session.which_task(open_tasks)
 
-    def _get_or_create_session(self) -> FinalVersionPerfectedSession:
-        snapshot = self._fvp_sessions_set.by()
+    def _get_or_create_session(self, user_key: UserKey) -> FinalVersionPerfectedSession:
+        snapshot = self._fvp_sessions_set.by(user_key=user_key)
         return FinalVersionPerfectedSession.from_snapshot(snapshot)
 
     @classmethod

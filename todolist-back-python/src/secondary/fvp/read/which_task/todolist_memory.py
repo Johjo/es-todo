@@ -1,6 +1,7 @@
 from src.dependencies import Dependencies
 from src.hexagon.fvp.aggregate import Task
 from src.hexagon.fvp.read.which_task import TodolistPort, WhichTaskFilter
+from src.hexagon.shared.type import UserKey
 from src.infra.memory import Memory
 from src.shared.const import USER_KEY
 
@@ -10,7 +11,7 @@ class TodolistInMemory(TodolistPort):
         self.memory = memory
         self._user_key = user_key
 
-    def all_open_tasks(self, task_filter: WhichTaskFilter) -> list[Task]:
+    def all_open_tasks(self, user_key: UserKey, task_filter: WhichTaskFilter) -> list[Task]:
         tasks = [task for task in self.memory.all_tasks(user_key=self._user_key, todolist_name=task_filter.todolist_name) if task.is_open]
         return [Task(key=task.key) for task in tasks if
                 task_filter.include(task.name, task.execution_date)]

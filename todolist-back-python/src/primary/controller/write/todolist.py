@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 from src.dependencies import Dependencies
 from src.hexagon.fvp.write.reset_fvp_session import ResetFvpSession
-from src.hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName
+from src.hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName, UserKey
 from src.hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
 from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from src.hexagon.todolist.write.close_task import CloseTask
@@ -48,17 +48,17 @@ class TodolistWriteController:
         external_todolist = MarkdownTodolist(markdown)
         use_case.execute(todolist_name, external_todolist)
 
-    def choose_and_ignore_task(self, chosen_task: TaskKey, ignored_task: TaskKey):
+    def choose_and_ignore_task(self, user_key: str, chosen_task: TaskKey, ignored_task: TaskKey):
         use_case: ChooseAndIgnoreTaskFvp = self.dependencies.get_use_case(ChooseAndIgnoreTaskFvp)
-        use_case.execute(chosen_task_id=chosen_task, ignored_task_id=ignored_task)
+        use_case.execute(user_key=UserKey(user_key),chosen_task_id=chosen_task, ignored_task_id=ignored_task)
 
-    def cancel_priority(self, task_key: TaskKey):
+    def cancel_priority(self, user_key: UserKey, task_key: TaskKey):
         use_case: Fvp_CancelPriority = self.dependencies.get_use_case(Fvp_CancelPriority)
-        use_case.execute(task_key)
+        use_case.execute(user_key=user_key, task_key=task_key)
 
-    def reset_all_priorities(self) -> None:
+    def reset_all_priorities(self, user_key: str) -> None:
         use_case: ResetFvpSession = self.dependencies.get_use_case(ResetFvpSession)
-        use_case.execute()
+        use_case.execute(user_key=UserKey(user_key))
 
     def postpone_task(self, name: TodolistName, key: TaskKey, execution_date: TaskExecutionDate):
         use_case: PostPoneTask = self.dependencies.get_use_case(PostPoneTask)

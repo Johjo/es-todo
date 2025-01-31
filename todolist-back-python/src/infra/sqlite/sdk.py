@@ -5,6 +5,7 @@ from uuid import UUID
 from sqlite3 import Connection
 from expression import Nothing, Some
 
+from src.hexagon.shared.type import UserKey
 from src.infra.sqlite.type import Task, Todolist, FvpSession, TodolistDoesNotExist
 
 
@@ -88,17 +89,17 @@ class SqliteSdk:
 
         cursor.execute("CREATE TABLE Task(id INTEGER PRIMARY KEY AUTOINCREMENT, todolist_id, key, name, is_open, execution_date)")
 
-        cursor.execute("CREATE TABLE Session(id INTEGER PRIMARY KEY AUTOINCREMENT, ignored_task_key, chosen_task_key)")
+        cursor.execute("CREATE TABLE Session(id INTEGER PRIMARY KEY AUTOINCREMENT, user_key, ignored_task_key, chosen_task_key)")
 
 
-    def upsert_fvp_session(self, fvp_session: FvpSession) -> None:
+    def upsert_fvp_session(self, user_key: str, fvp_session: FvpSession) -> None:
         cursor = self._connection.cursor()
-        cursor.execute("DELETE FROM Session")
+        cursor.execute("DELETE FROM Session where user_key=?", (user_key,))
         for ignored, chosen in fvp_session.priorities:
-            cursor.execute("INSERT INTO Session(ignored_task_key, chosen_task_key) VALUES (?, ?)", (str(ignored), str(chosen)))
+            cursor.execute("INSERT INTO Session(user_key, ignored_task_key, chosen_task_key) VALUES (?, ?, ?)", (user_key,str(ignored), str(chosen)))
 
-    def fvp_session_by(self) -> FvpSession:
+    def fvp_session_by(self, user_key: UserKey) -> FvpSession:
         cursor = self._connection.cursor()
-        cursor.execute("SELECT ignored_task_key, chosen_task_key FROM Session")
+        cursor.execute("SELECT ignored_task_key, chosen_task_key FROM Session where user_key = ?", (user_key,))
         rows = cursor.fetchall()
         return FvpSession(priorities=[(UUID(session[0]), UUID(session[1])) for session in rows])
