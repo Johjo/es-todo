@@ -1,27 +1,13 @@
-# que se passe-t-il si la todolist existe déjà ?
-
-from dataclasses import dataclass, replace
-from typing import Tuple
 from uuid import UUID, uuid4
 
 import pytest
 
 from src.hexagon.shared.type import UserKey, TodolistKey, TodolistName
+from src.hexagon.user.create_todolist import CreateTodolist
+from src.hexagon.user.port import TodolistUuidGeneratorPort, UserRepositoryPort, UserSnapshot, TodolistSnapshot
 
 
-@dataclass(frozen=True)
-class TodolistSnapshot:
-    key: TodolistKey
-    name: TodolistName
-
-
-@dataclass(frozen=True)
-class UserSnapshot:
-    key: UserKey
-    todolist: Tuple[TodolistSnapshot, ...]
-
-
-class TodolistUuidGeneratorForTest:
+class TodolistUuidGeneratorForTest(TodolistUuidGeneratorPort):
     def __init__(self) -> None:
         self._next_uuid: UUID | None = None
 
@@ -34,7 +20,7 @@ class TodolistUuidGeneratorForTest:
         return TodolistKey(self._next_uuid)
 
 
-class UserRepositoryForTest:
+class UserRepositoryForTest(UserRepositoryPort):
     def __init__(self) -> None:
         self._snapshot: dict[UserKey, UserSnapshot] = {}
 
@@ -45,33 +31,10 @@ class UserRepositoryForTest:
         return self._snapshot.get(key, None)
 
 
-class CreateTodolist:
-    def __init__(self, user_repository: UserRepositoryForTest, todolist_uuid_generator: TodolistUuidGeneratorForTest):
-        self._todolist_uuid_generator = todolist_uuid_generator
-        self._user_repository = user_repository
-
-    def execute(self, user_key: UserKey, todolist_name: TodolistName) -> None:
-        user = self._get_user_or_create_it(user_key)
-
-        user = replace(user, todolist=(*user.todolist, TodolistSnapshot(
-            key=self._todolist_uuid_generator.generate_todolist_key(), name=todolist_name)))
-
-        self._save(user)
-
-    def _save(self, user: UserSnapshot):
-        self._user_repository.save(user)
-
-    def _get_user_or_create_it(self, user_key: UserKey) -> UserSnapshot:
-        user: UserSnapshot | None = self._user_repository.by_user(user_key)
-        if user is None:
-            return UserSnapshot(key=UserKey(user_key), todolist=())
-        return user
-
-
 class TestCreateTodolist:
     def test_single_user_can_create_his_first_todolist(self, user_repository: UserRepositoryForTest,
-                             todolist_uuid_generator: TodolistUuidGeneratorForTest,
-                             sut: CreateTodolist):
+                                                       todolist_uuid_generator: TodolistUuidGeneratorForTest,
+                                                       sut: CreateTodolist):
         # GIVEN
         todolist_uuid: UUID = uuid4()
         todolist_uuid_generator.feed(next_uuid=todolist_uuid)
@@ -82,12 +45,13 @@ class TestCreateTodolist:
 
         # THEN
         assert user_repository.by_user(key=UserKey(user_key)) == UserSnapshot(key=UserKey(user_key),
-                                                         todolist=(TodolistSnapshot(key=TodolistKey(todolist_uuid),
-                                                                                    name=TodolistName("my todolist")),))
+                                                                              todolist=(
+                                                                              TodolistSnapshot(key=TodolistKey(todolist_uuid),
+                                                                                               name=TodolistName("my todolist")),))
 
     def test_single_user_can_create_many_todolist(self, user_repository: UserRepositoryForTest,
-                                    todolist_uuid_generator: TodolistUuidGeneratorForTest,
-                                    sut: CreateTodolist):
+                                                  todolist_uuid_generator: TodolistUuidGeneratorForTest,
+                                                  sut: CreateTodolist):
         # GIVEN
         todolist_uuid = uuid4()
         todolist_uuid_generator.feed(next_uuid=todolist_uuid)
@@ -99,14 +63,14 @@ class TestCreateTodolist:
 
         # THEN
         assert user_repository.by_user(key=UserKey("mail@mail.com")) == UserSnapshot(key=UserKey("mail@mail.com"),
-                                                         todolist=(first_todolist,
-                                                                   TodolistSnapshot(key=TodolistKey(todolist_uuid),
-                                                                                    name=TodolistName(
+                                                                                     todolist=(first_todolist,
+                                                                                               TodolistSnapshot(key=TodolistKey(todolist_uuid),
+                                                                                                                name=TodolistName(
                                                                                         "my second todolist"))))
 
     def test_many_users_can_create_todolist(self, user_repository: UserRepositoryForTest,
-                             todolist_uuid_generator: TodolistUuidGeneratorForTest,
-                             sut: CreateTodolist):
+                                            todolist_uuid_generator: TodolistUuidGeneratorForTest,
+                                            sut: CreateTodolist):
         # GIVEN
         todolist_uuid: UUID = uuid4()
         todolist_uuid_generator.feed(next_uuid=todolist_uuid)
@@ -119,11 +83,13 @@ class TestCreateTodolist:
 
         # THEN
         assert user_repository.by_user(key=UserKey(user_key_1)) == UserSnapshot(key=UserKey(user_key_1),
-                                                         todolist=(TodolistSnapshot(key=TodolistKey(todolist_uuid),
-                                                                                    name=TodolistName("my todolist for user 1")),))
+                                                                                todolist=(
+                                                                                TodolistSnapshot(key=TodolistKey(todolist_uuid),
+                                                                                                 name=TodolistName("my todolist for user 1")),))
         assert user_repository.by_user(key=UserKey(user_key_2)) == UserSnapshot(key=UserKey(user_key_2),
-                                                         todolist=(TodolistSnapshot(key=TodolistKey(todolist_uuid),
-                                                                                    name=TodolistName("my todolist for user 2")),))
+                                                                                todolist=(
+                                                                                TodolistSnapshot(key=TodolistKey(todolist_uuid),
+                                                                                                 name=TodolistName("my todolist for user 2")),))
 
     @pytest.fixture
     def user_repository(self) -> UserRepositoryForTest:
