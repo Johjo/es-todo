@@ -1,3 +1,4 @@
+from src.dependencies import Dependencies
 from src.hexagon.shared.type import UserKey
 from src.hexagon.user.port import UserRepositoryPort, UserSnapshot
 
@@ -13,3 +14,7 @@ class UserRepositoryInMemory(UserRepositoryPort):
         if key not in self.user:
             return None
         return self.user[key]
+
+    @classmethod
+    def factory(cls, _: Dependencies) -> 'UserRepositoryInMemory':
+        return UserRepositoryInMemory()

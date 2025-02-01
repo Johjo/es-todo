@@ -1,5 +1,6 @@
 from dataclasses import replace
 
+from src.dependencies import Dependencies
 from src.hexagon.shared.type import UserKey, TodolistName
 from src.hexagon.user.port import UserRepositoryPort, TodolistUuidGeneratorPort, TodolistSnapshot, UserSnapshot
 
@@ -25,3 +26,8 @@ class CreateTodolist:
         if user is None:
             return UserSnapshot(key=UserKey(user_key), todolist=())
         return user
+
+    @classmethod
+    def factory(cls, dependencies: Dependencies) -> 'CreateTodolist':
+        return CreateTodolist(user_repository=dependencies.get_adapter(UserRepositoryPort),
+                              todolist_uuid_generator=dependencies.get_adapter(TodolistUuidGeneratorPort))

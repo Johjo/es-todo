@@ -2,9 +2,11 @@ from uuid import UUID, uuid4
 
 import pytest
 
+from src.dependencies import Dependencies
 from src.hexagon.shared.type import UserKey, TodolistKey, TodolistName
 from src.hexagon.user.create_todolist import CreateTodolist
 from src.hexagon.user.port import TodolistUuidGeneratorPort, UserRepositoryPort, UserSnapshot, TodolistSnapshot
+from src.secondary.user.user_repository_in_memory import UserRepositoryInMemory
 
 
 class TodolistUuidGeneratorForTest(TodolistUuidGeneratorPort):
@@ -19,20 +21,8 @@ class TodolistUuidGeneratorForTest(TodolistUuidGeneratorPort):
             raise Exception("feed next_uuid before generating todolist key")
         return TodolistKey(self._next_uuid)
 
-
-class UserRepositoryForTest(UserRepositoryPort):
-    def __init__(self) -> None:
-        self._snapshot: dict[UserKey, UserSnapshot] = {}
-
-    def save(self, user: UserSnapshot) -> None:
-        self._snapshot[user.key] = user
-
-    def by_user(self, key: UserKey) -> UserSnapshot | None:
-        return self._snapshot.get(key, None)
-
-
 class TestCreateTodolist:
-    def test_single_user_can_create_his_first_todolist(self, user_repository: UserRepositoryForTest,
+    def test_single_user_can_create_his_first_todolist(self, user_repository: UserRepositoryInMemory,
                                                        todolist_uuid_generator: TodolistUuidGeneratorForTest,
                                                        sut: CreateTodolist):
         # GIVEN
@@ -49,7 +39,7 @@ class TestCreateTodolist:
                                                                               TodolistSnapshot(key=TodolistKey(todolist_uuid),
                                                                                                name=TodolistName("my todolist")),))
 
-    def test_single_user_can_create_many_todolist(self, user_repository: UserRepositoryForTest,
+    def test_single_user_can_create_many_todolist(self, user_repository: UserRepositoryInMemory,
                                                   todolist_uuid_generator: TodolistUuidGeneratorForTest,
                                                   sut: CreateTodolist):
         # GIVEN
@@ -68,7 +58,7 @@ class TestCreateTodolist:
                                                                                                                 name=TodolistName(
                                                                                         "my second todolist"))))
 
-    def test_many_users_can_create_todolist(self, user_repository: UserRepositoryForTest,
+    def test_many_users_can_create_todolist(self, user_repository: UserRepositoryInMemory,
                                             todolist_uuid_generator: TodolistUuidGeneratorForTest,
                                             sut: CreateTodolist):
         # GIVEN
@@ -92,17 +82,23 @@ class TestCreateTodolist:
                                                                                                  name=TodolistName("my todolist for user 2")),))
 
     @pytest.fixture
-    def user_repository(self) -> UserRepositoryForTest:
-        return UserRepositoryForTest()
+    def dependencies(self, user_repository: UserRepositoryInMemory, todolist_uuid_generator: TodolistUuidGeneratorForTest) -> Dependencies:
+        dependencies = Dependencies.create_empty()
+        dependencies = dependencies.feed_adapter(UserRepositoryPort, lambda _: user_repository)
+        dependencies = dependencies.feed_adapter(TodolistUuidGeneratorPort, lambda _: todolist_uuid_generator)
+        return dependencies
+
+    @pytest.fixture
+    def user_repository(self) -> UserRepositoryInMemory:
+        return UserRepositoryInMemory()
 
     @pytest.fixture
     def todolist_uuid_generator(self) -> TodolistUuidGeneratorForTest:
         return TodolistUuidGeneratorForTest()
 
     @pytest.fixture
-    def sut(self, user_repository: UserRepositoryForTest,
-            todolist_uuid_generator: TodolistUuidGeneratorForTest) -> CreateTodolist:
-        return CreateTodolist(user_repository=user_repository, todolist_uuid_generator=todolist_uuid_generator)
+    def sut(self, dependencies: Dependencies) -> CreateTodolist:
+        return CreateTodolist.factory(dependencies)
 
     @staticmethod
     def any_user_key():
