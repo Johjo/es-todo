@@ -12,6 +12,7 @@ from src.hexagon.todolist.write.import_many_task import ImportManyTask
 from src.hexagon.todolist.write.open_task import OpenTaskUseCase
 from src.hexagon.todolist.write.postpone_task import PostPoneTask
 from src.hexagon.todolist.write.reword_task import RewordTask
+from src.hexagon.user.create_todolist import CreateTodolist
 
 
 def inject_use_cases(dependencies: Dependencies) -> Dependencies:

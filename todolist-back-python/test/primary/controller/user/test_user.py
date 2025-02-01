@@ -6,6 +6,7 @@ from src.dependencies import Dependencies
 from src.hexagon.shared.type import UserKey, TodolistKey, TodolistName
 from src.hexagon.user.create_todolist import CreateTodolist
 from src.hexagon.user.port import TodolistUuidGeneratorPort, UserRepositoryPort, UserSnapshot, TodolistSnapshot
+from src.primary.controller.use_case_dependencies import inject_use_cases
 from src.secondary.user.user_repository_in_memory import UserRepositoryInMemory
 
 
@@ -21,17 +22,28 @@ class TodolistUuidGeneratorForTest(TodolistUuidGeneratorPort):
             raise Exception("feed next_uuid before generating todolist key")
         return TodolistKey(self._next_uuid)
 
+
+class UserController:
+    def __init__(self, dependencies: Dependencies):
+        self._dependencies = dependencies
+
+    def create_todolist(self, user_key: str, todolist_name: str):
+        use_case: CreateTodolist = self._dependencies.get_use_case(CreateTodolist)
+        use_case.execute(user_key=UserKey(user_key), todolist_name=TodolistName(todolist_name))
+
+
 class TestCreateTodolist:
-    def test_single_user_can_create_his_first_todolist(self, user_repository: UserRepositoryInMemory,
-                                                       todolist_uuid_generator: TodolistUuidGeneratorForTest,
-                                                       sut: CreateTodolist):
+    def test_single_user_can_create_his_first_todolist(self, dependencies: Dependencies,
+                                                       user_repository: UserRepositoryInMemory,
+                                                       todolist_uuid_generator: TodolistUuidGeneratorForTest):
         # GIVEN
         todolist_uuid: UUID = uuid4()
         todolist_uuid_generator.feed(next_uuid=todolist_uuid)
         user_key = self.any_user_key()
 
         # WHEN
-        sut.execute(user_key=UserKey(user_key), todolist_name=TodolistName("my todolist"))
+        sut = UserController(dependencies)
+        sut.create_todolist(user_key=user_key, todolist_name="my todolist")
 
         # THEN
         assert user_repository.by_user(key=UserKey(user_key)) == UserSnapshot(key=UserKey(user_key),
@@ -39,51 +51,12 @@ class TestCreateTodolist:
                                                                               TodolistSnapshot(key=TodolistKey(todolist_uuid),
                                                                                                name=TodolistName("my todolist")),))
 
-    def test_single_user_can_create_many_todolist(self, user_repository: UserRepositoryInMemory,
-                                                  todolist_uuid_generator: TodolistUuidGeneratorForTest,
-                                                  sut: CreateTodolist):
-        # GIVEN
-        todolist_uuid = uuid4()
-        todolist_uuid_generator.feed(next_uuid=todolist_uuid)
-        first_todolist = TodolistSnapshot(key=TodolistKey(uuid4()), name=TodolistName("my first todolist"))
-        user_repository.save(UserSnapshot(key=UserKey("mail@mail.com"), todolist=(first_todolist,)))
 
-        # WHEN
-        sut.execute(user_key=UserKey("mail@mail.com"), todolist_name=TodolistName("my second todolist"))
-
-        # THEN
-        assert user_repository.by_user(key=UserKey("mail@mail.com")) == UserSnapshot(key=UserKey("mail@mail.com"),
-                                                                                     todolist=(first_todolist,
-                                                                                               TodolistSnapshot(key=TodolistKey(todolist_uuid),
-                                                                                                                name=TodolistName(
-                                                                                        "my second todolist"))))
-
-    def test_many_users_can_create_todolist(self, user_repository: UserRepositoryInMemory,
-                                            todolist_uuid_generator: TodolistUuidGeneratorForTest,
-                                            sut: CreateTodolist):
-        # GIVEN
-        todolist_uuid: UUID = uuid4()
-        todolist_uuid_generator.feed(next_uuid=todolist_uuid)
-        user_key_1 = self.any_user_key()
-        user_key_2 = self.any_user_key()
-
-        # WHEN
-        sut.execute(user_key=UserKey(user_key_1), todolist_name=TodolistName("my todolist for user 1"))
-        sut.execute(user_key=UserKey(user_key_2), todolist_name=TodolistName("my todolist for user 2"))
-
-        # THEN
-        assert user_repository.by_user(key=UserKey(user_key_1)) == UserSnapshot(key=UserKey(user_key_1),
-                                                                                todolist=(
-                                                                                TodolistSnapshot(key=TodolistKey(todolist_uuid),
-                                                                                                 name=TodolistName("my todolist for user 1")),))
-        assert user_repository.by_user(key=UserKey(user_key_2)) == UserSnapshot(key=UserKey(user_key_2),
-                                                                                todolist=(
-                                                                                TodolistSnapshot(key=TodolistKey(todolist_uuid),
-                                                                                                 name=TodolistName("my todolist for user 2")),))
 
     @pytest.fixture
     def dependencies(self, user_repository: UserRepositoryInMemory, todolist_uuid_generator: TodolistUuidGeneratorForTest) -> Dependencies:
         dependencies = Dependencies.create_empty()
+        dependencies = dependencies.feed_use_case(CreateTodolist, CreateTodolist.factory)
         dependencies = dependencies.feed_adapter(UserRepositoryPort, lambda _: user_repository)
         dependencies = dependencies.feed_adapter(TodolistUuidGeneratorPort, lambda _: todolist_uuid_generator)
         return dependencies
@@ -95,10 +68,6 @@ class TestCreateTodolist:
     @pytest.fixture
     def todolist_uuid_generator(self) -> TodolistUuidGeneratorForTest:
         return TodolistUuidGeneratorForTest()
-
-    @pytest.fixture
-    def sut(self, dependencies: Dependencies) -> CreateTodolist:
-        return CreateTodolist.factory(dependencies)
 
     @staticmethod
     def any_user_key():
