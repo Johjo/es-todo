@@ -17,12 +17,6 @@ class UserSnapshot:
     todolist: Tuple[TodolistSnapshot, ...]
 
 
-class TodolistUuidGeneratorPort(ABC):
-    @abstractmethod
-    def generate_todolist_key(self) -> TodolistKey:
-        pass
-
-
 class UserRepositoryPort(ABC):
     @abstractmethod
     def save(self, user: UserSnapshot) -> None:

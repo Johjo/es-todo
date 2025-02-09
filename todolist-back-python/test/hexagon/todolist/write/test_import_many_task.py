@@ -46,9 +46,9 @@ def test_import_many_task(sut: ImportManyTask, todolist_set: TodolistSetForTest,
     todolist = fake.a_todolist()
     todolist_set.feed(todolist)
 
-    sut.execute(todolist.name, external_todolist)
+    sut.execute(todolist_key=todolist.to_key(), external_todolist=external_todolist)
 
-    actual = todolist_set.by(todolist.name).value
+    actual = todolist_set.by(todolist_key=todolist.to_key()).value
     assert actual == todolist.having(tasks=expected_tasks).to_snapshot()
 
 
@@ -62,9 +62,9 @@ def test_import_many_task_when_existing_task(sut: ImportManyTask, todolist_set: 
     todolist = fake.a_todolist().having(tasks=[first_task])
     todolist_set.feed(todolist)
 
-    sut.execute(todolist.name, external_todolist)
+    sut.execute(todolist_key=todolist.to_key(), external_todolist=external_todolist)
 
-    actual = todolist_set.by(todolist.name).value
+    actual = todolist_set.by(todolist_key=todolist.to_key()).value
     assert actual == todolist.having(tasks=[first_task, expected_task]).to_snapshot()
 
 
@@ -79,7 +79,7 @@ def test_tell_ok_when_import_task(sut: ImportManyTask, todolist_set: TodolistSet
     todolist_set.feed(todolist)
 
     # WHEN
-    response = sut.execute(todolist.name, external_todolist)
+    response = sut.execute(todolist_key=todolist.to_key(), external_todolist=external_todolist)
 
     # THEN
     assert response == Ok(None)

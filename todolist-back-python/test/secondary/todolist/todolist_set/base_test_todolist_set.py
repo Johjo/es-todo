@@ -17,7 +17,7 @@ class BaseTestTodolistSet:
         self.feed_todolist(user_key=current_user, todolist=expected_todolist)
 
         # when
-        actual = sut.by(expected_todolist.to_name())
+        actual = sut.by(todolist_key=expected_todolist.to_key())
 
         # then
         assert actual.value == expected_todolist.to_snapshot()
@@ -31,8 +31,8 @@ class BaseTestTodolistSet:
         self.feed_todolist(user_key=fake.a_user_key(), todolist=fake.a_todolist(todolist_one.name).having(tasks=fake.many_task(2)))
 
         # when / then
-        assert sut.by(todolist_one.name).value == todolist_one.to_snapshot()
-        assert sut.by(todolist_two.name).value == todolist_two.to_snapshot()
+        assert sut.by(todolist_key=todolist_one.to_key()).value == todolist_one.to_snapshot()
+        assert sut.by(todolist_key=todolist_two.to_key()).value == todolist_two.to_snapshot()
 
     def test_get_by_when_todolist_has_tasks(self, sut: TodolistSetPort, fake: TodolistFaker, current_user: str):
         # given
@@ -44,7 +44,7 @@ class BaseTestTodolistSet:
         self.feed_todolist(user_key=fake.a_user_key(), todolist=other_user_todolist)
 
         #when
-        actual = sut.by(todolist_name=expected_todolist.name)
+        actual = sut.by(todolist_key=expected_todolist.to_key())
 
         # then
         assert actual.value.tasks[1] == expected_todolist.to_snapshot().tasks[1]
@@ -56,7 +56,7 @@ class BaseTestTodolistSet:
         unknown_todolist = fake.a_todolist()
 
         # when
-        actual = sut.by(unknown_todolist.to_name())
+        actual = sut.by(todolist_key=unknown_todolist.to_key())
 
         # then
         assert actual == Nothing
@@ -70,7 +70,7 @@ class BaseTestTodolistSet:
         sut.save_snapshot(expected_todolist.to_snapshot())
 
         # then
-        assert sut.by(expected_todolist.name).value == expected_todolist.to_snapshot()
+        assert sut.by(todolist_key=expected_todolist.to_key()).value == expected_todolist.to_snapshot()
 
     @staticmethod
     def test_update_todolist(sut: TodolistSetSqlite, fake: TodolistFaker):
@@ -83,7 +83,7 @@ class BaseTestTodolistSet:
         sut.save_snapshot(todolist=expected_todolist.to_snapshot())
 
         # then
-        assert sut.by(todolist_name=expected_todolist.name).value == expected_todolist.to_snapshot()
+        assert sut.by(todolist_key=expected_todolist.to_key()).value == expected_todolist.to_snapshot()
 
     @pytest.fixture
     def sut(self, dependencies: Dependencies) -> TodolistSetPort:

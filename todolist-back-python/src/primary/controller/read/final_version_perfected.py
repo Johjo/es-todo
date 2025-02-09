@@ -14,7 +14,7 @@ class FinalVersionPerfectedReadController:
     def which_task(self, user_key: str, todolist_name: str, include_context: tuple[str, ...], exclude_context: tuple[str, ...], task_filter: WhichTaskFilter) -> NothingToDo | DoTheTask | ChooseTheTask:
         query : WhichTaskQuery = self._dependencies.get_query(WhichTaskQuery)
         calendar: CalendarPort = self._dependencies.get_adapter(CalendarPort)
-        task_filter = WhichTaskFilter(todolist_name=TodolistName(todolist_name), include_context=include_context, exclude_context=exclude_context, reference_date=calendar.today())
+        task_filter = WhichTaskFilter(todolist_key=TodolistName(todolist_name), include_context=include_context, exclude_context=exclude_context, reference_date=calendar.today())
         actual = query.which_task(user_key=UserKey(user_key), task_filter=task_filter)
         return actual
 

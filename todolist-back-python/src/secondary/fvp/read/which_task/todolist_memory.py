@@ -12,7 +12,7 @@ class TodolistInMemory(TodolistPort):
         self._user_key = user_key
 
     def all_open_tasks(self, user_key: UserKey, task_filter: WhichTaskFilter) -> list[Task]:
-        tasks = [task for task in self.memory.all_tasks(user_key=self._user_key, todolist_name=task_filter.todolist_name) if task.is_open]
+        tasks = [task for task in self.memory.all_tasks(user_key=self._user_key, todolist_key=task_filter.todolist_key) if task.is_open]
         return [Task(key=task.key) for task in tasks if
                 task_filter.include(task.name, task.execution_date)]
 

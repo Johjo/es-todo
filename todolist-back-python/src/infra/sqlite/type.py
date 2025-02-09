@@ -26,12 +26,14 @@ class Task:
 
 @dataclass(frozen=True, eq=True)
 class Todolist:
+    key: UUID
     name: str
 
     @classmethod
     def from_row(cls, row: Any) -> 'Todolist':
-        name: str = row[0]
-        return Todolist(name=TodolistName(name))
+        key: UUID = UUID(hex=row[0])
+        name: str = row[1]
+        return Todolist(key=key, name=name)
 
 
 @dataclass(frozen=True, eq=True)

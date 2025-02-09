@@ -48,9 +48,9 @@ class FvpFaker:
         return Task(key=a_task_key(key))
 
     def a_which_task_filter(self) -> WhichTaskFilter:
-        return WhichTaskFilter(todolist_name=TodolistName(self._fake.word()), reference_date=self._fake.date_object(),
-                          include_context=(self._fake.word(),),
-                          exclude_context=(self._fake.word(),))
+        return WhichTaskFilter(todolist_key=TodolistName(self._fake.word()), reference_date=self._fake.date_object(),
+                               include_context=(self._fake.word(),),
+                               exclude_context=(self._fake.word(),))
 
     def a_user_key(self) -> UserKey:
         return UserKey(self._fake.email())

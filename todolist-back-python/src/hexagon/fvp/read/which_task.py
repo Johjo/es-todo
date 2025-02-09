@@ -1,19 +1,20 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import date
+from uuid import UUID
 
 from expression import Option, Nothing
 
 from src.dependencies import Dependencies
 from src.hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
     FvpSessionSetPort
-from src.hexagon.shared.type import TodolistName, UserKey
+from src.hexagon.shared.type import UserKey, TodolistKey
 from src.shared.filter import TextFilter
 
 
 @dataclass(frozen=True, eq=True)
 class WhichTaskFilter:
-    todolist_name: TodolistName
+    todolist_key: UUID
     reference_date: date
     include_context: tuple[str, ...] = ()
     exclude_context: tuple[str, ...] = ()

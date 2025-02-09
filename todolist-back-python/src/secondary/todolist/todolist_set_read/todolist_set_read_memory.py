@@ -1,9 +1,10 @@
 import re
+from uuid import UUID
 
 from expression import Nothing
 
 from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
+from src.hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount, TodolistKey
 from src.infra.memory import Memory
 from src.primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
 from src.shared.const import USER_KEY
@@ -14,8 +15,8 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
         self._user_key = user_key
         self.memory = memory
 
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
-        task = self.memory.task_by(user_key=self._user_key, todolist_name=todolist_name, task_key=task_key)
+    def task_by(self, todolist_key: UUID, task_key: TaskKey) -> TaskPresentation:
+        task = self.memory.task_by(user_key=self._user_key, todolist_key=todolist_key, task_key=task_key)
         return self._to_task_presentation(task)
 
     @staticmethod
@@ -26,8 +27,8 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
     def all_by_name(self) -> list[TodolistName]:
         return sorted([TodolistName(name) for name in self.memory.all_todolist_by_name(user_key=self._user_key)])
 
-    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
-        tasks = self.memory.all_tasks(user_key=self._user_key, todolist_name=todolist_name)
+    def counts_by_context(self, todolist_key: TodolistKey) -> list[tuple[TodolistContext, TodolistContextCount]]:
+        tasks = self.memory.all_tasks(user_key=self._user_key, todolist_key=todolist_key)
         counts_by_context: dict[str, int] = {}
         for task in tasks:
             if task.is_open:
@@ -42,10 +43,10 @@ class TodolistSetReadInMemory(TodolistSetReadPort):
         return [TodolistContext(context.lower()) for context in contexts]
 
     def all_tasks(self, task_filter: TaskFilter) -> list[TaskPresentation]:
-        return [self._to_task_presentation(task) for task in self.memory.all_tasks(user_key=self._user_key, todolist_name=task_filter.todolist_name) if task_filter.include(task_name=task.name)]
+        return [self._to_task_presentation(task) for task in self.memory.all_tasks(user_key=self._user_key, todolist_key=task_filter.todolist_key) if task_filter.include(task_name=task.name)]
 
-    def all_tasks_postponed_task(self, todolist_name: str):
-        tasks = [self._to_task_presentation(task) for task in self.memory.all_tasks(user_key=self._user_key, todolist_name=todolist_name) if
+    def all_tasks_postponed_task(self, todolist_key: UUID):
+        tasks = [self._to_task_presentation(task) for task in self.memory.all_tasks(user_key=self._user_key, todolist_key=todolist_key) if
                     task.is_open and task.execution_date != Nothing]
         return sorted(tasks, key=lambda task: task.execution_date)
 

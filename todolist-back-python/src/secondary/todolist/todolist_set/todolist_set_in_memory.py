@@ -2,7 +2,7 @@
 from expression import Option
 
 from src.dependencies import Dependencies
-from src.hexagon.shared.type import TodolistName
+from src.hexagon.shared.type import TodolistName, TodolistKey
 from src.hexagon.todolist.aggregate import TodolistSnapshot
 from src.hexagon.todolist.port import TodolistSetPort
 from src.infra.memory import Memory
@@ -14,8 +14,8 @@ class TodolistSetInMemory(TodolistSetPort):
         self.memory = memory
         self._user_key = user_key
 
-    def by(self, todolist_name: TodolistName) -> Option[TodolistSnapshot]:
-        return self.memory.by(user_key=self._user_key, todolist_name=todolist_name)
+    def by(self, todolist_key: TodolistKey) -> Option[TodolistSnapshot]:
+        return self.memory.by(user_key=self._user_key, todolist_key=todolist_key)
 
     def save_snapshot(self, todolist: TodolistSnapshot) -> None:
         self.memory.save(user_key=self._user_key, todolist=todolist)

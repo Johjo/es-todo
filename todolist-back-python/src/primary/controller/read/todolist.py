@@ -5,7 +5,7 @@ from typing import cast
 from uuid import UUID
 
 from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
+from src.hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount, TodolistKey
 from src.shared.filter import TextFilter
 
 
@@ -40,7 +40,7 @@ class WithoutDate(Category):
 
 @dataclass(frozen=True, eq=True)
 class TaskFilter:
-    todolist_name: TodolistName
+    todolist_key: TodolistKey
     criteria: tuple[Criterion, ...] = ()
 
     def include(self, task_name: str) -> bool:
@@ -62,8 +62,8 @@ class TaskFilter:
         return text_filter.include(task_name)
 
     @classmethod
-    def create(cls, todolist_name: TodolistName, *criteria: Criterion) -> 'TaskFilter':
-        return TaskFilter(todolist_name=todolist_name, criteria=tuple(criteria))
+    def create(cls, todolist_key: TodolistKey, *criteria: Criterion) -> 'TaskFilter':
+        return TaskFilter(todolist_key=todolist_key, criteria=tuple(criteria))
 
 @dataclass(frozen=True)
 class TaskPresentation:
@@ -75,7 +75,7 @@ class TaskPresentation:
 
 class TodolistSetReadPort(ABC):
     @abstractmethod
-    def task_by(self, todolist_name: str, task_key: TaskKey) -> TaskPresentation:
+    def task_by(self, todolist_key: UUID, task_key: TaskKey) -> TaskPresentation:
         pass
 
     @abstractmethod
@@ -83,7 +83,7 @@ class TodolistSetReadPort(ABC):
         pass
 
     @abstractmethod
-    def counts_by_context(self, todolist_name: TodolistName) -> list[tuple[TodolistContext, TodolistContextCount]]:
+    def counts_by_context(self, todolist_key: TodolistKey) -> list[tuple[TodolistContext, TodolistContextCount]]:
         pass
 
     @abstractmethod
@@ -91,7 +91,7 @@ class TodolistSetReadPort(ABC):
         pass
 
     @abstractmethod
-    def all_tasks_postponed_task(self, todolist_name: str) -> list[TaskPresentation]:
+    def all_tasks_postponed_task(self, todolist_key: UUID) -> list[TaskPresentation]:
         pass
 
 
@@ -109,7 +109,7 @@ class TodolistReadController:
 
     def counts_by_context(self, todolist_name: str):
         todolist_set: TodolistSetReadPort = self.dependencies.get_adapter(TodolistSetReadPort)
-        context = todolist_set.counts_by_context(todolist_name=TodolistName(todolist_name))
+        context = todolist_set.counts_by_context(todolist_key=TodolistName(todolist_name))
         return sorted(context)
 
     def to_markdown(self, todolist_name: str):

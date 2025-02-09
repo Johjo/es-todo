@@ -3,7 +3,7 @@ from dataclasses import dataclass, replace
 from expression import Result, Error, Ok, Option, Some
 
 from src.hexagon.shared.event import Event, TaskPostponedEvent
-from src.hexagon.shared.type import TaskKey, TodolistName, TaskName, TaskExecutionDate, TaskOpen
+from src.hexagon.shared.type import TaskKey, TodolistName, TaskName, TaskExecutionDate, TaskOpen, TodolistKey
 
 
 @dataclass(frozen=True ,eq=True)
@@ -16,6 +16,7 @@ class TaskSnapshot:
 
 @dataclass(frozen=True, eq=True)
 class TodolistSnapshot:
+    key: TodolistKey
     name: TodolistName
     tasks: tuple[TaskSnapshot, ...]
 
@@ -47,20 +48,21 @@ class Task:
 
 @dataclass(frozen=True, eq=True)
 class TodolistAggregate:
+    key: TodolistKey
     name: TodolistName
     tasks: tuple[Task, ...]
     events: tuple[Event, ...]
 
     @classmethod
-    def create(cls, todolist_name) -> 'TodolistAggregate':
-        return TodolistAggregate(name=todolist_name, tasks=(), events=())
+    def create(cls, todolist_key: TodolistKey, todolist_name: TodolistName) -> 'TodolistAggregate':
+        return TodolistAggregate(key=todolist_key, name=todolist_name, tasks=(), events=())
 
     @classmethod
     def from_snapshot(cls, snapshot: TodolistSnapshot) -> 'TodolistAggregate':
-        return TodolistAggregate(name=snapshot.name, tasks=(*[Task.from_snapshot(task) for task in snapshot.tasks],), events=())
+        return TodolistAggregate(key=snapshot.key, name=snapshot.name, tasks=(*[Task.from_snapshot(task) for task in snapshot.tasks],), events=())
 
     def to_snapshot(self) -> TodolistSnapshot:
-        return TodolistSnapshot(self.name, tasks=tuple([task.to_snapshot() for task in self.tasks]))
+        return TodolistSnapshot(key=self.key, name=self.name, tasks=tuple([task.to_snapshot() for task in self.tasks]))
 
     def open_task(self, task: Task) -> Result['TodolistAggregate', str]:
         return Ok(replace(self, tasks=self.tasks + (task,)))
@@ -70,7 +72,7 @@ class TodolistAggregate:
             return Error(f"The task '{key}' does not exist")
         return Ok(replace(self, tasks=(*[task.close_task() if task.key == key else task for task in self.tasks],)))
 
-    def reword_task(self, key: TaskKey, new_name: str) -> Result['TodolistAggregate', str]:
+    def reword_task(self, key: TaskKey, new_name: TaskName) -> Result['TodolistAggregate', str]:
         if not [task for task in self.tasks if task.key == key]:
             return Error(f"The task '{key}' does not exist")
 

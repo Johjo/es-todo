@@ -1,0 +1,7 @@
+POST http://localhost:8000/mail/todolist/281d02b6f7354b519e8a684060faffde
+
+{
+  "name": "todolist_name"
+}
+
+###

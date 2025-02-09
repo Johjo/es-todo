@@ -14,14 +14,14 @@ class BaseTestTodolistSetRead:
         todolist = fake.a_todolist().having(tasks=[fake.a_task(), expected_task, fake.a_task()])
         self.feed_todolist(user_key=current_user, todolist=todolist)
 
-        assert sut.task_by(todolist.name, expected_task.to_key()) == expected_task.to_presentation()
+        assert sut.task_by(todolist_key=todolist.to_key(), task_key=expected_task.to_key()) == expected_task.to_presentation()
 
     def test_read_task_having_execution_date(self, sut: TodolistSetReadPort, fake: TodolistFaker, current_user: str):
         expected_task = fake.a_task().having(execution_date=today().date())
         todolist = fake.a_todolist().having(tasks=[fake.a_task(), expected_task, fake.a_task()])
         self.feed_todolist(user_key=current_user, todolist=todolist)
 
-        assert sut.task_by(todolist.name, expected_task.to_key()) == expected_task.to_presentation()
+        assert sut.task_by(todolist_key=todolist.to_key(), task_key=expected_task.to_key()) == expected_task.to_presentation()
 
     def test_read_all_by_name(self, sut: TodolistSetReadPort, fake: TodolistFaker, current_user: str):
         todolist_1 = fake.a_todolist()
@@ -45,7 +45,7 @@ class BaseTestTodolistSetRead:
         self.feed_todolist(user_key=current_user, todolist=todolist)
         self.feed_todolist(user_key=fake.a_user_key(), todolist=fake.a_todolist(todolist.name).having(tasks=[fake.a_task().having(name="title #context1 #context2")]))
 
-        assert sut.counts_by_context(todolist.name) == [("#context1", 1), ("#context2", 3), ("#con_text3", 1),
+        assert sut.counts_by_context(todolist_key=todolist.to_key()) == [("#context1", 1), ("#context2", 3), ("#con_text3", 1),
                                                         ("@context4", 1), ("@con-text5", 1)]
 
     def test_read_all_tasks(self, sut: TodolistSetReadPort, fake: TodolistFaker, current_user: str):
@@ -57,7 +57,7 @@ class BaseTestTodolistSetRead:
         self.feed_todolist(user_key=current_user, todolist=todolist_2)
         self.feed_todolist(user_key=current_user, todolist=todolist_3)
 
-        task_filter = TaskFilter.create(todolist_2.to_name(), Include(Word("#include1")), Include(Word("#include2")), Exclude(Word("#exclude1")), Exclude(Word("#exclude2")))
+        task_filter = TaskFilter.create(todolist_2.to_key(), Include(Word("#include1")), Include(Word("#include2")), Exclude(Word("#exclude1")), Exclude(Word("#exclude2")))
 
         actual = sut.all_tasks(task_filter)
 
@@ -71,7 +71,7 @@ class BaseTestTodolistSetRead:
         todolist = fake.a_todolist().having(tasks=[expected_tasks[2], expected_tasks[1], fake.a_task(), expected_tasks[3], fake.a_closed_task(), expected_tasks[0]])
         self.feed_todolist(user_key=current_user, todolist=todolist)
 
-        actual = sut.all_tasks_postponed_task(todolist_name=todolist.to_name())
+        actual = sut.all_tasks_postponed_task(todolist_key=todolist.to_key())
 
         assert actual == [task.to_presentation() for task in expected_tasks]
 

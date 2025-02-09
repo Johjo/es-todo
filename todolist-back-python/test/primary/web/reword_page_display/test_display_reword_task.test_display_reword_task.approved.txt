@@ -1,9 +1,0 @@
-b'<form action="/todo/todolist/item/00000000-0000-0000-0000-000000000001/reword?" method="post">
-
-    <input type="text" name="new_name" value="initial name">
-
-    <input type="submit" value="Renommer">
-
-</form>
-
-'
