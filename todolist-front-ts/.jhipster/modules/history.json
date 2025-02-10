@@ -17,5 +17,14 @@
       "endOfLine" : "lf",
       "indentSize" : 2
     }
+  }, {
+    "module" : "prettier",
+    "date" : "2025-02-10T22:55:06.852628Z",
+    "properties" : {
+      "projectName" : "todolist-front-ts",
+      "baseName" : "todolistFrontTs",
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
   } ]
 }
