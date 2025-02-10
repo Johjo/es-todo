@@ -1,24 +1,32 @@
-# Todolist Front
+# todolist-front-ts
 
-##Procedure to add features
-1. design front
-2. split components
-3. add slice and selector 
-4. add controller
+## Prerequisites
 
-app = front
+### Node.js and NPM
 
-primary
-hexagon = lib ??
-secondary
-tests = __tests__
+Before you can build this project, you must install and configure the following dependencies on your machine:
+
+[Node.js](https://nodejs.org/): We use Node to run a development web server and build the project.
+Depending on your system, you can install Node either from source or as a pre-packaged bundle.
+
+After installing Node, you should be able to run the following command to install development tools.
+You will only need to run this command when dependencies change in [package.json](package.json).
+
+```
+npm install
+```
+
+## Local environment
 
 
-## procedure to add feature
-1. use case -> fake adapter : test métier (test unitaire) (beaucoup / rapide) (permet de créer le métier comme on en a besoin)
-2. controller -> fake use case : test de contrat (peu / rapide) (permet de mettre en place le contrat)
-3. controller -> use case -> fake adapter (peu / rapide) (permet de tester l'injection de dépendance)
-4. adapter : test d'intégration (beaucoup / lent) (permet de tester l'intégration)
-5. test e2e
-    - controller -> use case -> adapter : test e2e (peu / lent) (meilleur lecture des erreurs)
-    - web -> controller -> use case -> adapter : test e2e (peu / lent) (on traverse tout)
+<!-- jhipster-needle-localEnvironment -->
+
+## Start up
+
+
+<!-- jhipster-needle-startupCommand -->
+
+## Documentation
+
+
+<!-- jhipster-needle-documentation -->
