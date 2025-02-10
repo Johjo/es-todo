@@ -8,6 +8,8 @@
     "node": ">=22"
   },
   "scripts": {
+    "build:tikui": "tikui-core build",
+    "dev:tikui": "tikui-core serve",
     "dev": "npm-run-all --parallel dev:*",
     "dev:vite": "vite",
     "build": "npm-run-all build:*",
@@ -26,6 +28,12 @@
     "prepare": "husky"
   },
   "devDependencies": {
+    "@prettier/plugin-pug": "3.2.0",
+    "stylelint": "16.14.1",
+    "stylelint-config-concentric-order": "5.2.0",
+    "stylelint-config-standard-scss": "14.0.0",
+    "stylelint-order": "6.0.4",
+    "tikuidoc-tikui": "8.0.1",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.2.0",
     "@types/node": "22.13.1",
@@ -59,6 +67,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@tikui/core": "6.3.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "piqure": "2.1.1"

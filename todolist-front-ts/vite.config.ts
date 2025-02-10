@@ -12,6 +12,12 @@ export default defineConfig({
     port: 9000,
     hmr: { overlay: false },
     proxy: {
+      '/style': {
+        ws: true,
+        changeOrigin: true,
+        rewrite: path => path.replace('/style', ''),
+        target: 'http://localhost:9005',
+      },
       '/api': {
         target: 'http://localhost:8080',
         changeOrigin: true,
