@@ -5,13 +5,13 @@ from pydantic import BaseModel
 
 from src.hexagon.shared.type import UserKey, TodolistKey, TodolistName
 from src.hexagon.user.create_todolist import CreateTodolist
-from src.primary.use_cases_port import UseCasePort
+from src.primary.port import UseCaseDependenciesPort
 
 
 class Todolist(BaseModel):
     name: str
 
-def register_user_routes(app: FastAPI, use_cases: UseCasePort):
+def register_user_routes(app: FastAPI, use_cases: UseCaseDependenciesPort):
     @app.post("/{user_key}/todolist/{todolist_key}")
     async def create_todolist_for_user(user_key: str, todolist_key: UUID, todolist: Todolist) -> None:
         create_todolist: CreateTodolist = use_cases.create_todolist()

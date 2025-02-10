@@ -1,12 +1,14 @@
 from abc import ABC, abstractmethod
 
 from src.hexagon.todolist.port import TodolistSetPort
+from src.hexagon.todolist.write.create_todolist import TodolistCreate
 from src.hexagon.todolist.write.open_task import OpenTaskUseCase
-from src.hexagon.user.create_todolist import CreateTodolist
 from src.hexagon.user.port import UserRepositoryPort
 from src.infra.memory import Memory
+from src.primary.port import UseCaseDependenciesPort, QueryDependenciesPort
 from src.primary.rest import start_app
-from src.primary.use_cases_port import UseCasePort
+from src.primary.todolist.read.port import AllTaskPort
+from src.secondary.todolist.read.all_tasks.all_tasks_in_memory import AllTaskInMemory
 from src.secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
 from src.secondary.user.user_repository_in_memory import UserRepositoryInMemory
 
@@ -38,12 +40,12 @@ class AdapterForDemo(AdapterPort):
         return TodolistSetInMemory(memory=self._infrastructure.todolist_memory(), user_key="")
 
 
-class UseCases(UseCasePort):
+class UseCasesDependencies(UseCaseDependenciesPort):
     def __init__(self, adapters: AdapterPort) -> None:
         self._adapters = adapters
 
-    def create_todolist(self) -> CreateTodolist:
-        return CreateTodolist(user_repository=self._adapters.user_repository())
+    def create_todolist(self) -> TodolistCreate:
+        return TodolistCreate(todolist_set=self._adapters.todolist_set())
 
     def open_task(self) -> OpenTaskUseCase:
         return OpenTaskUseCase(todolist_set=self._adapters.todolist_set())
@@ -57,4 +59,14 @@ class InfrastructureForDemo(InfrastructurePort):
         return self._memory
 
 
-app = start_app(UseCases(adapters=AdapterForDemo(infrastructure=InfrastructureForDemo())))
+class QueryDependenciesForDemo(QueryDependenciesPort):
+    def __init__(self, infrastructure: InfrastructurePort):
+        self._infrastructure = infrastructure
+
+    def all_tasks(self) -> AllTaskPort:
+        return AllTaskInMemory(memory=self._infrastructure.todolist_memory())
+
+
+infrastructure = InfrastructureForDemo()
+app = start_app(use_cases=UseCasesDependencies(adapters=AdapterForDemo(infrastructure=infrastructure)),
+                queries=QueryDependenciesForDemo(infrastructure=infrastructure))

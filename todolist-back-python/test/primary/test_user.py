@@ -7,9 +7,11 @@ from mock.mock import MagicMock  # type: ignore
 
 from src.hexagon.user.create_todolist import CreateTodolist
 from src.primary.rest import start_app
+from test.primary.query_dependencies_not_implemented import QueryDependenciesNotImplemented
+from test.primary.use_cases_dependencies_not_implemented import UseCaseDependenciesNotImplemented
 
 
-class UseCasesForTest:
+class UseCaseDependenciesForTest(UseCaseDependenciesNotImplemented):
     def __init__(self, use_case: MagicMock):
         self.use_case = use_case
 
@@ -24,7 +26,7 @@ def use_case() -> MagicMock:
 
 @pytest.fixture
 def app(use_case: MagicMock) -> FastAPI:
-    return start_app(UseCasesForTest(use_case))
+    return start_app(use_cases=UseCaseDependenciesForTest(use_case), queries=QueryDependenciesNotImplemented())
 
 
 @pytest.fixture

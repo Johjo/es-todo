@@ -5,3 +5,24 @@ POST http://localhost:8000/mail/todolist/281d02b6f7354b519e8a684060faffde
 }
 
 ###
+
+POST http://localhost:8000/todolist/b69785c5-9266-486c-9655-52d85ad25bd5
+
+{
+"name" : "my todolist"
+}
+
+
+###
+
+POST http://localhost:8000/todolist/b69785c5-9266-486c-9655-52d85ad25bd5/task/c69785c5-9266-486c-9655-52d85ad25bd5
+
+{
+"name" : "buy the milk"
+}
+
+###
+
+GET http://localhost:8000/todolist/b69785c5-9266-486c-9655-52d85ad25bd5/task
+
+###
