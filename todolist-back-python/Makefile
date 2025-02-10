@@ -12,6 +12,7 @@ ROOT_DIR := $(dir $(realpath $(firstword $(MAKEFILE_LIST))))
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
 	@echo "start : start server"
+	@echo "start-demo" start the demo server
 	@echo "update : update from git"
 	@echo "check : check code with mypy"
 	@echo "create_table : create table first time"
@@ -22,6 +23,10 @@ help:
 .PHONY: start
 start:
 	python -m pipenv run start_web_for_test.py
+
+.PHONY: start-demo
+start-demo:
+	python -m fastapi dev .\start_demo.py
 
 .PHONY: create_table
 create_table:
