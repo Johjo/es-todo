@@ -35,5 +35,14 @@
       "endOfLine" : "lf",
       "indentSize" : 2
     }
+  }, {
+    "module" : "react-core",
+    "date" : "2025-02-10T22:55:07.317612600Z",
+    "properties" : {
+      "projectName" : "todolist-front-ts",
+      "baseName" : "todolistFrontTs",
+      "endOfLine" : "lf",
+      "indentSize" : 2
+    }
   } ]
 }

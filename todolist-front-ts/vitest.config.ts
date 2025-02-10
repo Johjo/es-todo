@@ -2,9 +2,10 @@
 
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { configDefaults, defineConfig } from 'vitest/config';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  plugins: [tsconfigPaths()],
+  plugins: [react(), tsconfigPaths()],
   test: {
     reporters: ['verbose', 'vitest-sonar-reporter'],
     outputFile: {
@@ -18,7 +19,7 @@ export default defineConfig({
         maxThreads: 2,
       },
     },
-    environment: 'node',
+    environment: 'jsdom',
     cache: false,
     include: ['src/test/webapp/unit/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     coverage: {
@@ -28,7 +29,7 @@ export default defineConfig({
         100: true,
       },
       include: ['src/main/webapp/**/*.ts?(x)'],
-      exclude: [...(configDefaults.coverage.exclude as string[])],
+      exclude: [...(configDefaults.coverage.exclude as string[]), 'src/main/webapp/app/injections.ts', 'src/main/webapp/app/index.tsx'],
       provider: 'istanbul',
       reportsDirectory: 'target/test-results/',
       reporter: ['html', 'json-summary', 'text', 'text-summary', 'lcov', 'clover'],
