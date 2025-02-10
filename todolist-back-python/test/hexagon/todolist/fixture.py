@@ -1,31 +1,33 @@
 from datetime import datetime
+from uuid import UUID
 
 from expression import Option, Nothing, Some
 
-from src.hexagon.shared.type import TaskKey, TodolistName
+from src.hexagon.shared.type import TaskKey, TodolistKey
 from src.hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
-from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from src.hexagon.todolist.port import TodolistSetPort
+from src.hexagon.todolist.write.import_many_task import TaskKeyGeneratorPort
 from src.primary.controller.write.todolist import DateTimeProviderPort
 from test.fixture import TaskBuilder, TodolistBuilder
 
 
 class TodolistSetForTest(TodolistSetPort):
     def __init__(self) -> None:
-        self._all_snapshot: dict[TodolistName, Option[TodolistSnapshot]] = {}
+        self._all_snapshot: dict[TodolistKey, Option[TodolistSnapshot]] = {}
 
-    def by(self, todolist_name: TodolistName) -> Option[TodolistSnapshot]:
-        if todolist_name not in self._all_snapshot:
-            raise Exception(f"feed todolist '{todolist_name}' before getting tasks")
-        return self._all_snapshot[todolist_name]
+    def by(self, todolist_key: TodolistKey) -> Option[TodolistSnapshot]:
+        if todolist_key not in self._all_snapshot:
+            raise Exception(f"feed todolist '{todolist_key}' before getting tasks")
+        return self._all_snapshot[todolist_key]
 
     def save_snapshot(self, todolist: TodolistSnapshot) -> None:
-        self._all_snapshot[todolist.name] = Some(todolist)
+        self._all_snapshot[todolist.key] = Some(todolist)
 
     def feed(self, todolist: TodolistBuilder):
-        self._all_snapshot[todolist.to_name()] = Some(todolist.to_snapshot())
+        self._all_snapshot[todolist.to_key()] = Some(todolist.to_snapshot())
 
-    def feed_nothing(self, todolist_name: str):
-        self._all_snapshot[TodolistName(todolist_name)] = Nothing
+    def feed_nothing(self, todolist_key: UUID):
+        self._all_snapshot[TodolistKey(todolist_key)] = Nothing
 
 
 class TaskKeyGeneratorForTest(TaskKeyGeneratorPort):

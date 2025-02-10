@@ -7,7 +7,7 @@ from expression import Option, Nothing, Some
 from faker import Faker
 
 import src.infra.sqlite.type
-from src.hexagon.shared.type import TaskKey, TaskName, TodolistName, TaskOpen, TaskExecutionDate
+from src.hexagon.shared.type import TaskKey, TaskName, TodolistName, TaskOpen, TaskExecutionDate, TodolistKey
 from src.hexagon.todolist.aggregate import TaskSnapshot, TodolistSnapshot
 from src.primary.controller.read.todolist import TaskPresentation, TaskFilter
 
@@ -69,6 +69,7 @@ class TaskBuilder:
 
 @dataclass(frozen=True)
 class TodolistBuilder:
+    key: TodolistKey
     name: TodolistName = TodolistName("undefined")
     tasks: list[TaskBuilder] | None= None
 
@@ -76,7 +77,7 @@ class TodolistBuilder:
         return replace(self, **kwargs)
 
     def to_snapshot(self) -> TodolistSnapshot:
-        return TodolistSnapshot(name=self.to_name(), tasks=tuple(task.to_snapshot() for task in self.to_tasks()))
+        return TodolistSnapshot(key=self.to_key(), name=self.to_name(), tasks=tuple(task.to_snapshot() for task in self.to_tasks()))
 
     def to_tasks(self) -> list[TaskBuilder]:
         if self.tasks is None:
@@ -89,7 +90,10 @@ class TodolistBuilder:
         return TodolistName(self.name)
 
     def to_sqlite_sdk(self) -> src.infra.sqlite.type.Todolist:
-        return src.infra.sqlite.type.Todolist(name=self.to_name())
+        return src.infra.sqlite.type.Todolist(key=self.to_key(), name=self.to_name())
+
+    def to_key(self) -> TodolistKey:
+        return self.key
 
 
 @dataclass(frozen=True)
@@ -118,7 +122,7 @@ class TodolistFaker:
     def a_todolist(self, name: TodolistName | str | None = None) -> TodolistBuilder:
         if name is None:
             name = self.fake.word()
-        return TodolistBuilder(name=TodolistName(name), tasks=[])
+        return TodolistBuilder(key= TodolistKey(uuid4()), name=TodolistName(name), tasks=[])
 
     @staticmethod
     def task_key(key: None | int | UUID | TaskKey = None) -> TaskKey:
