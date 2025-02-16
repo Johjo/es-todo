@@ -12,17 +12,14 @@ export const todolistPageSlice = createSlice({
   name: 'todolist',
   initialState: initialState as TodolistPresentation,
   reducers: {
-    todolistFetched: (_state, action: PayloadAction<{ tasks: Task[] }>) => {
-      if (action.payload.tasks.length === 0) {
-        return { statut: 'empty' };
-      }
-      return { statut: 'atLeastOneTask', tasks: action.payload.tasks };
+    todolistPageDisplayed: (_state, action: PayloadAction<TodolistPresentation>) => {
+      return action.payload;
     }
   }
 });
 
 
-export const { todolistFetched } = todolistPageSlice.actions;
+export const { todolistPageDisplayed } = todolistPageSlice.actions;
 export const todolistPageReducer = todolistPageSlice.reducer
 
 export const selectTodolistPage = (state: RootState) : TodolistPresentation => state.todolistPage as TodolistPresentation ;

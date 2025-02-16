@@ -1,16 +1,16 @@
 import { match } from 'ts-pattern';
-import { useSelector, useStore } from 'react-redux';
-import type { Task } from '../../../../hexagon/todolistPage.ts';
-import { selectTodolistPage, todolistFetched } from '../../../../hexagon/todolistPage.ts';
-import type { AppStore } from '../../../../hexagon/store.ts';
+import { useSelector } from 'react-redux';
+import type { Task } from '../../../../hexagon/todolistPage.slice.ts';
+import { selectTodolistPage } from '../../../../hexagon/todolistPage.slice.ts';
 import { useEffect } from 'react';
+import { useDependenciesUseCase } from './useDependenciesUseCase.ts';
 
 
 export function TodolistPage() {
-  const store = useStore<AppStore>();
+  const dependenciesUseCase = useDependenciesUseCase();
 
   useEffect(() => {
-    store.dispatch(todolistFetched({ tasks: [] }));
+    dependenciesUseCase.todolistPageDisplay.execute();
   }, []);
 
   return <TodolistPageDisplay />;

@@ -1,5 +1,5 @@
 import { v4 } from 'uuid';
-import { selectTodolistPage, todolistFetched } from '../../hexagon/todolistPage';
+import { selectTodolistPage, todolistPageDisplayed } from '../../hexagon/todolistPage.slice';
 import { AppStore, createStore } from '../../hexagon/store';
 
 
@@ -14,7 +14,7 @@ describe('Todolist', () => {
   });
 
   it('should fetch empty todolist', () => {
-    store.dispatch(todolistFetched({ tasks: [] }));
+    store.dispatch(todolistPageDisplayed({statut : 'empty'}));
 
     expect(selectTodolistPage(store.getState())).toEqual({ statut: 'empty' });
   });
@@ -22,7 +22,7 @@ describe('Todolist', () => {
   it('should fetch at least one task', () => {
     const task_one = {key: v4(), name: "buy the milk"};
     const task_two = {key: v4(), name: "buy the milk"};
-    store.dispatch(todolistFetched({ tasks: [task_one, task_two] }));
+    store.dispatch(todolistPageDisplayed({ statut: 'atLeastOneTask', tasks:[task_one, task_two] }));
 
     expect(selectTodolistPage(store.getState())).toEqual({ statut: 'atLeastOneTask', tasks:[task_one, task_two] });
   });

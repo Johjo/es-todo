@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { todolistPageReducer } from './todolistPage';
+import { todolistPageReducer } from './todolistPage.slice.ts';
 
 export function createStore() {
   return configureStore({ reducer: { todolistPage: todolistPageReducer } });
