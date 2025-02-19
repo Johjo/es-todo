@@ -1,10 +1,7 @@
 import { createContext, useContext } from 'react';
-import { TodolistPageDisplayUseCase } from '../../../../hexagon/todolistPageDisplay.usecase.ts';
+import type { DependenciesUseCase } from './dependenciesUseCase.ts';
 
-export type UseCaseDependencies = {
-  todolistPageDisplay: TodolistPageDisplayUseCase;
-}
-export const DependenciesContext = createContext<UseCaseDependencies | null>(null);
+export const DependenciesContext = createContext<DependenciesUseCase | null>(null);
 
 export function useDependenciesUseCase() {
   const context = useContext(DependenciesContext);

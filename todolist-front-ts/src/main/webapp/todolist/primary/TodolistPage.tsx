@@ -10,7 +10,7 @@ export function TodolistPage() {
   const dependenciesUseCase = useDependenciesUseCase();
 
   useEffect(() => {
-    dependenciesUseCase.todolistPageDisplay.execute();
+    void dependenciesUseCase.todolistPageDisplay().execute();
   }, []);
 
   return <TodolistPageDisplay />;
