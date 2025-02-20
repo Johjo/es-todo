@@ -32,6 +32,12 @@
 10. step 10 : move method to controller
 
 Créer une image Docker
+
+```
+python -m pip freeze > requirements.txt
+```
+
+
 ```
 docker build -t todolist-back .
 ```
@@ -39,5 +45,5 @@ docker build -t todolist-back .
 Lancer une image Docker
 
 ```
-docker run -p 8091:80 -v C:\Projets\python\todo\es-todo\todolist-back-python\db:db todolist-back 
+docker run -p 8091:8000 todolist-back 
 ```

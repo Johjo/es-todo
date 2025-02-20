@@ -4,7 +4,6 @@ from src.dependencies import Dependencies
 from src.hexagon.shared.type import TodolistName, TodolistKey
 from src.hexagon.todolist.aggregate import TodolistAggregate
 from src.hexagon.todolist.port import TodolistSetPort
-from test.hexagon.fvp.read.test_which_task import todolist_name
 
 
 class TodolistCreate:

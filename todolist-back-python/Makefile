@@ -26,7 +26,7 @@ start:
 
 .PHONY: start-demo
 start-demo:
-	python -m fastapi dev .\start_demo.py
+	python -m fastapi dev start_demo.py
 
 .PHONY: create_table
 create_table:
