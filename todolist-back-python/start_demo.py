@@ -66,7 +66,6 @@ class QueryDependenciesForDemo(QueryDependenciesPort):
     def all_tasks(self) -> AllTaskPort:
         return AllTaskInMemory(memory=self._infrastructure.todolist_memory())
 
-
 infrastructure = InfrastructureForDemo()
 app = start_app(use_cases=UseCasesDependencies(adapters=AdapterForDemo(infrastructure=infrastructure)),
                 queries=QueryDependenciesForDemo(infrastructure=infrastructure))

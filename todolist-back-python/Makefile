@@ -18,6 +18,7 @@ help:
 	@echo "create_table : create table first time"
 	@echo "freeze : create requirements.txt"
 	@echo "install : install package from requirements.txt"
+	@echo "build-docker : build docker image"
 
 
 .PHONY: start
@@ -49,4 +50,7 @@ update:
 check:
 	mypy . --strict --disallow-untyped-decorators
 
+.PHONY: build-docker
+build-docker:
+	docker build -t todolist-back .
 
