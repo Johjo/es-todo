@@ -1,0 +1,62 @@
+name: Fransys CI for react on restart-front
+
+on:
+  push:
+    branches: [ "restart-front", "fransys_ci-restart-front" ]
+
+env:
+  FRANSYS_REGISTRY: ${{ secrets.FRANSYS_REGISTRY_DOMAIN }}/${{ secrets.FRANSYS_REGISTRY_PROJECT }}/restart-front
+  DOCKERFILE_PATH: /build/react/Dockerfile
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: fransys/buildpack:latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Login to Fransys registry
+        run: docker login -u ${{ secrets.FRANSYS_REGISTRY_RESTART_FRONT_USERNAME }} -p ${{ secrets.FRANSYS_REGISTRY_RESTART_FRONT_PASSWORD }} ${{ secrets.FRANSYS_REGISTRY_DOMAIN }}
+      - name: Prepare the directory
+        run: cp -r /build build
+      - name: Prepare variables
+        id: prepare-vars
+        run: |
+          if [[ -z "${{ vars.DOCKERFILE_PATH }}" ]]; then
+            echo "DOCKERFILE_PATH=/build/react/Dockerfile" >> $GITHUB_OUTPUT
+          else
+            echo "DOCKERFILE_PATH=${{ vars.DOCKERFILE_PATH }}" >> $GITHUB_OUTPUT
+          fi
+      - name: Build the Docker image
+        run: docker buildx build --cache-from "$FRANSYS_REGISTRY:${{ github.sha }}" --cache-from "$FRANSYS_REGISTRY:${{ github.ref_name }}" -f ${{ steps.prepare-vars.outputs.DOCKERFILE_PATH }} --tag "$FRANSYS_REGISTRY:${{ github.sha }}" --progress=plain . 2>&1
+      - name: Push the image
+        if: github.ref == 'refs/heads/restart-front'
+        run: docker push "$FRANSYS_REGISTRY:${{ github.sha }}"
+
+  publish-latest:
+    runs-on: ubuntu-latest
+    container:
+      image: fransys/crane:v0.16.1
+    if: github.ref == 'refs/heads/restart-front'
+    needs: [
+      build,
+    ]
+    steps:
+      - name: Login to Fransys registry
+        run: crane auth login -u ${{ secrets.FRANSYS_REGISTRY_RESTART_FRONT_USERNAME }} -p ${{ secrets.FRANSYS_REGISTRY_RESTART_FRONT_PASSWORD }} ${{ secrets.FRANSYS_REGISTRY_DOMAIN }}
+      - name: Push the Docker image for latest
+        run: crane copy "$FRANSYS_REGISTRY:${{ github.sha }}" "$FRANSYS_REGISTRY:latest"
+
+  publish-ref:
+    runs-on: ubuntu-latest
+    container:
+      image: fransys/crane:v0.16.1
+    if: github.ref == 'refs/heads/restart-front'
+    needs: [
+      build,
+    ]
+    steps:
+      - name: Login to Fransys registry
+        run: crane auth login -u ${{ secrets.FRANSYS_REGISTRY_RESTART_FRONT_USERNAME }} -p ${{ secrets.FRANSYS_REGISTRY_RESTART_FRONT_PASSWORD }} ${{ secrets.FRANSYS_REGISTRY_DOMAIN }}
+      - name: Push the Docker image for ref
+        run: crane copy "$FRANSYS_REGISTRY:${{ github.sha }}" "$FRANSYS_REGISTRY:${{ github.ref_name }}"
