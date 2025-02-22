@@ -17,7 +17,7 @@ class TodolistSetForTest(TodolistSetPort):
 
     def by(self, todolist_key: TodolistKey) -> Option[TodolistSnapshot]:
         if todolist_key not in self._all_snapshot:
-            raise Exception(f"feed todolist '{todolist_key}' before getting tasks")
+            return Nothing
         return self._all_snapshot[todolist_key]
 
     def save_snapshot(self, todolist: TodolistSnapshot) -> None:
@@ -28,6 +28,9 @@ class TodolistSetForTest(TodolistSetPort):
 
     def feed_nothing(self, todolist_key: UUID):
         self._all_snapshot[TodolistKey(todolist_key)] = Nothing
+
+    def delete(self, todolist_key):
+        del self._all_snapshot[todolist_key]
 
 
 class TaskKeyGeneratorForTest(TaskKeyGeneratorPort):

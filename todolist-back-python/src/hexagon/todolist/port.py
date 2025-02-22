@@ -14,3 +14,7 @@ class TodolistSetPort(ABC):
     @abstractmethod
     def save_snapshot(self, snapshot: TodolistSnapshot) -> None:
         pass
+
+    @abstractmethod
+    def delete(self, todolist_key: TodolistKey) -> None:
+        pass

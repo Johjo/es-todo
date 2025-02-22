@@ -37,3 +37,7 @@ class Memory:
 
     def __repr__(self):
         return str(self.all_todolist_by_user)
+
+    def delete(self, user_key: str, todolist_key: UUID):
+        del self.all_todolist[todolist_key]
+        del self.all_todolist_by_user[(user_key, todolist_key)]

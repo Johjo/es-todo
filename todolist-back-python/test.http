@@ -1,11 +1,3 @@
-POST http://localhost:8000/mail/todolist/281d02b6f7354b519e8a684060faffde
-
-{
-  "name": "todolist_name"
-}
-
-###
-
 POST http://{{host}}/todolist/b69785c5-9266-486c-9655-52d85ad25bd5
 
 {
@@ -34,3 +26,5 @@ POST http://{{host}}/todolist/b69785c5-9266-486c-9655-52d85ad25bd5/task/d69785c5
 GET http://{{host}}/todolist/b69785c5-9266-486c-9655-52d85ad25bd5/task
 
 ###
+
+DELETE http://{{host}}/todolist/b69785c5-9266-486c-9655-52d85ad25bd5

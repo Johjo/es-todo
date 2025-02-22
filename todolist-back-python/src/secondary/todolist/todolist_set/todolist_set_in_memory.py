@@ -20,6 +20,9 @@ class TodolistSetInMemory(TodolistSetPort):
     def save_snapshot(self, todolist: TodolistSnapshot) -> None:
         self.memory.save(user_key=self._user_key, todolist=todolist)
 
+    def delete(self, todolist_key: TodolistKey) -> None:
+        self.memory.delete(user_key=self._user_key, todolist_key=todolist_key)
+
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetInMemory':
         return TodolistSetInMemory(

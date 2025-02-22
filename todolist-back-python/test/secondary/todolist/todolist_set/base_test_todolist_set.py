@@ -85,6 +85,17 @@ class BaseTestTodolistSet:
         # then
         assert sut.by(todolist_key=expected_todolist.to_key()).value == expected_todolist.to_snapshot()
 
+    def test_delete_todolist(self, sut: TodolistSetPort, fake: TodolistFaker, current_user: str):
+        # given
+        todolist = fake.a_todolist()
+        self.feed_todolist(user_key=current_user, todolist=todolist)
+
+        # when
+        sut.delete(todolist_key=todolist.to_key())
+
+        # then
+        assert sut.by(todolist_key=todolist.to_key()) == Nothing
+
     @pytest.fixture
     def sut(self, dependencies: Dependencies) -> TodolistSetPort:
         return dependencies.get_adapter(TodolistSetPort)

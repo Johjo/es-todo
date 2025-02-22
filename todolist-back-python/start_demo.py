@@ -11,6 +11,7 @@ from src.primary.todolist.read.port import AllTaskPort
 from src.secondary.todolist.read.all_tasks.all_tasks_in_memory import AllTaskInMemory
 from src.secondary.todolist.todolist_set.todolist_set_in_memory import TodolistSetInMemory
 from src.secondary.user.user_repository_in_memory import UserRepositoryInMemory
+from test.hexagon.todolist.write.test_delete_todolist import TodolistDelete
 
 
 class AdapterPort(ABC):
@@ -49,6 +50,9 @@ class UseCasesDependencies(UseCaseDependenciesPort):
 
     def open_task(self) -> OpenTaskUseCase:
         return OpenTaskUseCase(todolist_set=self._adapters.todolist_set())
+
+    def delete_todolist(self) -> TodolistDelete:
+        return TodolistDelete(todolist_set=self._adapters.todolist_set())
 
 
 class InfrastructureForDemo(InfrastructurePort):

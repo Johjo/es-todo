@@ -108,3 +108,6 @@ class SqliteSdk:
         cursor.execute("SELECT ignored_task_key, chosen_task_key FROM Session where user_key = ?", (user_key,))
         rows = cursor.fetchall()
         return FvpSession(priorities=[(UUID(session[0]), UUID(session[1])) for session in rows])
+
+    def delete_todolist(self, user_key: str, todolist_key: UUID):
+        self._delete_previous_todolist(user_key=user_key, todolist_key=todolist_key)

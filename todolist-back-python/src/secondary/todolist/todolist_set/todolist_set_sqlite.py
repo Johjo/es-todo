@@ -41,6 +41,10 @@ class TodolistSetSqlite(TodolistSetPort):
                                   tasks=[TaskSdk(key=task.key, name=task.name, is_open=task.is_open,
                                                  execution_date=task.execution_date) for task in todolist.tasks])
 
+    def delete(self, todolist_key: TodolistKey) -> None:
+        self._sdk.delete_todolist(user_key=self._user_key, todolist_key=todolist_key)
+
+
     @classmethod
     def factory(cls, dependencies: Dependencies) -> 'TodolistSetSqlite':
         return TodolistSetSqlite(connection=dependencies.get_infrastructure(sqlite3.Connection),
