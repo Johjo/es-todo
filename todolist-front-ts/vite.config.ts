@@ -9,8 +9,9 @@ export default defineConfig({
   },
   root: 'src/main/webapp',
   server: {
-    port: 9000,
+    host: '0.0.0.0',
     hmr: { overlay: false },
+    allowedHosts: ['todolist-ytreza-front.osc-fr1.scalingo.io'],
     proxy: {
       '/style': {
         ws: true,

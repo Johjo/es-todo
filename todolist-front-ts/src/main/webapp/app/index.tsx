@@ -40,7 +40,7 @@ class DependenciesAdapter {
   }
 
   todolistFetcher() : TodolistFetcherPort {
-    return new TodolistFetcherHttp('http://todolist-ytreza-dev.osc-fr1.scalingo.io');
+    return new TodolistFetcherHttp('https://todolist-ytreza-dev.osc-fr1.scalingo.io');
     // return new TodolistFetcherHttp('http://127.0.0.1:8000');
   }
 }

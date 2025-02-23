@@ -16,7 +16,7 @@
     "build:tsc": "tsc -b",
     "build:vite": "vite build --emptyOutDir",
     "preview": "vite preview",
-    "start": "vite",
+    "start": "vite --port $PORT",
     "lint": "eslint .",
     "test": "npm run watch:test",
     "test:coverage": "vitest run --coverage",
@@ -32,14 +32,12 @@
     "@prettier/plugin-xml": "3.4.1",
     "@testing-library/dom": "10.4.0",
     "@testing-library/react": "16.2.0",
-    "@tsconfig/vite-react": "3.4.0",
     "@types/node": "22.13.1",
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "@types/react-redux": "7.1.34",
     "@typescript-eslint/eslint-plugin": "8.23.0",
     "@typescript-eslint/parser": "8.23.0",
-    "@vitejs/plugin-react": "4.3.4",
     "@vitest/coverage-istanbul": "3.0.5",
     "eslint": "9.19.0",
     "eslint-config-prettier": "10.0.1",
@@ -61,8 +59,6 @@
     "tikuidoc-tikui": "8.0.1",
     "typescript": "5.7.3",
     "typescript-eslint": "8.23.0",
-    "vite": "6.0.11",
-    "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.0.5",
     "vitest-sonar-reporter": "2.0.0"
   },
@@ -70,12 +66,16 @@
   "dependencies": {
     "@reduxjs/toolkit": "2.5.1",
     "@tikui/core": "6.3.0",
+    "@tsconfig/vite-react": "3.4.0",
+    "@vitejs/plugin-react": "4.3.4",
     "piqure": "2.1.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-redux": "9.2.0",
     "react-router": "7.1.5",
     "ts-pattern": "5.6.2",
-    "uuid": "11.0.5"
+    "uuid": "11.0.5",
+    "vite": "6.1.1",
+    "vite-tsconfig-paths": "5.1.4"
   }
 }
