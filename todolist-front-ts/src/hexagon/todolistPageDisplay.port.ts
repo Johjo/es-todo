@@ -6,5 +6,5 @@ export interface TodolistPageDisplayStorePort {
 }
 
 export interface TodolistFetcherPort {
-  getTodolist(): Promise<FromBackend.Todolist>;
+  getTodolist(todolistKey: string): Promise<FromBackend.Todolist>;
 }

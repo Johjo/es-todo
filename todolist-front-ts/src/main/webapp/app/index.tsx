@@ -12,7 +12,7 @@ import { Provider } from 'react-redux';
 import { AppStore, createStore } from '../../../hexagon/store.ts';
 import type { TodolistFetcherPort, TodolistPageDisplayStorePort } from '../../../hexagon/todolistPageDisplay.port.ts';
 import { TodolistPageDisplayStore } from '../../../secondary/todolistPageDisplayStore.ts';
-import { TodolistFetcher } from '../../../secondary/todolistFetcher.ts';
+import { TodolistFetcherHttp } from '../../../secondary/todolistFetcherHttp.ts';
 
 const container = document.getElementById('root');
 
@@ -40,7 +40,8 @@ class DependenciesAdapter {
   }
 
   todolistFetcher() : TodolistFetcherPort {
-    return new TodolistFetcher();
+    return new TodolistFetcherHttp('http://todolist-ytreza-dev.osc-fr1.scalingo.io');
+    // return new TodolistFetcherHttp('http://127.0.0.1:8000');
   }
 }
 
