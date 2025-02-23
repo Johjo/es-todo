@@ -30,7 +30,6 @@ class Memory:
                 in self.all_todolist_by_user.keys() if todolist_user_key == user_key]
 
     def all_tasks(self, user_key: str, todolist_key: UUID) -> list[TaskSnapshot]:
-        print(self.all_todolist)
         if todolist_key not in self.all_todolist:
             return []
         return list(self.all_todolist[todolist_key].tasks)
