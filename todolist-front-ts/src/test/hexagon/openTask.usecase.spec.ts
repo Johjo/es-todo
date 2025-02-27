@@ -15,7 +15,7 @@ describe('open task use case', () => {
     uuidGenerator = new UuidGeneratorForTest();
     todolistUpdater = new TodolistUpdaterForTest();
     useCase = new OpenTaskUseCase(uuidGenerator, todolistUpdater);
-    store = createAppStore({ uuidGenerator, todolistUpdater, openTask : useCase });
+    store = createAppStore({ openTask : useCase });
   });
 
   it('should do nothing', async () => {

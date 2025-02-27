@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { todolistPageReducer } from './todolistPage.slice.ts';
 import { OpenTaskContract } from './openTask.usecase.ts';
+import { FetchTodolistContract } from './fetchTodolist.usecase.ts';
 
 export type UseCases = {
   openTask: OpenTaskContract;
+  fetchTodolist: FetchTodolistContract;
 }
 
 export function createAppStore(useCases : UseCases) {

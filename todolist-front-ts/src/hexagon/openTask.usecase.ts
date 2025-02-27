@@ -1,5 +1,5 @@
 import { TodolistUpdaterPort, UuidGeneratorPort } from './openTask.port';
-import { AppDispatch, AppGetState, UseCases } from './store';
+import { AppDispatch, UseCases } from './store';
 import { taskOpened } from './todolistPage.slice';
 
 export interface OpenTaskContract {
@@ -17,7 +17,7 @@ export class OpenTaskUseCase implements OpenTaskContract {
   }
 }
 
-export const openTask = (taskName: string) => async (dispatch: AppDispatch, _getState: AppGetState, usesCases : UseCases) => {
+export const openTask = (taskName: string) => async (dispatch: any, _getState: any, usesCases: UseCases) => {
   const { openTask }: { openTask: OpenTaskContract } = usesCases;
   await openTask.execute(dispatch, taskName);
 };

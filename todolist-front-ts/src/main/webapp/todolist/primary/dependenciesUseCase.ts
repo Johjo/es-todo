@@ -1,7 +1,7 @@
-import type { TodolistPageDisplayUseCase } from '../../../../hexagon/todolistPageDisplay.usecase.ts';
+import type { FetchTodolistContract } from '../../../../hexagon/fetchTodolist.usecase.ts';
 import type { OpenTaskContract } from '../../../../hexagon/openTask.usecase.ts';
 
 export interface DependenciesUseCase {
-  todolistPageDisplay(): TodolistPageDisplayUseCase;
+  todolistPageDisplay(): FetchTodolistContract;
   openTask(): OpenTaskContract;
 }

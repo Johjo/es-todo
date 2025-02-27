@@ -1,5 +1,5 @@
 import type { OpenTaskContract } from 'src/hexagon/openTask.usecase.ts';
-import type { TodolistPageDisplayUseCase } from '../../../../../hexagon/todolistPageDisplay.usecase.ts';
+import type { FetchTodolistContract } from '../../../../../hexagon/fetchTodolist.usecase.ts';
 import type { DependenciesUseCase } from '../../../../../main/webapp/todolist/primary/dependenciesUseCase.ts';
 
 export class DependenciesUseCaseDummy implements DependenciesUseCase {
@@ -7,7 +7,7 @@ export class DependenciesUseCaseDummy implements DependenciesUseCase {
       throw new Error('Method not implemented.');
   }
 
-  todolistPageDisplay(): TodolistPageDisplayUseCase {
+  todolistPageDisplay(): FetchTodolistContract {
     throw new Error('Method not implemented.');
   }
 

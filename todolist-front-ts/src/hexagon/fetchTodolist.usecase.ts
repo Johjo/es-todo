@@ -1,12 +1,12 @@
-import { TodolistFetcherPort } from './todolistPageDisplay.port';
+import { TodolistFetcherPort } from './fetchTodolist.port.ts';
 import { emptyTodolistFetched, todolistFetched, todolistFetchingStarted } from './todolistPage.slice.ts';
 import { AppStore } from './store.ts';
 
-export interface TodolistPageDisplayUseCase {
+export interface FetchTodolistContract {
   execute(): Promise<void>;
 }
 
-export class TodolistPageDisplayImpl implements TodolistPageDisplayUseCase {
+export class FetchTodolistUseCase implements FetchTodolistContract {
   constructor(private readonly todolistFetcher: TodolistFetcherPort, private readonly store: AppStore) {
   }
 

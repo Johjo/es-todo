@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { TaskForm, TodolistPage } from '../../../../../main/webapp/todolist/primary/TodolistPage.tsx';
 import type { AppStore } from '../../../../../hexagon/store.ts';
 import { createAppStore } from '../../../../../hexagon/store.ts';
-import type { TodolistPageDisplayUseCase } from '../../../../../hexagon/todolistPageDisplay.usecase.ts';
+import type { FetchTodolistContract } from '../../../../../hexagon/fetchTodolist.usecase.ts';
 import { renderWithDependencies } from './renderWithDependencies.tsx';
 import { DependenciesUseCaseDummy } from './dependenciesUseCaseDummy.ts';
 import { waitFor } from '@testing-library/dom';
@@ -48,7 +48,7 @@ describe('TodolistPage', () => {
   });
 });
 
-class TodolistPageDisplayUseCaseForTest implements TodolistPageDisplayUseCase {
+class TodolistPageDisplayUseCaseForTest implements FetchTodolistContract {
   private _hasBeenExecuted: boolean = false;
 
   execute(): Promise<void> {
@@ -66,7 +66,7 @@ class DependenciesUseCaseForTest extends DependenciesUseCaseDummy {
     super();
   }
 
-  todolistPageDisplay(): TodolistPageDisplayUseCase {
+  todolistPageDisplay(): FetchTodolistContract {
     return this._todolistPageDisplay;
   }
 

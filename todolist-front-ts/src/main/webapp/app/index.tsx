@@ -6,12 +6,12 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import { TodolistPage } from '../todolist/primary/TodolistPage.tsx';
 import { DependenciesContext } from '../todolist/primary/useDependenciesUseCase.ts';
 import type { DependenciesUseCase } from '../todolist/primary/dependenciesUseCase.ts';
-import type { TodolistPageDisplayUseCase } from 'src/hexagon/todolistPageDisplay.usecase.ts';
-import { TodolistPageDisplayImpl } from 'src/hexagon/todolistPageDisplay.usecase.ts';
+import type { FetchTodolistContract } from '../../../hexagon/fetchTodolist.usecase.ts';
+import { FetchTodolistUseCase } from '../../../hexagon/fetchTodolist.usecase.ts';
 import { Provider } from 'react-redux';
 import type { AppStore} from '../../../hexagon/store.ts';
 import { createAppStore } from '../../../hexagon/store.ts';
-import type { TodolistFetcherPort } from '../../../hexagon/todolistPageDisplay.port.ts';
+import type { TodolistFetcherPort } from '../../../hexagon/fetchTodolist.port.ts';
 import { TodolistFetcherHttp } from '../../../secondary/todolistFetcherHttp.ts';
 import { OpenTaskContract, OpenTaskUseCase } from 'src/hexagon/openTask.usecase.ts';
 import type { TodolistUpdaterPort, UuidGeneratorPort } from '../../../hexagon/openTask.port.ts';
@@ -31,11 +31,11 @@ class DependenciesUseCaseImpl implements DependenciesUseCase {
     return new OpenTaskUseCase(uuidGenerator, todolistUpdater);
   }
 
-  todolistPageDisplay(): TodolistPageDisplayUseCase {
+  todolistPageDisplay(): FetchTodolistContract {
     const store: AppStore = this._adapters.store();
     const todolistFetcher: TodolistFetcherPort = this._adapters.todolistFetcher();
 
-    return new TodolistPageDisplayImpl(todolistFetcher, store);
+    return new FetchTodolistUseCase(todolistFetcher, store);
   }
 }
 

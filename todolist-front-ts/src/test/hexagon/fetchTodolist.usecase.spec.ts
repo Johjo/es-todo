@@ -1,20 +1,20 @@
 import {
   FromBackend,
-  TodolistPageDisplayImpl,
-  TodolistPageDisplayUseCase
-} from '../../hexagon/todolistPageDisplay.usecase';
-import { TodolistFetcherPort } from '../../hexagon/todolistPageDisplay.port';
+  FetchTodolistUseCase,
+  FetchTodolistContract
+} from '../../hexagon/fetchTodolist.usecase';
+import { TodolistFetcherPort } from '../../hexagon/fetchTodolist.port';
 import { AppStore, createAppStore } from '../../hexagon/store';
 
-describe('Todolist page use case', () => {
-  let sut: TodolistPageDisplayUseCase;
+describe('fetch todolist use case', () => {
+  let fetchTodolist: FetchTodolistContract;
   let todolistFetcher: TodolistFetcherForTest;
   let store: AppStore;
 
   beforeEach(() => {
-    store = createAppStore();
     todolistFetcher = new TodolistFetcherForTest();
-    sut = new TodolistPageDisplayImpl(todolistFetcher, store);
+    store = createAppStore({ fetchTodolist: fetchTodolist });
+    fetchTodolist = new FetchTodolistUseCase(todolistFetcher, store);
   });
 
   it('should do nothing', () => {
@@ -23,13 +23,13 @@ describe('Todolist page use case', () => {
 
 
   it('should indicate when loading started (no wait for async method)', () => {
-    sut.execute();
+    fetchTodolist.execute();
     expect(store.getState().todolistPage).toEqual({ statut: 'loading' });
   });
 
   it('should indicate empty todolist when no task', async () => {
     todolistFetcher.feed({ tasks: [] });
-    await sut.execute();
+    await fetchTodolist.execute();
 
     expect(store.getState().todolistPage).toEqual({ statut: 'empty' });
 
@@ -38,7 +38,7 @@ describe('Todolist page use case', () => {
   it('should display todolist when one task', async () => {
     todolistFetcher.feed({ tasks: [{ key: '1', name: 'buy the milk' }] });
 
-    await sut.execute();
+    await fetchTodolist.execute();
 
     expect(store.getState().todolistPage).toEqual({
       statut: 'atLeastOneTask',
@@ -53,7 +53,7 @@ describe('Todolist page use case', () => {
         { key: '2', name: 'buy the water' }]
     });
 
-    await sut.execute();
+    await fetchTodolist.execute();
   });
 });
 

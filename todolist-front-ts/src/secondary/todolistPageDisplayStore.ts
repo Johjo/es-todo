@@ -1,4 +1,4 @@
-import { TodolistPageDisplayStorePort } from '../hexagon/todolistPageDisplay.port';
+import { TodolistPageDisplayStorePort } from '../hexagon/fetchTodolist.port';
 import { AppStore } from '../hexagon/store';
 import { todolistPageDisplayed, TodolistPresentation } from '../hexagon/todolistPage.slice';
 

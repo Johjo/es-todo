@@ -1,7 +1,7 @@
 import { TodolistFetcherHttp } from '../../secondary/todolistFetcherHttp';
 import { v4 } from 'uuid';
 import { Task } from '../../hexagon/todolistPage.slice';
-import { FromBackend } from '../../hexagon/todolistPageDisplay.usecase';
+import { FromBackend } from '../../hexagon/fetchTodolist.usecase';
 import { TodolistUpdaterHttp } from '../../secondary/todolistUpdaterHttp';
 
 const url = 'http://todolist-ytreza-dev.osc-fr1.scalingo.io';
