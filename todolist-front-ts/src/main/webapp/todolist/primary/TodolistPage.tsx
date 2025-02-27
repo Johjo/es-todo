@@ -20,6 +20,7 @@ export function TodolistPageDisplay() {
   const todolistPage = useSelector(selectTodolistPage);
 
   return match(todolistPage)
+    .with({ statut: 'idle' }, () => <></>)
     .with({ statut: 'loading' }, () => <Loading />)
     .with({ statut: 'empty' }, () => <EmptyState />)
     .with({ statut: 'atLeastOneTask' }, (todolist) => <Todolist tasks={todolist.tasks} />)

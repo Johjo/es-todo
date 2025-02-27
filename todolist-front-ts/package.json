@@ -68,6 +68,7 @@
     "@tikui/core": "6.3.0",
     "@tsconfig/vite-react": "3.4.0",
     "@vitejs/plugin-react": "4.3.4",
+    "fp-ts": "2.16.9",
     "piqure": "2.1.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",

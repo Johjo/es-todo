@@ -1,24 +1,26 @@
-import { TodolistFetcherPort, TodolistPageDisplayStorePort } from './todolistPageDisplay.port';
+import { TodolistFetcherPort } from './todolistPageDisplay.port';
+import { emptyTodolistFetched, todolistFetched, todolistFetchingStarted } from './todolistPage.slice.ts';
+import { AppStore } from './store.ts';
 
 export interface TodolistPageDisplayUseCase {
   execute(): Promise<void>;
 }
 
 export class TodolistPageDisplayImpl implements TodolistPageDisplayUseCase {
-  constructor(private readonly store: TodolistPageDisplayStorePort, private readonly todolistFetcher: TodolistFetcherPort) {
+  constructor(private readonly todolistFetcher: TodolistFetcherPort, private readonly store: AppStore) {
   }
 
   async execute(): Promise<void> {
-    this.store.displayTodolistPage({ statut: 'loading' });
+    this.store.dispatch(todolistFetchingStarted());
 
-    const todolist = await this.todolistFetcher.getTodolist("b69785c5-9266-486c-9655-52d85ad25bd5");
+    const todolist = await this.todolistFetcher.getTodolist('b69785c5-9266-486c-9655-52d85ad25bd5');
 
     if (todolist.tasks.length === 0) {
-      this.store.displayTodolistPage({ statut: 'empty' });
+      this.store.dispatch(emptyTodolistFetched());
       return;
     }
 
-    this.store.displayTodolistPage({ statut: 'atLeastOneTask', tasks: todolist.tasks });
+    this.store.dispatch(todolistFetched(todolist.tasks));
   }
 }
 

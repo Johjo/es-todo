@@ -10,8 +10,7 @@ import type { TodolistPageDisplayUseCase } from 'src/hexagon/todolistPageDisplay
 import { TodolistPageDisplayImpl } from 'src/hexagon/todolistPageDisplay.usecase.ts';
 import { Provider } from 'react-redux';
 import { AppStore, createStore } from '../../../hexagon/store.ts';
-import type { TodolistFetcherPort, TodolistPageDisplayStorePort } from '../../../hexagon/todolistPageDisplay.port.ts';
-import { TodolistPageDisplayStore } from '../../../secondary/todolistPageDisplayStore.ts';
+import type { TodolistFetcherPort } from '../../../hexagon/todolistPageDisplay.port.ts';
 import { TodolistFetcherHttp } from '../../../secondary/todolistFetcherHttp.ts';
 
 const container = document.getElementById('root');
@@ -22,10 +21,10 @@ class DependenciesUseCaseImpl implements DependenciesUseCase {
   }
 
   todolistPageDisplay(): TodolistPageDisplayUseCase {
-    const store: TodolistPageDisplayStorePort = this._adapters.todolistPageDisplayStore();
+    const store : AppStore = this._adapters.store();
     const todolistFetcher: TodolistFetcherPort = this._adapters.todolistFetcher();
 
-    return new TodolistPageDisplayImpl(store, todolistFetcher);
+    return new TodolistPageDisplayImpl(todolistFetcher, store);
   }
 }
 
@@ -35,17 +34,18 @@ class DependenciesAdapter {
 
   }
 
-  todolistPageDisplayStore() : TodolistPageDisplayStorePort {
-    return new TodolistPageDisplayStore(this._store);
-  }
-
-  todolistFetcher() : TodolistFetcherPort {
+  todolistFetcher(): TodolistFetcherPort {
     return new TodolistFetcherHttp('https://todolist-ytreza-dev.osc-fr1.scalingo.io');
     // return new TodolistFetcherHttp('http://127.0.0.1:8000');
   }
+
+  store(): AppStore {
+    return this._store;
+  }
+
 }
 
-const store : AppStore = createStore();
+const store: AppStore = createStore();
 const useCaseDependencies: DependenciesUseCaseImpl = new DependenciesUseCaseImpl(new DependenciesAdapter(store));
 
 const root = createRoot(container!);

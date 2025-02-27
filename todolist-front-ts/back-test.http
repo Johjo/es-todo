@@ -15,10 +15,10 @@ POST http://{{host}}/todolist/b69785c5-9266-486c-9655-52d85ad25bd5/task/c69785c5
 
 ###
 
-POST http://{{host}}/todolist/b69785c5-9266-486c-9655-52d85ad25bd5/task/d69785c5-9266-486c-9655-52d85ad25bd7
+POST http://{{host}}/todolist/b69785c5-9266-486c-9655-52d85ad25bd5/task/d69785c5-9266-486c-9655-52d85ad25bd8
 
 {
-"name" : "buy something "
+"name" : "buy something else"
 }
 
 ###

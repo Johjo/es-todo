@@ -4,7 +4,7 @@ import { v4 } from 'uuid';
 import { TodolistPageDisplay } from '../../../../../main/webapp/todolist/primary/TodolistPage.tsx';
 import type { AppStore } from '../../../../../hexagon/store.ts';
 import { createStore } from '../../../../../hexagon/store.ts';
-import { todolistPageDisplayed } from '../../../../../hexagon/todolistPage.slice.ts';
+import { todolistFetchingStarted, todolistPageDisplayed } from '../../../../../hexagon/todolistPage.slice.ts';
 import { renderWithDependencies } from './renderWithDependencies.tsx';
 import { DependenciesUseCaseDummy } from './dependenciesUseCaseDummy.ts';
 
@@ -26,6 +26,11 @@ describe('TodolistPage Display', () => {
   describe('loading statut', () => {
     it('todolist is loading', () => {
       const { queryByText } = renderBis(<TodolistPageDisplay />);
+      act(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        store.dispatch(todolistFetchingStarted());
+      });
+
       const text = queryByText('loading...');
       expect(text).toBeTruthy();
     });
