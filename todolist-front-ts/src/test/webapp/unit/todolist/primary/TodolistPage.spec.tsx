@@ -18,7 +18,7 @@ describe('TodolistPage', () => {
   beforeEach(() => {
     todolistPageDisplay = new TodolistPageDisplayUseCaseForTest();
     openTask = new OpenTaskUseCaseForTest();
-    store = createAppStore();
+    store = createAppStore({});
     renderBis = renderWithDependencies(store, new DependenciesUseCaseForTest(todolistPageDisplay, openTask));
   });
 

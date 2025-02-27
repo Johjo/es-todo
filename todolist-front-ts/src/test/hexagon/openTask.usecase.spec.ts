@@ -1,7 +1,7 @@
 // ajouter une tache dans les tâches
 // mettre à jour la vue des tâches
 import { v4 } from 'uuid';
-import { OpenTaskUseCase } from '../../hexagon/openTask.usecase';
+import { openTask, OpenTaskUseCase } from '../../hexagon/openTask.usecase';
 import { ToBackend, TodolistUpdaterPort, UuidGeneratorPort } from '../../hexagon/openTask.port';
 import { AppStore, createAppStore } from '../../hexagon/store';
 
@@ -9,13 +9,13 @@ describe('open task use case', () => {
   let store: AppStore;
   let uuidGenerator: UuidGeneratorForTest;
   let todolistUpdater: TodolistUpdaterForTest;
-  let sut: OpenTaskUseCase;
+  let useCase: OpenTaskUseCase;
 
   beforeEach(() => {
-    store = createAppStore();
     uuidGenerator = new UuidGeneratorForTest();
     todolistUpdater = new TodolistUpdaterForTest();
-    sut = new OpenTaskUseCase(uuidGenerator, todolistUpdater, store);
+    useCase = new OpenTaskUseCase(uuidGenerator, todolistUpdater);
+    store = createAppStore({ uuidGenerator, todolistUpdater, openTask : useCase });
   });
 
   it('should do nothing', async () => {
@@ -27,7 +27,7 @@ describe('open task use case', () => {
     const taskKey = v4();
     uuidGenerator.feed(taskKey);
     // WHEN
-    await sut.execute('buy the milk');
+    await store.dispatch(openTask('buy the milk'));
     // THEN
     expect(todolistUpdater.all()).toEqual([{ key: taskKey, name: 'buy the milk' }]);
   });
@@ -38,7 +38,7 @@ describe('open task use case', () => {
     uuidGenerator.feed(task.key);
 
     // WHEN
-    await sut.execute(task.name);
+    await store.dispatch(openTask(task.name));
 
     // THEN
     expect(todolistUpdater.all()).toEqual([{ key: task.key, name: task.name }]);

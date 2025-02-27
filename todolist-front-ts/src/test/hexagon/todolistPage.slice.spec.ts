@@ -12,7 +12,7 @@ import { AppStore, createAppStore } from '../../hexagon/store';
 describe('Todolist', () => {
   let store: AppStore;
   beforeEach(() => {
-    store = createAppStore();
+    store = createAppStore({});
   });
 
   it('initial state should be idle', () => {

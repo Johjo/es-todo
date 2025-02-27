@@ -28,7 +28,7 @@ class DependenciesUseCaseImpl implements DependenciesUseCase {
   openTask(): OpenTaskContract {
     const uuidGenerator: UuidGeneratorPort = this._adapters.uuidGenerator();
     const todolistUpdater: TodolistUpdaterPort = this._adapters.todolistUpdater();
-    return new OpenTaskUseCase(uuidGenerator, todolistUpdater, this._adapters.store());
+    return new OpenTaskUseCase(uuidGenerator, todolistUpdater);
   }
 
   todolistPageDisplay(): TodolistPageDisplayUseCase {
