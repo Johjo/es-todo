@@ -2,9 +2,19 @@ import { match } from 'ts-pattern';
 import { useSelector } from 'react-redux';
 import type { Task } from '../../../../hexagon/todolistPage.slice.ts';
 import { selectTodolistPage } from '../../../../hexagon/todolistPage.slice.ts';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDependenciesUseCase } from './useDependenciesUseCase.ts';
 
+
+export function TaskForm() {
+  const dependenciesUseCase = useDependenciesUseCase();
+  const [taskName, setTaskName] = useState("");
+
+  return <>
+    <input type="text" value={taskName} onChange={(e) => setTaskName(e.target.value)} />
+    <button onClick={() => dependenciesUseCase.openTask().execute(taskName).then()}>Add task</button>
+  </>;
+}
 
 export function TodolistPage() {
   const dependenciesUseCase = useDependenciesUseCase();
@@ -13,7 +23,7 @@ export function TodolistPage() {
     void dependenciesUseCase.todolistPageDisplay().execute();
   }, []);
 
-  return <TodolistPageDisplay />;
+  return <><TaskForm /><TodolistPageDisplay /> </>;
 }
 
 export function TodolistPageDisplay() {

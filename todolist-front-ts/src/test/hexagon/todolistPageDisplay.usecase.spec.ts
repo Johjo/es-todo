@@ -4,7 +4,7 @@ import {
   TodolistPageDisplayUseCase
 } from '../../hexagon/todolistPageDisplay.usecase';
 import { TodolistFetcherPort } from '../../hexagon/todolistPageDisplay.port';
-import { AppStore, createStore } from '../../hexagon/store';
+import { AppStore, createAppStore } from '../../hexagon/store';
 
 describe('Todolist page use case', () => {
   let sut: TodolistPageDisplayUseCase;
@@ -12,7 +12,7 @@ describe('Todolist page use case', () => {
   let store: AppStore;
 
   beforeEach(() => {
-    store = createStore();
+    store = createAppStore();
     todolistFetcher = new TodolistFetcherForTest();
     sut = new TodolistPageDisplayImpl(todolistFetcher, store);
   });

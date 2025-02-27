@@ -27,8 +27,17 @@ export const todolistPageSlice = createSlice({
     },
     todolistFetched: (_state, action: PayloadAction<Task[]>) => {
       return { statut: 'atLeastOneTask', tasks: action.payload };
+    },
+    taskOpened: (state, action: PayloadAction<Task>) => {
+      const tasks: Task[] = state.statut === 'atLeastOneTask' ? [...state.tasks] : [];
+      return {
+        statut: 'atLeastOneTask',
+        tasks: [...tasks, action.payload]
+      };
     }
   }
+
+
 });
 
 
@@ -36,7 +45,8 @@ export const {
   todolistPageDisplayed,
   todolistFetchingStarted,
   emptyTodolistFetched,
-  todolistFetched
+  todolistFetched,
+  taskOpened
 } = todolistPageSlice.actions;
 export const todolistPageReducer = todolistPageSlice.reducer;
 

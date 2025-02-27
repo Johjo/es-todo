@@ -3,7 +3,7 @@ import { act } from '@testing-library/react';
 import { v4 } from 'uuid';
 import { TodolistPageDisplay } from '../../../../../main/webapp/todolist/primary/TodolistPage.tsx';
 import type { AppStore } from '../../../../../hexagon/store.ts';
-import { createStore } from '../../../../../hexagon/store.ts';
+import { createAppStore } from '../../../../../hexagon/store.ts';
 import { todolistFetchingStarted, todolistPageDisplayed } from '../../../../../hexagon/todolistPage.slice.ts';
 import { renderWithDependencies } from './renderWithDependencies.tsx';
 import { DependenciesUseCaseDummy } from './dependenciesUseCaseDummy.ts';
@@ -19,7 +19,7 @@ describe('TodolistPage Display', () => {
   let renderBis: ReturnType<typeof renderWithDependencies>;
 
   beforeEach(() => {
-    store = createStore();
+    store = createAppStore();
     renderBis = renderWithDependencies(store, new DependenciesUseCaseDummy());
   });
 
@@ -27,7 +27,6 @@ describe('TodolistPage Display', () => {
     it('todolist is loading', () => {
       const { queryByText } = renderBis(<TodolistPageDisplay />);
       act(() => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         store.dispatch(todolistFetchingStarted());
       });
 

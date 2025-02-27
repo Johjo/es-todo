@@ -9,9 +9,14 @@ import type { DependenciesUseCase } from '../todolist/primary/dependenciesUseCas
 import type { TodolistPageDisplayUseCase } from 'src/hexagon/todolistPageDisplay.usecase.ts';
 import { TodolistPageDisplayImpl } from 'src/hexagon/todolistPageDisplay.usecase.ts';
 import { Provider } from 'react-redux';
-import { AppStore, createStore } from '../../../hexagon/store.ts';
+import type { AppStore} from '../../../hexagon/store.ts';
+import { createAppStore } from '../../../hexagon/store.ts';
 import type { TodolistFetcherPort } from '../../../hexagon/todolistPageDisplay.port.ts';
 import { TodolistFetcherHttp } from '../../../secondary/todolistFetcherHttp.ts';
+import { OpenTaskContract, OpenTaskUseCase } from 'src/hexagon/openTask.usecase.ts';
+import type { TodolistUpdaterPort, UuidGeneratorPort } from '../../../hexagon/openTask.port.ts';
+import { UuidGeneratorRandom } from '../../../secondary/uuidGeneratorRandom.ts';
+import { TodolistUpdaterHttp } from '../../../secondary/todolistUpdaterHttp.ts';
 
 const container = document.getElementById('root');
 
@@ -20,8 +25,14 @@ class DependenciesUseCaseImpl implements DependenciesUseCase {
 
   }
 
+  openTask(): OpenTaskContract {
+    const uuidGenerator: UuidGeneratorPort = this._adapters.uuidGenerator();
+    const todolistUpdater: TodolistUpdaterPort = this._adapters.todolistUpdater();
+    return new OpenTaskUseCase(uuidGenerator, todolistUpdater, this._adapters.store());
+  }
+
   todolistPageDisplay(): TodolistPageDisplayUseCase {
-    const store : AppStore = this._adapters.store();
+    const store: AppStore = this._adapters.store();
     const todolistFetcher: TodolistFetcherPort = this._adapters.todolistFetcher();
 
     return new TodolistPageDisplayImpl(todolistFetcher, store);
@@ -43,9 +54,16 @@ class DependenciesAdapter {
     return this._store;
   }
 
+  uuidGenerator() : UuidGeneratorPort {
+    return new UuidGeneratorRandom();
+  }
+
+  todolistUpdater() : TodolistUpdaterPort {
+    return new TodolistUpdaterHttp('https://todolist-ytreza-dev.osc-fr1.scalingo.io');
+  }
 }
 
-const store: AppStore = createStore();
+const store: AppStore = createAppStore();
 const useCaseDependencies: DependenciesUseCaseImpl = new DependenciesUseCaseImpl(new DependenciesAdapter(store));
 
 const root = createRoot(container!);
