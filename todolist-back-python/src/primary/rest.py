@@ -2,8 +2,8 @@ from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 
 from src.primary.port import UseCaseDependenciesPort, QueryDependenciesPort
-from src.primary.todolist.read.list_all_tasks import register_todolist_read_routes
-from src.primary.todolist_write_routes import register_todolist_write_routes
+from src.primary.todolist.read.routes import register_todolist_read_routes
+from src.primary.todolist.write.routes import register_todolist_write_routes
 from src.primary.user_routes import register_user_routes
 
 
