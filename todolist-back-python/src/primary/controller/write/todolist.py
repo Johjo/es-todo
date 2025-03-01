@@ -6,7 +6,7 @@ from src.hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 from src.hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName, UserKey, TodolistKey
 from src.hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
 from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
-from src.hexagon.todolist.write.close_task import CloseTask
+from src.hexagon.todolist.write.close_task import CloseTaskUseCase
 from src.hexagon.todolist.write.create_todolist import TodolistCreate
 from src.hexagon.todolist.write.import_many_task import ImportManyTask
 from src.hexagon.todolist.write.open_task import OpenTaskUseCase
@@ -36,7 +36,7 @@ class TodolistWriteController:
         use_case.execute(todolist_key=todolist_key, name=task_name)
 
     def close_task(self, todolist_name: TodolistName, task_key: TaskKey):
-        use_case: CloseTask = self.dependencies.get_use_case(CloseTask)
+        use_case: CloseTaskUseCase = self.dependencies.get_use_case(CloseTaskUseCase)
         use_case.execute(todolist_name=todolist_name, task_key=task_key)
 
     def reword_task(self, todolist_name: TodolistName, task_key: TaskKey, new_name: TaskName):

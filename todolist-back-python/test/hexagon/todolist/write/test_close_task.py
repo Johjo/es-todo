@@ -3,17 +3,17 @@ from dataclasses import replace
 import pytest
 from expression import Ok, Error
 
-from src.hexagon.todolist.write.close_task import CloseTask
+from src.hexagon.todolist.write.close_task import CloseTaskUseCase
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TodolistSetForTest
 
 
 @pytest.fixture
 def sut(todolist_set: TodolistSetForTest):
-    return CloseTask(todolist_set)
+    return CloseTaskUseCase(todolist_set)
 
 
-def test_close_task(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+def test_close_task(sut: CloseTaskUseCase, todolist_set: TodolistSetForTest, fake: TodolistFaker):
     task = fake.a_task()
     todolist = fake.a_todolist().having(tasks=[task])
     todolist_set.feed(todolist)
@@ -24,7 +24,7 @@ def test_close_task(sut: CloseTask, todolist_set: TodolistSetForTest, fake: Todo
     assert actual == todolist.having(tasks=[task.having(is_open=False)]).to_snapshot()
 
 
-def test_close_when_two_tasks(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+def test_close_when_two_tasks(sut: CloseTaskUseCase, todolist_set: TodolistSetForTest, fake: TodolistFaker):
     first_task = fake.a_task(1)
     closed_task = fake.a_task(2)
     todolist = fake.a_todolist().having(tasks=[first_task, closed_task])
@@ -36,7 +36,7 @@ def test_close_when_two_tasks(sut: CloseTask, todolist_set: TodolistSetForTest, 
     assert actual == todolist.having(tasks=[first_task, (replace(closed_task, is_open=False))]).to_snapshot()
 
 
-def test_tell_ok_when_close_task(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+def test_tell_ok_when_close_task(sut: CloseTaskUseCase, todolist_set: TodolistSetForTest, fake: TodolistFaker):
     task = fake.a_task()
     todolist = fake.a_todolist().having(tasks=[task])
     todolist_set.feed(todolist)
@@ -46,7 +46,7 @@ def test_tell_ok_when_close_task(sut: CloseTask, todolist_set: TodolistSetForTes
     assert response == Ok(None)
 
 
-def test_tell_error_if_task_does_not_exist(sut: CloseTask, todolist_set: TodolistSetForTest, fake: TodolistFaker):
+def test_tell_error_if_task_does_not_exist(sut: CloseTaskUseCase, todolist_set: TodolistSetForTest, fake: TodolistFaker):
     todolist = fake.a_todolist()
     todolist_set.feed(todolist)
 
