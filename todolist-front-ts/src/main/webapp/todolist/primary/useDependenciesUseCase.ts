@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { DependenciesUseCase } from './dependenciesUseCase.ts';
+import type { DependenciesUseCase } from '../../../../dependenciesUseCase.ts';
 
 export const DependenciesContext = createContext<DependenciesUseCase | null>(null);
 

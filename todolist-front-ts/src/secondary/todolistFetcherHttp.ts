@@ -1,5 +1,5 @@
-import { TodolistFetcherPort } from '../hexagon/todolistPageDisplay.port';
-import { FromBackend } from '../hexagon/todolistPageDisplay.usecase';
+import { TodolistFetcherPort } from '../hexagon/fetchTodolist.port.ts';
+import { FromBackend } from '../hexagon/fetchTodolist.usecase.ts';
 
 export class TodolistFetcherHttp implements TodolistFetcherPort {
   constructor(private readonly url: string) {

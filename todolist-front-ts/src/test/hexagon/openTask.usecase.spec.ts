@@ -1,9 +1,20 @@
 // ajouter une tache dans les tâches
 // mettre à jour la vue des tâches
 import { v4 } from 'uuid';
-import { openTask, OpenTaskUseCase } from '../../hexagon/openTask.usecase';
+import { openTask, OpenTaskContract, OpenTaskUseCase } from '../../hexagon/openTask.usecase';
 import { ToBackend, TodolistUpdaterPort, UuidGeneratorPort } from '../../hexagon/openTask.port';
 import { AppStore, createAppStore } from '../../hexagon/store';
+import { DependenciesUseCaseDummy } from '../webapp/unit/todolist/primary/dependenciesUseCaseDummy';
+
+class DependenciesUseCaseForTest extends DependenciesUseCaseDummy {
+  constructor(private readonly useCase: OpenTaskContract) {
+    super();
+  }
+
+  openTask(): OpenTaskContract {
+    return this.useCase;
+  }
+}
 
 describe('open task use case', () => {
   let store: AppStore;
@@ -15,7 +26,7 @@ describe('open task use case', () => {
     uuidGenerator = new UuidGeneratorForTest();
     todolistUpdater = new TodolistUpdaterForTest();
     useCase = new OpenTaskUseCase(uuidGenerator, todolistUpdater);
-    store = createAppStore({ uuidGenerator, todolistUpdater, openTask : useCase });
+    store = createAppStore(new DependenciesUseCaseForTest(useCase));
   });
 
   it('should do nothing', async () => {

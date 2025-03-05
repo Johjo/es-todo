@@ -1,29 +1,34 @@
 import { match } from 'ts-pattern';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type { Task } from '../../../../hexagon/todolistPage.slice.ts';
 import { selectTodolistPage } from '../../../../hexagon/todolistPage.slice.ts';
 import { useEffect, useState } from 'react';
-import { useDependenciesUseCase } from './useDependenciesUseCase.ts';
+import { fetchTodolist } from '../../../../hexagon/fetchTodolist.usecase.ts';
+import { openTask } from '../../../../hexagon/openTask.usecase.ts';
+import type { AppDispatch } from '../../../../hexagon/store.ts';
 
 
 export function TaskForm() {
-  const dependenciesUseCase = useDependenciesUseCase();
-  const [taskName, setTaskName] = useState("");
+  const dispatch = useDispatch<AppDispatch>()
+  const [taskName, setTaskName] = useState('');
 
   return <>
     <input type="text" value={taskName} onChange={(e) => setTaskName(e.target.value)} />
-    <button onClick={() => dependenciesUseCase.openTask().execute(taskName).then()}>Add task</button>
+    <button onClick={() => dispatch(openTask(taskName))}>Add task</button>
   </>;
 }
 
 export function TodolistPage() {
-  const dependenciesUseCase = useDependenciesUseCase();
+  const dispatch = useDispatch<AppDispatch>()
 
   useEffect(() => {
-    void dependenciesUseCase.todolistPageDisplay().execute();
+    void dispatch(fetchTodolist());
   }, []);
 
-  return <><TaskForm /><TodolistPageDisplay /> </>;
+  return <>
+    <TaskForm />
+    <TodolistPageDisplay />
+  </>;
 }
 
 export function TodolistPageDisplay() {

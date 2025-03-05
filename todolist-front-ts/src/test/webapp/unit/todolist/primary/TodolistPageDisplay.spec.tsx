@@ -19,7 +19,7 @@ describe('TodolistPage Display', () => {
   let renderBis: ReturnType<typeof renderWithDependencies>;
 
   beforeEach(() => {
-    store = createAppStore();
+    store = createAppStore(new DependenciesUseCaseDummy());
     renderBis = renderWithDependencies(store, new DependenciesUseCaseDummy());
   });
 

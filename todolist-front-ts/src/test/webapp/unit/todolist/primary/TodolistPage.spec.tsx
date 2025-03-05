@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { TaskForm, TodolistPage } from '../../../../../main/webapp/todolist/primary/TodolistPage.tsx';
-import type { AppStore } from '../../../../../hexagon/store.ts';
+import type { AppDispatch, AppStore } from '../../../../../hexagon/store.ts';
 import { createAppStore } from '../../../../../hexagon/store.ts';
-import type { TodolistPageDisplayUseCase } from '../../../../../hexagon/todolistPageDisplay.usecase.ts';
+import type { FetchTodolistContract } from '../../../../../hexagon/fetchTodolist.usecase.ts';
 import { renderWithDependencies } from './renderWithDependencies.tsx';
 import { DependenciesUseCaseDummy } from './dependenciesUseCaseDummy.ts';
 import { waitFor } from '@testing-library/dom';
@@ -12,25 +12,25 @@ import userEvent from '@testing-library/user-event';
 describe('TodolistPage', () => {
   let store: AppStore;
   let renderBis: ReturnType<typeof renderWithDependencies>;
-  let todolistPageDisplay: TodolistPageDisplayUseCaseForTest;
+  let fetchTodolist: TodolistPageDisplayUseCaseForTest;
   let openTask: OpenTaskUseCaseForTest;
 
   beforeEach(() => {
-    todolistPageDisplay = new TodolistPageDisplayUseCaseForTest();
+    fetchTodolist = new TodolistPageDisplayUseCaseForTest();
     openTask = new OpenTaskUseCaseForTest();
-    store = createAppStore({});
-    renderBis = renderWithDependencies(store, new DependenciesUseCaseForTest(todolistPageDisplay, openTask));
+    store = createAppStore(new DependenciesUseCaseForTest(fetchTodolist, openTask));
+    renderBis = renderWithDependencies(store, new DependenciesUseCaseForTest(fetchTodolist, openTask));
   });
 
   describe('Should load todolist', () => {
     it('do nothing', () => {
-      expect(todolistPageDisplay.hasBeenExecuted()).toBeFalsy();
+      expect(fetchTodolist.hasBeenExecuted()).toBeFalsy();
     });
 
     it('after loading', () => {
       renderBis(<TodolistPage />);
 
-      expect(todolistPageDisplay.hasBeenExecuted()).toBeTruthy();
+      expect(fetchTodolist.hasBeenExecuted()).toBeTruthy();
     });
 
     it('click on button should open task', async () => {
@@ -48,10 +48,10 @@ describe('TodolistPage', () => {
   });
 });
 
-class TodolistPageDisplayUseCaseForTest implements TodolistPageDisplayUseCase {
+class TodolistPageDisplayUseCaseForTest implements FetchTodolistContract {
   private _hasBeenExecuted: boolean = false;
 
-  execute(): Promise<void> {
+  execute(_dispatch: AppDispatch): Promise<void> {
     this._hasBeenExecuted = true;
     return Promise.resolve();
   }
@@ -66,7 +66,7 @@ class DependenciesUseCaseForTest extends DependenciesUseCaseDummy {
     super();
   }
 
-  todolistPageDisplay(): TodolistPageDisplayUseCase {
+   fetchTodolist(): FetchTodolistContract {
     return this._todolistPageDisplay;
   }
 
@@ -80,7 +80,7 @@ class DependenciesUseCaseForTest extends DependenciesUseCaseDummy {
 class OpenTaskUseCaseForTest implements OpenTaskContract {
   private _hasBeenExecuted: { name: string } | undefined = undefined;
 
-  execute(taskName: string): Promise<void> {
+  execute(_dispatch: AppDispatch, taskName: string): Promise<void> {
     this._hasBeenExecuted = { name: taskName };
     return Promise.resolve();
   }

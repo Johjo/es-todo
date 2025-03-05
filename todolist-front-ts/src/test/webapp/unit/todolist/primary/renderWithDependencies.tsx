@@ -3,7 +3,7 @@ import { DependenciesContext } from '../../../../../main/webapp/todolist/primary
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { DependenciesUseCase } from '../../../../../main/webapp/todolist/primary/dependenciesUseCase.ts';
+import type { DependenciesUseCase } from '../../../../../dependenciesUseCase.ts';
 
 export const renderWithDependencies = (store: AppStore, useCaseDependencies: DependenciesUseCase) => (ui: React.ReactElement) => {
   return render(<DependenciesContext value={useCaseDependencies}>
