@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from src.hexagon.todolist.port import TodolistSetPort
+from src.hexagon.todolist.write.close_task import CloseTaskPrimaryPort, CloseTaskUseCase
 from src.hexagon.todolist.write.create_todolist import TodolistCreate
 from src.hexagon.todolist.write.open_task import OpenTaskUseCase
 from src.hexagon.user.port import UserRepositoryPort
@@ -48,11 +49,14 @@ class UseCasesDependencies(UseCaseDependenciesPort):
     def create_todolist(self) -> TodolistCreate:
         return TodolistCreate(todolist_set=self._adapters.todolist_set())
 
+    def delete_todolist(self) -> TodolistDelete:
+        return TodolistDelete(todolist_set=self._adapters.todolist_set())
+
     def open_task(self) -> OpenTaskUseCase:
         return OpenTaskUseCase(todolist_set=self._adapters.todolist_set())
 
-    def delete_todolist(self) -> TodolistDelete:
-        return TodolistDelete(todolist_set=self._adapters.todolist_set())
+    def close_task(self) -> CloseTaskPrimaryPort:
+        return CloseTaskUseCase(todolist_set=self._adapters.todolist_set())
 
 
 class InfrastructureForDemo(InfrastructurePort):

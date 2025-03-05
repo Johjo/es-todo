@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from src.hexagon.todolist.write.close_task import CloseTaskPrimaryPort
 from src.hexagon.todolist.write.create_todolist import TodolistCreate
 from src.hexagon.todolist.write.open_task import OpenTaskUseCase
 from src.primary.todolist.read.port import AllTaskPort
@@ -17,6 +18,10 @@ class UseCaseDependenciesPort(ABC):
 
     @abstractmethod
     def delete_todolist(self) -> TodolistDelete:
+        pass
+
+    @abstractmethod
+    def close_task(self) -> CloseTaskPrimaryPort:
         pass
 
 
