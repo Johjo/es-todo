@@ -1,32 +1,30 @@
-// ajouter une tache dans les tâches
-// mettre à jour la vue des tâches
 import { v4 } from 'uuid';
-import { openTask, OpenTaskContract, OpenTaskUseCase } from '../../hexagon/openTask.usecase';
-import { ToBackend, TodolistUpdaterPort, UuidGeneratorPort } from '../../hexagon/openTask.port';
-import { AppStore, createAppStore } from '../../hexagon/store';
-import { DependenciesUseCaseDummy } from '../webapp/unit/todolist/primary/dependenciesUseCaseDummy';
+import { openTask, OpenTaskPrimaryPort, OpenTaskUseCase } from '../../hexagon/openTask.usecase';
+import { OpenTaskUpdaterPort, ToBackend, UuidGeneratorPort } from '../../hexagon/openTask.port';
+import { AppDispatch, AppStore, createAppStore } from '../../hexagon/store';
+import { DependenciesUseCaseDummy } from '../dependenciesUseCaseDummy';
 
-class DependenciesUseCaseForTest extends DependenciesUseCaseDummy {
-  constructor(private readonly useCase: OpenTaskContract) {
+class DependenciesForTest extends DependenciesUseCaseDummy {
+  constructor(private readonly uuidGenerator: UuidGeneratorForTest, private readonly todolistUpdater: TodolistUpdaterForTest) {
     super();
+    console.log(this.uuidGenerator);
   }
 
-  openTask(): OpenTaskContract {
-    return this.useCase;
+  openTask(dispatch: AppDispatch): OpenTaskPrimaryPort {
+    return new OpenTaskUseCase(this.uuidGenerator, this.todolistUpdater, dispatch);
   }
+
 }
 
 describe('open task use case', () => {
   let store: AppStore;
   let uuidGenerator: UuidGeneratorForTest;
   let todolistUpdater: TodolistUpdaterForTest;
-  let useCase: OpenTaskUseCase;
 
   beforeEach(() => {
     uuidGenerator = new UuidGeneratorForTest();
     todolistUpdater = new TodolistUpdaterForTest();
-    useCase = new OpenTaskUseCase(uuidGenerator, todolistUpdater);
-    store = createAppStore(new DependenciesUseCaseForTest(useCase));
+    store = createAppStore(new DependenciesForTest(uuidGenerator, todolistUpdater));
   });
 
   it('should do nothing', async () => {
@@ -61,7 +59,7 @@ describe('open task use case', () => {
   });
 });
 
-class TodolistUpdaterForTest implements TodolistUpdaterPort {
+class TodolistUpdaterForTest implements OpenTaskUpdaterPort {
   private tasks: ToBackend.Task[] = [];
 
   all() {

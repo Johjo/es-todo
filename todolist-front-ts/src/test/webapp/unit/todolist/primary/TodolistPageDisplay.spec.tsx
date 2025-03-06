@@ -6,7 +6,7 @@ import type { AppStore } from '../../../../../hexagon/store.ts';
 import { createAppStore } from '../../../../../hexagon/store.ts';
 import { todolistFetchingStarted, todolistPageDisplayed } from '../../../../../hexagon/todolistPage.slice.ts';
 import { renderWithDependencies } from './renderWithDependencies.tsx';
-import { DependenciesUseCaseDummy } from './dependenciesUseCaseDummy.ts';
+import { DependenciesUseCaseDummy } from '../../../../dependenciesUseCaseDummy.ts';
 
 
 function aTask() {
@@ -20,7 +20,7 @@ describe('TodolistPage Display', () => {
 
   beforeEach(() => {
     store = createAppStore(new DependenciesUseCaseDummy());
-    renderBis = renderWithDependencies(store, new DependenciesUseCaseDummy());
+    renderBis = renderWithDependencies(store);
   });
 
   describe('loading statut', () => {

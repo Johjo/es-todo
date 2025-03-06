@@ -1,22 +1,12 @@
 import {
   fetchTodolist,
-  type FetchTodolistContract,
+  FetchTodolistPrimaryPort,
   FetchTodolistUseCase,
   FromBackend
 } from '../../hexagon/fetchTodolist.usecase';
 import { TodolistFetcherPort } from '../../hexagon/fetchTodolist.port';
-import { AppStore, createAppStore } from '../../hexagon/store';
-import { DependenciesUseCaseDummy } from '../webapp/unit/todolist/primary/dependenciesUseCaseDummy';
-
-class DependenciesUseCaseForTest extends DependenciesUseCaseDummy {
-  constructor(private readonly useCase: FetchTodolistUseCase) {
-    super();
-  }
-
-  fetchTodolist(): FetchTodolistContract {
-    return this.useCase;
-  }
-}
+import { AppDispatch, AppStore, createAppStore } from '../../hexagon/store';
+import { DependenciesUseCaseDummy } from '../dependenciesUseCaseDummy';
 
 describe('fetch todolist use case', () => {
   let todolistFetcher: TodolistFetcherForTest;
@@ -24,7 +14,7 @@ describe('fetch todolist use case', () => {
 
   beforeEach(() => {
     todolistFetcher = new TodolistFetcherForTest();
-    store = createAppStore(new DependenciesUseCaseForTest(new FetchTodolistUseCase(todolistFetcher)));
+    store = createAppStore(new DependenciesUseCaseForTest(todolistFetcher));
   });
 
   it('should do nothing', () => {
@@ -67,7 +57,6 @@ describe('fetch todolist use case', () => {
   });
 });
 
-
 class TodolistFetcherForTest implements TodolistFetcherPort {
   private _todolist: FromBackend.Todolist | undefined = undefined;
 
@@ -85,3 +74,13 @@ class TodolistFetcherForTest implements TodolistFetcherPort {
 }
 
 
+class DependenciesUseCaseForTest extends DependenciesUseCaseDummy {
+  constructor(private readonly todolistFetcher: TodolistFetcherForTest) {
+    super();
+
+  }
+
+  fetchTodolist(dispatch: AppDispatch): FetchTodolistPrimaryPort {
+    return new FetchTodolistUseCase(this.todolistFetcher, dispatch);
+  }
+}

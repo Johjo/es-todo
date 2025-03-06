@@ -1,4 +1,4 @@
-export interface TodolistUpdaterPort {
+export interface OpenTaskUpdaterPort {
   openTask(todolistKey: string, task: ToBackend.Task): Promise<void>;
 }
 

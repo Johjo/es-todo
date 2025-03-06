@@ -1,7 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { todolistPageReducer } from './todolistPage.slice.ts';
 import { DependenciesUseCase } from '../dependenciesUseCase.ts';
-import { DependenciesUseCaseDummy } from '../test/webapp/unit/todolist/primary/dependenciesUseCaseDummy.ts';
+
+import { DependenciesUseCaseDummy } from '../test/dependenciesUseCaseDummy.ts';
 
 export function createAppStore(useCaseDependencies: DependenciesUseCase) {
   return configureStore({
@@ -13,9 +14,10 @@ export function createAppStore(useCaseDependencies: DependenciesUseCase) {
       })
     }
   );
+
 }
 
-const store = createAppStore(new DependenciesUseCaseDummy() );
+const store = createAppStore(new DependenciesUseCaseDummy());
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppStore = ReturnType<typeof createAppStore>;

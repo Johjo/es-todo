@@ -1,13 +1,28 @@
 import { describe, expect, it } from 'vitest';
 import { TaskForm, TodolistPage } from '../../../../../main/webapp/todolist/primary/TodolistPage.tsx';
-import type { AppDispatch, AppStore } from '../../../../../hexagon/store.ts';
+import type { AppStore } from '../../../../../hexagon/store.ts';
 import { createAppStore } from '../../../../../hexagon/store.ts';
-import type { FetchTodolistContract } from '../../../../../hexagon/fetchTodolist.usecase.ts';
+import type { FetchTodolistPrimaryPort } from '../../../../../hexagon/fetchTodolist.usecase.ts';
 import { renderWithDependencies } from './renderWithDependencies.tsx';
-import { DependenciesUseCaseDummy } from './dependenciesUseCaseDummy.ts';
 import { waitFor } from '@testing-library/dom';
-import type { OpenTaskContract } from '../../../../../hexagon/openTask.usecase.ts';
+import type { OpenTaskPrimaryPort } from '../../../../../hexagon/openTask.usecase.ts';
 import userEvent from '@testing-library/user-event';
+
+import { DependenciesUseCaseDummy } from '../../../../dependenciesUseCaseDummy.ts';
+
+class DependenciesUseCaseForTest extends DependenciesUseCaseDummy {
+  constructor(private readonly _fetchTodolist: FetchTodolistPrimaryPort, private readonly _openTask: OpenTaskPrimaryPort) {
+    super();
+  }
+
+  fetchTodolist(): FetchTodolistPrimaryPort {
+    return this._fetchTodolist;
+  }
+
+  openTask(): OpenTaskPrimaryPort {
+    return this._openTask;
+  }
+}
 
 describe('TodolistPage', () => {
   let store: AppStore;
@@ -19,7 +34,7 @@ describe('TodolistPage', () => {
     fetchTodolist = new TodolistPageDisplayUseCaseForTest();
     openTask = new OpenTaskUseCaseForTest();
     store = createAppStore(new DependenciesUseCaseForTest(fetchTodolist, openTask));
-    renderBis = renderWithDependencies(store, new DependenciesUseCaseForTest(fetchTodolist, openTask));
+    renderBis = renderWithDependencies(store);
   });
 
   describe('Should load todolist', () => {
@@ -27,10 +42,13 @@ describe('TodolistPage', () => {
       expect(fetchTodolist.hasBeenExecuted()).toBeFalsy();
     });
 
-    it('after loading', () => {
+    it('after loading', async () => {
       renderBis(<TodolistPage />);
 
-      expect(fetchTodolist.hasBeenExecuted()).toBeTruthy();
+      await waitFor(() => {
+
+        expect(fetchTodolist.hasBeenExecuted()).toBeTruthy();
+      });
     });
 
     it('click on button should open task', async () => {
@@ -48,10 +66,10 @@ describe('TodolistPage', () => {
   });
 });
 
-class TodolistPageDisplayUseCaseForTest implements FetchTodolistContract {
+class TodolistPageDisplayUseCaseForTest implements FetchTodolistPrimaryPort {
   private _hasBeenExecuted: boolean = false;
 
-  execute(_dispatch: AppDispatch): Promise<void> {
+  execute(): Promise<void> {
     this._hasBeenExecuted = true;
     return Promise.resolve();
   }
@@ -61,26 +79,10 @@ class TodolistPageDisplayUseCaseForTest implements FetchTodolistContract {
   }
 }
 
-class DependenciesUseCaseForTest extends DependenciesUseCaseDummy {
-  constructor(private readonly _todolistPageDisplay: TodolistPageDisplayUseCaseForTest, private readonly _openTask: OpenTaskUseCaseForTest) {
-    super();
-  }
-
-   fetchTodolist(): FetchTodolistContract {
-    return this._todolistPageDisplay;
-  }
-
-  openTask(): OpenTaskContract {
-    return this._openTask;
-  }
-
-}
-
-
-class OpenTaskUseCaseForTest implements OpenTaskContract {
+class OpenTaskUseCaseForTest implements OpenTaskPrimaryPort {
   private _hasBeenExecuted: { name: string } | undefined = undefined;
 
-  execute(_dispatch: AppDispatch, taskName: string): Promise<void> {
+  execute(taskName: string): Promise<void> {
     this._hasBeenExecuted = { name: taskName };
     return Promise.resolve();
   }
