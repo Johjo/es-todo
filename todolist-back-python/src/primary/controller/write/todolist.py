@@ -1,18 +1,18 @@
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.write.reset_fvp_session import ResetFvpSession
-from src.hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName, UserKey
-from src.hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
-from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
-from src.hexagon.todolist.write.close_task import CloseTask
-from src.hexagon.todolist.write.create_todolist import TodolistCreate
-from src.hexagon.todolist.write.import_many_task import ImportManyTask
-from src.hexagon.todolist.write.open_task import OpenTaskUseCase
-from src.hexagon.todolist.write.postpone_task import PostPoneTask
-from src.hexagon.todolist.write.reword_task import RewordTask
-from src.secondary.todolist.markdown_todolist import MarkdownTodolist
+from dependencies import Dependencies
+from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
+from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName, UserKey
+from hexagon.fvp.write.cancel_priority import CancelPriority as Fvp_CancelPriority
+from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
+from hexagon.todolist.write.close_task import CloseTask
+from hexagon.todolist.write.create_todolist import TodolistCreate
+from hexagon.todolist.write.import_many_task import ImportManyTask
+from hexagon.todolist.write.open_task import OpenTaskUseCase
+from hexagon.todolist.write.postpone_task import PostPoneTask
+from hexagon.todolist.write.reword_task import RewordTask
+from secondary.todolist.markdown_todolist import MarkdownTodolist
 
 
 class DateTimeProviderPort(ABC):

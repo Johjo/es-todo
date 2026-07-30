@@ -1,10 +1,10 @@
 import sqlite3
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import FvpSessionSetPort, FvpSnapshot
-from src.hexagon.shared.type import TaskKey, UserKey
-from src.infra.sqlite.sdk import SqliteSdk
-from src.infra.sqlite.type import FvpSession as FvpSessionSdk
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import FvpSessionSetPort, FvpSnapshot
+from hexagon.shared.type import TaskKey, UserKey
+from infra.sqlite.sdk import SqliteSdk
+from infra.sqlite.type import FvpSession as FvpSessionSdk
 
 
 class SessionSqlite(FvpSessionSetPort):

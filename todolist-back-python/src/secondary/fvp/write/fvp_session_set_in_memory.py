@@ -1,8 +1,8 @@
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from src.hexagon.shared.type import UserKey
-from src.infra.fvp_memory import FvpMemory
-from src.shared.const import USER_KEY
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from hexagon.shared.type import UserKey
+from infra.fvp_memory import FvpMemory
+from shared.const import USER_KEY
 
 
 class FvpSessionSetInMemory(FvpSessionSetPort):

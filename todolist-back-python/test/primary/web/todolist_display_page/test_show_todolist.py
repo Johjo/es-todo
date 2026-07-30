@@ -4,9 +4,9 @@ from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp  # type: ignore
 
-from src.dependencies import Dependencies
-from src.infra.memory import Memory
-from src.primary.web.pages import bottle_config
+from dependencies import Dependencies
+from infra.memory import Memory
+from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
 from test.primary.web._test_double.calendar_for_test import _CalendarForTest
 from test.primary.web.fixture import header_with_good_authentication
@@ -19,7 +19,7 @@ def test_show_when_no_task(memory:Memory, calendar: _CalendarForTest, dependenci
     response = app.get('/todo/my_todolist', headers=header_with_good_authentication())
 
     assert response.status == '200 OK'
-    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
+    verify(str(response.body).replace("\\r", "\r").replace("\\n", "\n"), reporter=PythonNativeReporter())
 
 
 def test_show_when_one_task(memory:Memory, calendar: _CalendarForTest, dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
@@ -30,7 +30,7 @@ def test_show_when_one_task(memory:Memory, calendar: _CalendarForTest, dependenc
     response = app.get('/todo/my_todolist', headers=header_with_good_authentication())
 
     assert response.status == '200 OK'
-    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
+    verify(str(response.body).replace("\\r", "\r").replace("\\n", "\n"), reporter=PythonNativeReporter())
 
 
 def test_show_when_task_has_execution_date(memory:Memory, calendar: _CalendarForTest, dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
@@ -42,7 +42,7 @@ def test_show_when_task_has_execution_date(memory:Memory, calendar: _CalendarFor
     response = app.get('/todo/my_todolist', headers=header_with_good_authentication())
 
     assert response.status == '200 OK'
-    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
+    verify(str(response.body).replace("\\r", "\r").replace("\\n", "\n"), reporter=PythonNativeReporter())
 
 
 def test_show_when_two_tasks(memory:Memory, calendar: _CalendarForTest, dependencies: Dependencies, app: TestApp, fake: TodolistFaker) -> None:
@@ -55,4 +55,4 @@ def test_show_when_two_tasks(memory:Memory, calendar: _CalendarForTest, dependen
     response = app.get('/todo/my_todolist', headers=header_with_good_authentication())
 
     assert response.status == '200 OK'
-    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
+    verify(str(response.body).replace("\\r", "\r").replace("\\n", "\n"), reporter=PythonNativeReporter())

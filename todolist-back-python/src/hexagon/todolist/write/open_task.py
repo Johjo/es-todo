@@ -1,10 +1,10 @@
 from expression import Result, Nothing
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskName, TaskOpen, TodolistName
-from src.hexagon.todolist.aggregate import Task, TodolistAggregate
-from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
-from src.hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
+from dependencies import Dependencies
+from hexagon.shared.type import TaskName, TaskOpen, TodolistName
+from hexagon.todolist.aggregate import Task, TodolistAggregate
+from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
 
 
 class OpenTaskUseCase:

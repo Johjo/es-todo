@@ -1,12 +1,12 @@
 from collections import OrderedDict
 from uuid import uuid4
 
-from src.hexagon.shared.type import UserKey, TaskKey
+from hexagon.shared.type import UserKey, TaskKey
 from test.fixture import a_task_key
-from src.hexagon.fvp.write.reset_fvp_session import ResetFvpSession
+from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
 
 
-from src.hexagon.fvp.aggregate import FvpSnapshot
+from hexagon.fvp.aggregate import FvpSnapshot
 from test.hexagon.fvp.write.fixture import FvpSessionSetForTest
 
 

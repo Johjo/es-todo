@@ -1,6 +1,6 @@
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import UserKey
-from src.hexagon.user.port import UserRepositoryPort, UserSnapshot
+from dependencies import Dependencies
+from hexagon.shared.type import UserKey
+from hexagon.user.port import UserRepositoryPort, UserSnapshot
 
 
 class UserRepositoryInMemory(UserRepositoryPort):

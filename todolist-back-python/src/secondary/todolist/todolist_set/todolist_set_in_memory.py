@@ -1,12 +1,12 @@
 
 from expression import Option
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import TodolistName
-from src.hexagon.todolist.aggregate import TodolistSnapshot
-from src.hexagon.todolist.port import TodolistSetPort
-from src.infra.memory import Memory
-from src.shared.const import USER_KEY
+from dependencies import Dependencies
+from hexagon.shared.type import TodolistName
+from hexagon.todolist.aggregate import TodolistSnapshot
+from hexagon.todolist.port import TodolistSetPort
+from infra.memory import Memory
+from shared.const import USER_KEY
 
 
 class TodolistSetInMemory(TodolistSetPort):

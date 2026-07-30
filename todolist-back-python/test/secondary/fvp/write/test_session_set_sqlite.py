@@ -3,12 +3,12 @@ import sqlite3
 import pytest
 from typing_extensions import override
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from src.hexagon.shared.type import UserKey
-from src.infra.sqlite.sdk import SqliteSdk
-from src.infra.sqlite.type import FvpSession as FvpSessionSdk
-from src.secondary.fvp.write.session_set_sqlite import SessionSqlite
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from hexagon.shared.type import UserKey
+from infra.sqlite.sdk import SqliteSdk
+from infra.sqlite.type import FvpSession as FvpSessionSdk
+from secondary.fvp.write.session_set_sqlite import SessionSqlite
 from test.secondary.fvp.write.base_test_session_set import BaseTestFvpSessionSet
 
 

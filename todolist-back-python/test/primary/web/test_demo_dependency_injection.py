@@ -2,9 +2,9 @@ import pytest
 from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter  # type: ignore
 
-from src.dependencies import Dependencies
-from src.primary.demo_dependencies import inject_all_dependencies
-from src.shared.const import USER_KEY
+from dependencies import Dependencies
+from primary.demo_dependencies import inject_all_dependencies
+from shared.const import USER_KEY
 
 
 @pytest.fixture

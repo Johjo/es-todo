@@ -3,12 +3,12 @@ import sqlite3
 
 from expression import Nothing
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskKey, TaskName, TaskOpen, TodolistName, TodolistContext, TodolistContextCount
-from src.infra.sqlite.sdk import SqliteSdk
-from src.infra.sqlite.type import Task as TaskSdk, Todolist as TodolistSdk
-from src.primary.controller.read.todolist import TaskPresentation, TodolistSetReadPort, TaskFilter
-from src.shared.const import USER_KEY
+from dependencies import Dependencies
+from hexagon.shared.type import TaskKey, TaskName, TaskOpen, TodolistName, TodolistContext, TodolistContextCount
+from infra.sqlite.sdk import SqliteSdk
+from infra.sqlite.type import Task as TaskSdk, Todolist as TodolistSdk
+from primary.controller.read.todolist import TaskPresentation, TodolistSetReadPort, TaskFilter
+from shared.const import USER_KEY
 
 
 def map_to_task_presentation(task: TaskSdk) -> TaskPresentation:

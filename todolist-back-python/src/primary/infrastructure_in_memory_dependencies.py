@@ -1,6 +1,6 @@
-from src.dependencies import Dependencies
-from src.infra.fvp_memory import FvpMemory
-from src.infra.memory import Memory
+from dependencies import Dependencies
+from infra.fvp_memory import FvpMemory
+from infra.memory import Memory
 
 
 def inject_infrastructure_in_memory(dependencies: Dependencies, memory: Memory, fvp_memory: FvpMemory) -> Dependencies:

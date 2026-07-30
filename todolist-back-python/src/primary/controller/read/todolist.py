@@ -4,9 +4,9 @@ from datetime import date
 from typing import cast
 from uuid import UUID
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
-from src.shared.filter import TextFilter
+from dependencies import Dependencies
+from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
+from shared.filter import TextFilter
 
 
 @dataclass(frozen=True)

@@ -2,9 +2,9 @@ from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp  # type: ignore
 
-from src.dependencies import Dependencies
-from src.infra.memory import Memory
-from src.primary.web.pages import bottle_config
+from dependencies import Dependencies
+from infra.memory import Memory
+from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
 from test.primary.web.fixture import BASE_URL, header_with_good_authentication
 
@@ -17,5 +17,5 @@ def test_display_import(memory: Memory, dependencies: Dependencies, app: TestApp
     response = app.get(f'{BASE_URL}/{todolist.name}/import', headers=header_with_good_authentication())
 
     assert response.status == '200 OK'
-    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
+    verify(str(response.body).replace("\\r", "\r").replace("\\n", "\n"), reporter=PythonNativeReporter())
 

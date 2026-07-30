@@ -5,7 +5,7 @@ from uuid import UUID
 
 from expression import Option, Some, Nothing
 
-from src.hexagon.shared.type import TodolistName
+from hexagon.shared.type import TodolistName
 
 
 @dataclass(frozen=True, eq=True)

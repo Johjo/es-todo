@@ -1,7 +1,7 @@
 from uuid import uuid4
 
-from src.hexagon.shared.type import TodolistKey
-from src.hexagon.user.port import TodolistUuidGeneratorPort
+from hexagon.shared.type import TodolistKey
+from hexagon.user.port import TodolistUuidGeneratorPort
 
 
 class TodolistUuidGeneratorRandom(TodolistUuidGeneratorPort):

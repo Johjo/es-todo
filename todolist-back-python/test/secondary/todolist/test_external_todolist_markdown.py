@@ -4,9 +4,9 @@ import pytest
 from expression import Some, Nothing, pipe
 from faker import Faker
 
-from src.hexagon.shared.type import TaskName, TaskOpen, TaskExecutionDate
-from src.hexagon.todolist.write.import_many_task import TaskImported
-from src.secondary.todolist.markdown_todolist import MarkdownTodolist
+from hexagon.shared.type import TaskName, TaskOpen, TaskExecutionDate
+from hexagon.todolist.write.import_many_task import TaskImported
+from secondary.todolist.markdown_todolist import MarkdownTodolist
 from test.fixture import TodolistFaker, TaskBuilder
 
 

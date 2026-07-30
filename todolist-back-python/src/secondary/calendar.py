@@ -1,7 +1,7 @@
 from datetime import date, datetime
 
-from src.dependencies import Dependencies
-from src.primary.controller.read.final_version_perfected import CalendarPort
+from dependencies import Dependencies
+from primary.controller.read.final_version_perfected import CalendarPort
 
 
 class Calendar(CalendarPort):

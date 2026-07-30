@@ -1,13 +1,13 @@
 import pytest
 from faker import Faker
 
-from src.dependencies import Dependencies
-from src.infra.fvp_memory import FvpMemory
-from src.infra.memory import Memory
-from src.primary.adapter_in_memory_dependencies import inject_adapter_in_memory
-from src.primary.controller.use_case_dependencies import inject_use_cases
-from src.primary.infrastructure_in_memory_dependencies import inject_infrastructure_in_memory
-from src.shared.const import USER_KEY
+from dependencies import Dependencies
+from infra.fvp_memory import FvpMemory
+from infra.memory import Memory
+from primary.adapter_in_memory_dependencies import inject_adapter_in_memory
+from primary.controller.use_case_dependencies import inject_use_cases
+from primary.infrastructure_in_memory_dependencies import inject_infrastructure_in_memory
+from shared.const import USER_KEY
 from test.fixture import TodolistFaker
 
 

@@ -2,10 +2,10 @@ from datetime import datetime
 
 from expression import Option, Nothing, Some
 
-from src.hexagon.shared.type import TaskKey, TodolistName
-from src.hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
-from src.hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
-from src.primary.controller.write.todolist import DateTimeProviderPort
+from hexagon.shared.type import TaskKey, TodolistName
+from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
+from hexagon.todolist.port import TodolistSetPort, TaskKeyGeneratorPort
+from primary.controller.write.todolist import DateTimeProviderPort
 from test.fixture import TaskBuilder, TodolistBuilder
 
 

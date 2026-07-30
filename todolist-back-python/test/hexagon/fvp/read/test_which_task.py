@@ -3,9 +3,9 @@ from dataclasses import replace
 import pytest
 from faker import Faker
 
-from src.hexagon.fvp.aggregate import Task, NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot
-from src.hexagon.fvp.read.which_task import TodolistPort, WhichTaskQuery, WhichTaskFilter
-from src.hexagon.shared.type import TodolistName, UserKey
+from hexagon.fvp.aggregate import Task, NothingToDo, DoTheTask, ChooseTheTask, FvpSnapshot
+from hexagon.fvp.read.which_task import TodolistPort, WhichTaskQuery, WhichTaskFilter
+from hexagon.shared.type import TodolistName, UserKey
 from test.fixture import a_task_key
 from test.hexagon.fvp.write.fixture import FvpSessionSetForTest
 

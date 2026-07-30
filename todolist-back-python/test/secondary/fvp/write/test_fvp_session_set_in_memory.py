@@ -1,10 +1,10 @@
 import pytest
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from src.infra.fvp_memory import FvpMemory
-from src.secondary.fvp.write.fvp_session_set_in_memory import FvpSessionSetInMemory
-from src.shared.const import USER_KEY
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from infra.fvp_memory import FvpMemory
+from secondary.fvp.write.fvp_session_set_in_memory import FvpSessionSetInMemory
+from shared.const import USER_KEY
 from test.secondary.fvp.write.base_test_session_set import BaseTestFvpSessionSet
 
 

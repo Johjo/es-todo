@@ -2,8 +2,9 @@ import os
 import sqlite3
 
 from dotenv import load_dotenv
-
 from infra.sqlite.sdk import SqliteSdk
+
+
 
 
 def main():

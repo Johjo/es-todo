@@ -8,14 +8,14 @@ from uuid import UUID
 from bottle import template, Bottle, view, request, redirect, static_file, auth_basic  # type: ignore
 from bottle_utils import form  # type: ignore
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
-from src.hexagon.fvp.read.which_task import WhichTaskFilter
-from src.hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName
-from src.primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
-from src.primary.controller.read.todolist import TodolistReadController, TaskPresentation
-from src.primary.controller.write.todolist import TodolistWriteController
-from src.shared.const import USER_KEY
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
+from hexagon.fvp.read.which_task import WhichTaskFilter
+from hexagon.shared.type import TaskKey, TodolistName, TaskExecutionDate, TaskName
+from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController
+from primary.controller.read.todolist import TodolistReadController, TaskPresentation
+from primary.controller.write.todolist import TodolistWriteController
+from shared.const import USER_KEY
 
 bottle_app = Bottle()
 

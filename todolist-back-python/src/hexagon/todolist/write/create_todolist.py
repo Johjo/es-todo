@@ -1,9 +1,9 @@
 from expression import Result, Nothing, Error, Ok
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import TodolistName
-from src.hexagon.todolist.aggregate import TodolistAggregate
-from src.hexagon.todolist.port import TodolistSetPort
+from dependencies import Dependencies
+from hexagon.shared.type import TodolistName
+from hexagon.todolist.aggregate import TodolistAggregate
+from hexagon.todolist.port import TodolistSetPort
 
 
 class TodolistCreate:

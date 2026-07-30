@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from expression import Some
 
-from src.primary.controller.write.todolist import TodolistWriteController
+from primary.controller.write.todolist import TodolistWriteController
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import DateTimeProviderForTest
 from test.primary.controller.write.conftest import TodolistSetForTest

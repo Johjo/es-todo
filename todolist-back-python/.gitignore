@@ -5,7 +5,7 @@ __pycache__
 /todo.db*
 /.env
 session_fvp.json
-/test/data_test/*
+
 /test_todolist.json
 /test_fvp.json
 /todolist.db.sqlite

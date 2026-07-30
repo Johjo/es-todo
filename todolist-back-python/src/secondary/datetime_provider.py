@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from src.dependencies import Dependencies
-from src.primary.controller.write.todolist import DateTimeProviderPort
+from dependencies import Dependencies
+from primary.controller.write.todolist import DateTimeProviderPort
 
 
 class DateTimeProvider(DateTimeProviderPort):

@@ -3,7 +3,7 @@ from dataclasses import replace
 import pytest
 from expression import Ok, Error
 
-from src.hexagon.todolist.write.close_task import CloseTask
+from hexagon.todolist.write.close_task import CloseTask
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TodolistSetForTest
 

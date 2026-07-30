@@ -1,10 +1,10 @@
 from expression import Result
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskKey
-from src.hexagon.todolist.aggregate import TodolistAggregate
-from src.hexagon.todolist.port import TodolistSetPort
-from src.hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
+from dependencies import Dependencies
+from hexagon.shared.type import TaskKey
+from hexagon.todolist.aggregate import TodolistAggregate
+from hexagon.todolist.port import TodolistSetPort
+from hexagon.todolist.write.update_todolist_aggregate import UpdateTodolistAggregate
 
 
 class CloseTask:

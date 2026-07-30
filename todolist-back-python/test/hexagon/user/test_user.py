@@ -2,9 +2,9 @@ from uuid import UUID, uuid4
 
 import pytest
 
-from src.hexagon.shared.type import UserKey, TodolistKey, TodolistName
-from src.hexagon.user.create_todolist import CreateTodolist
-from src.hexagon.user.port import TodolistUuidGeneratorPort, UserRepositoryPort, UserSnapshot, TodolistSnapshot
+from hexagon.shared.type import UserKey, TodolistKey, TodolistName
+from hexagon.user.create_todolist import CreateTodolist
+from hexagon.user.port import TodolistUuidGeneratorPort, UserRepositoryPort, UserSnapshot, TodolistSnapshot
 
 
 class TodolistUuidGeneratorForTest(TodolistUuidGeneratorPort):

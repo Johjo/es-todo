@@ -5,8 +5,8 @@ from uuid import UUID
 from sqlite3 import Connection
 from expression import Nothing, Some
 
-from src.hexagon.shared.type import UserKey
-from src.infra.sqlite.type import Task, Todolist, FvpSession, TodolistDoesNotExist
+from hexagon.shared.type import UserKey
+from infra.sqlite.type import Task, Todolist, FvpSession, TodolistDoesNotExist
 
 
 class SqliteSdk:

@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from datetime import date
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
-from src.hexagon.fvp.read.which_task import WhichTaskQuery, WhichTaskFilter
-from src.hexagon.shared.type import TodolistName, UserKey
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import NothingToDo, DoTheTask, ChooseTheTask
+from hexagon.fvp.read.which_task import WhichTaskQuery, WhichTaskFilter
+from hexagon.shared.type import TodolistName, UserKey
 
 
 class FinalVersionPerfectedReadController:

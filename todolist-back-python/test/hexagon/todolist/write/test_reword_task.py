@@ -3,7 +3,7 @@ from dataclasses import replace
 import pytest
 from expression import Ok, Error
 
-from src.hexagon.todolist.write.reword_task import RewordTask
+from hexagon.todolist.write.reword_task import RewordTask
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TodolistSetForTest
 

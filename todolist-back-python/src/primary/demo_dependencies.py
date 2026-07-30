@@ -3,20 +3,20 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import FvpSessionSetPort
-from src.hexagon.todolist.port import TaskKeyGeneratorPort
-from src.infra.memory import Memory
-from src.primary.adapter_in_memory_dependencies import inject_adapter_in_memory
-from src.primary.controller.read.final_version_perfected import CalendarPort
-from src.primary.controller.use_case_dependencies import inject_use_cases
-from src.primary.controller.write.todolist import DateTimeProviderPort
-from src.primary.infrastructure_in_memory_dependencies import inject_infrastructure_in_memory
-from src.secondary.calendar import Calendar
-from src.secondary.datetime_provider import DateTimeProvider
-from src.secondary.fvp.write.fvp_session_set_in_memory import FvpSessionSetInMemory
-from src.infra.fvp_memory import FvpMemory
-from src.secondary.todolist.task_key_generator_random import TaskKeyGeneratorRandom
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import FvpSessionSetPort
+from hexagon.todolist.port import TaskKeyGeneratorPort
+from infra.memory import Memory
+from primary.adapter_in_memory_dependencies import inject_adapter_in_memory
+from primary.controller.read.final_version_perfected import CalendarPort
+from primary.controller.use_case_dependencies import inject_use_cases
+from primary.controller.write.todolist import DateTimeProviderPort
+from primary.infrastructure_in_memory_dependencies import inject_infrastructure_in_memory
+from secondary.calendar import Calendar
+from secondary.datetime_provider import DateTimeProvider
+from secondary.fvp.write.fvp_session_set_in_memory import FvpSessionSetInMemory
+from infra.fvp_memory import FvpMemory
+from secondary.todolist.task_key_generator_random import TaskKeyGeneratorRandom
 
 memory = Memory()
 fvp_memory = FvpMemory()

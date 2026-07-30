@@ -1,10 +1,10 @@
 from typing import OrderedDict
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import FvpSnapshot
-from src.hexagon.shared.type import TaskKey, UserKey
-from src.infra.fvp_memory import FvpMemory
-from src.primary.controller.write.todolist import TodolistWriteController
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import FvpSnapshot
+from hexagon.shared.type import TaskKey, UserKey
+from infra.fvp_memory import FvpMemory
+from primary.controller.write.todolist import TodolistWriteController
 from test.fixture import a_task_key
 
 

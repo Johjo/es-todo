@@ -2,10 +2,10 @@ from typing import OrderedDict
 
 import pytest
 
-from src.hexagon.shared.type import TaskKey, UserKey
+from hexagon.shared.type import TaskKey, UserKey
 from test.fixture import a_task_key
-from src.hexagon.fvp.aggregate import FvpSnapshot
-from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
+from hexagon.fvp.aggregate import FvpSnapshot
+from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 from test.hexagon.fvp.write.fixture import FvpSessionSetForTest
 
 

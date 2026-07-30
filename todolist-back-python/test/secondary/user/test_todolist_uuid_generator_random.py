@@ -1,4 +1,4 @@
-from src.secondary.user.todolist_uuid_generator_random import TodolistUuidGeneratorRandom
+from secondary.user.todolist_uuid_generator_random import TodolistUuidGeneratorRandom
 
 
 class TestTodolistUuidGeneratorRandom:

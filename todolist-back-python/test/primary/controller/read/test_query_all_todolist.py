@@ -1,6 +1,6 @@
-from src.hexagon.shared.type import TodolistName
-from src.primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort
-from src.dependencies import Dependencies
+from hexagon.shared.type import TodolistName
+from primary.controller.read.todolist import TodolistReadController, TodolistSetReadPort
+from dependencies import Dependencies
 from test.fixture import TodolistFaker
 from test.primary.controller.read.fixture import TodolistSetReadPortNotImplemented
 

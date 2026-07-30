@@ -4,12 +4,12 @@ from datetime import date
 import pytest
 from faker import Faker
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import DoTheTask, FvpSnapshot, FvpSessionSetPort
-from src.hexagon.fvp.read.which_task import TodolistPort
-from src.hexagon.shared.type import UserKey
-from src.infra.fvp_memory import FvpMemory
-from src.primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController, CalendarPort
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import DoTheTask, FvpSnapshot, FvpSessionSetPort
+from hexagon.fvp.read.which_task import TodolistPort
+from hexagon.shared.type import UserKey
+from infra.fvp_memory import FvpMemory
+from primary.controller.read.final_version_perfected import FinalVersionPerfectedReadController, CalendarPort
 from test.hexagon.fvp.read.test_which_task import TodolistForTest, FvpFaker
 
 

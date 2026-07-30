@@ -4,11 +4,11 @@ from datetime import date
 
 from expression import Option, Nothing
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import Task, FinalVersionPerfectedSession, NothingToDo, DoTheTask, ChooseTheTask, \
     FvpSessionSetPort
-from src.hexagon.shared.type import TodolistName, UserKey
-from src.shared.filter import TextFilter
+from hexagon.shared.type import TodolistName, UserKey
+from shared.filter import TextFilter
 
 
 @dataclass(frozen=True, eq=True)

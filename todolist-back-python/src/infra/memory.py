@@ -2,7 +2,7 @@ from uuid import UUID
 
 from expression import Option, Nothing, Some
 
-from src.hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
+from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
 
 
 class Memory:

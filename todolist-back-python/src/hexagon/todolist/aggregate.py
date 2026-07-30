@@ -2,8 +2,8 @@ from dataclasses import dataclass, replace
 
 from expression import Result, Error, Ok, Option, Some
 
-from src.hexagon.shared.event import Event, TaskPostponedEvent
-from src.hexagon.shared.type import TaskKey, TodolistName, TaskName, TaskExecutionDate, TaskOpen
+from hexagon.shared.event import Event, TaskPostponedEvent
+from hexagon.shared.type import TaskKey, TodolistName, TaskName, TaskExecutionDate, TaskOpen
 
 
 @dataclass(frozen=True ,eq=True)

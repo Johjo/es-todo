@@ -3,13 +3,13 @@ from typing import cast
 
 from expression import Option, Some, Nothing
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import TodolistName, TaskKey, TaskName, TaskOpen, TaskExecutionDate
-from src.hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
-from src.hexagon.todolist.port import TodolistSetPort
-from src.infra.sqlite.sdk import SqliteSdk
-from src.infra.sqlite.type import TodolistDoesNotExist, Todolist as TodolistSdk, Task as TaskSdk
-from src.shared.const import USER_KEY
+from dependencies import Dependencies
+from hexagon.shared.type import TodolistName, TaskKey, TaskName, TaskOpen, TaskExecutionDate
+from hexagon.todolist.aggregate import TodolistSnapshot, TaskSnapshot
+from hexagon.todolist.port import TodolistSetPort
+from infra.sqlite.sdk import SqliteSdk
+from infra.sqlite.type import TodolistDoesNotExist, Todolist as TodolistSdk, Task as TaskSdk
+from shared.const import USER_KEY
 
 
 class TodolistSetSqlite(TodolistSetPort):

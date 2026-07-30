@@ -4,8 +4,8 @@ from typing import Tuple
 
 from expression import Nothing, Some, Option
 
-from src.hexagon.shared.type import TaskName, TaskOpen, TaskExecutionDate
-from src.hexagon.todolist.write.import_many_task import ExternalTodoListPort, TaskImported
+from hexagon.shared.type import TaskName, TaskOpen, TaskExecutionDate
+from hexagon.todolist.write.import_many_task import ExternalTodoListPort, TaskImported
 
 TASK_NAME_KEY = "task_name"
 EXECUTION_DATE_KEY = "execution_date"

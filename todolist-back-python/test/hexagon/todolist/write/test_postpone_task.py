@@ -3,9 +3,9 @@ from datetime import datetime
 import pytest
 from expression import Ok, Error, Some
 
-from src.hexagon.shared.event import TaskPostponedEvent
-from src.hexagon.shared.type import TaskExecutionDate, TaskKey
-from src.hexagon.todolist.write.postpone_task import PostPoneTask
+from hexagon.shared.event import TaskPostponedEvent
+from hexagon.shared.type import TaskExecutionDate, TaskKey
+from hexagon.todolist.write.postpone_task import PostPoneTask
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TodolistSetForTest
 

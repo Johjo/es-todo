@@ -4,9 +4,9 @@ from approvaltests import verify  # type: ignore
 from approvaltests.reporters import PythonNativeReporter  # type: ignore
 from webtest import TestApp  # type: ignore
 
-from src.dependencies import Dependencies
-from src.infra.memory import Memory
-from src.primary.web.pages import bottle_config
+from dependencies import Dependencies
+from infra.memory import Memory
+from primary.web.pages import bottle_config
 from test.fixture import TodolistFaker
 from test.primary.web._test_double.calendar_for_test import _CalendarForTest
 from test.primary.web.fixture import header_with_good_authentication
@@ -20,4 +20,4 @@ def test_show_postponed_tasks(memory: Memory, calendar: _CalendarForTest, depend
     response = app.get('/todo/my_todolist/calendar', headers=header_with_good_authentication())
 
     assert response.status == '200 OK'
-    verify(str(response.body).replace("\\r\\n", "\r\n"), reporter=PythonNativeReporter())
+    verify(str(response.body).replace("\\r", "\r").replace("\\n", "\n"), reporter=PythonNativeReporter())

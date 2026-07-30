@@ -1,8 +1,8 @@
 from uuid import uuid4
 
-from src.hexagon.shared.type import UserKey
-from src.hexagon.user.port import UserSnapshot
-from src.secondary.user.user_repository_in_memory import UserRepositoryInMemory
+from hexagon.shared.type import UserKey
+from hexagon.user.port import UserSnapshot
+from secondary.user.user_repository_in_memory import UserRepositoryInMemory
 
 
 def any_user_key() -> UserKey:

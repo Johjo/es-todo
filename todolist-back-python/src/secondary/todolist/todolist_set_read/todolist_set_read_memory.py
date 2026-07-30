@@ -2,11 +2,11 @@ import re
 
 from expression import Nothing
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
-from src.infra.memory import Memory
-from src.primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
-from src.shared.const import USER_KEY
+from dependencies import Dependencies
+from hexagon.shared.type import TaskKey, TodolistName, TodolistContext, TodolistContextCount
+from infra.memory import Memory
+from primary.controller.read.todolist import TodolistSetReadPort, TaskPresentation, TaskFilter
+from shared.const import USER_KEY
 
 
 class TodolistSetReadInMemory(TodolistSetReadPort):

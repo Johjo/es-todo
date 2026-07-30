@@ -1,8 +1,8 @@
 from dataclasses import replace
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import UserKey, TodolistName
-from src.hexagon.user.port import UserRepositoryPort, TodolistUuidGeneratorPort, TodolistSnapshot, UserSnapshot
+from dependencies import Dependencies
+from hexagon.shared.type import UserKey, TodolistName
+from hexagon.user.port import UserRepositoryPort, TodolistUuidGeneratorPort, TodolistSnapshot, UserSnapshot
 
 
 class CreateTodolist:

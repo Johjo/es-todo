@@ -2,14 +2,14 @@ from typing import OrderedDict
 
 import pytest
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import TaskKey, UserKey
-from src.infra.fvp_memory import FvpMemory
-from src.primary.controller.write.todolist import TodolistWriteController
-from src.secondary.fvp.write.fvp_session_set_in_memory import FvpSessionSetInMemory
+from dependencies import Dependencies
+from hexagon.shared.type import TaskKey, UserKey
+from infra.fvp_memory import FvpMemory
+from primary.controller.write.todolist import TodolistWriteController
+from secondary.fvp.write.fvp_session_set_in_memory import FvpSessionSetInMemory
 from test.fixture import a_task_key
-from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
 
 
 @pytest.fixture

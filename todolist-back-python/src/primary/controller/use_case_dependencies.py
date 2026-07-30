@@ -1,18 +1,18 @@
 from functools import reduce
 from typing import Any
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.read.which_task import WhichTaskQuery
-from src.hexagon.fvp.write.cancel_priority import CancelPriority
-from src.hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
-from src.hexagon.fvp.write.reset_fvp_session import ResetFvpSession
-from src.hexagon.todolist.write.close_task import CloseTask
-from src.hexagon.todolist.write.create_todolist import TodolistCreate
-from src.hexagon.todolist.write.import_many_task import ImportManyTask
-from src.hexagon.todolist.write.open_task import OpenTaskUseCase
-from src.hexagon.todolist.write.postpone_task import PostPoneTask
-from src.hexagon.todolist.write.reword_task import RewordTask
-from src.hexagon.user.create_todolist import CreateTodolist
+from dependencies import Dependencies
+from hexagon.fvp.read.which_task import WhichTaskQuery
+from hexagon.fvp.write.cancel_priority import CancelPriority
+from hexagon.fvp.write.choose_and_ignore_task import ChooseAndIgnoreTaskFvp
+from hexagon.fvp.write.reset_fvp_session import ResetFvpSession
+from hexagon.todolist.write.close_task import CloseTask
+from hexagon.todolist.write.create_todolist import TodolistCreate
+from hexagon.todolist.write.import_many_task import ImportManyTask
+from hexagon.todolist.write.open_task import OpenTaskUseCase
+from hexagon.todolist.write.postpone_task import PostPoneTask
+from hexagon.todolist.write.reword_task import RewordTask
+from hexagon.user.create_todolist import CreateTodolist
 
 
 def inject_use_cases(dependencies: Dependencies) -> Dependencies:

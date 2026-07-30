@@ -7,9 +7,9 @@ from expression import Option, Nothing, Some
 from faker import Faker
 
 import src.infra.sqlite.type
-from src.hexagon.shared.type import TaskKey, TaskName, TodolistName, TaskOpen, TaskExecutionDate
-from src.hexagon.todolist.aggregate import TaskSnapshot, TodolistSnapshot
-from src.primary.controller.read.todolist import TaskPresentation, TaskFilter
+from hexagon.shared.type import TaskKey, TaskName, TodolistName, TaskOpen, TaskExecutionDate
+from hexagon.todolist.aggregate import TaskSnapshot, TodolistSnapshot
+from primary.controller.read.todolist import TaskPresentation, TaskFilter
 
 
 def a_task_key(index: TaskKey | UUID | int | None = None) -> TaskKey:

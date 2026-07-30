@@ -2,12 +2,12 @@ from uuid import UUID, uuid4
 
 import pytest
 
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import UserKey, TodolistKey, TodolistName
-from src.hexagon.user.create_todolist import CreateTodolist
-from src.hexagon.user.port import TodolistUuidGeneratorPort, UserRepositoryPort, UserSnapshot, TodolistSnapshot
-from src.primary.controller.user import UserController
-from src.secondary.user.user_repository_in_memory import UserRepositoryInMemory
+from dependencies import Dependencies
+from hexagon.shared.type import UserKey, TodolistKey, TodolistName
+from hexagon.user.create_todolist import CreateTodolist
+from hexagon.user.port import TodolistUuidGeneratorPort, UserRepositoryPort, UserSnapshot, TodolistSnapshot
+from primary.controller.user import UserController
+from secondary.user.user_repository_in_memory import UserRepositoryInMemory
 
 
 class TodolistUuidGeneratorForTest(TodolistUuidGeneratorPort):

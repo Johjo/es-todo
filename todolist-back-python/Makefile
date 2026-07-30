@@ -21,20 +21,11 @@ help:
 
 .PHONY: start
 start:
-	python -m pipenv run start_web_for_test.py
+	poetry run python src/start_web_for_test.py
 
 .PHONY: create_table
 create_table:
-	python -m pipenv run create_tables.py
-
-.PHONY: freeze
-freeze:
-	python -m pipenv run pip freeze > requirements.txt
-
-.PHONY: install
-install:
-	python -m pipenv run pip install -r requirements.txt
-
+	poetry run python src/create_tables.py
 
 .PHONY: update
 update:
@@ -42,6 +33,6 @@ update:
 
 .PHONY: check
 check:
-	mypy . --strict --disallow-untyped-decorators
+	poetry run mypy . --strict --disallow-untyped-decorators
 
 

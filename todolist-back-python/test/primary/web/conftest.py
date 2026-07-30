@@ -4,17 +4,17 @@ from bottle import Bottle
 from faker import Faker
 from webtest import TestApp  # type: ignore
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
-from src.hexagon.todolist.port import TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
-from src.infra.fvp_memory import FvpMemory
-from src.infra.memory import Memory
-from src.primary.adapter_in_memory_dependencies import inject_adapter_in_memory
-from src.primary.controller.read.final_version_perfected import CalendarPort
-from src.primary.controller.use_case_dependencies import inject_use_cases
-from src.primary.controller.write.todolist import DateTimeProviderPort
-from src.primary.web.pages import bottle_app, bottle_config
-from src.secondary.fvp.write.fvp_session_set_in_memory import FvpSessionSetInMemory
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import FvpSessionSetPort as FinalVersionPerfected_Port_SessionSet
+from hexagon.todolist.port import TaskKeyGeneratorPort as OpenTask_Port_TaskKeyGenerator
+from infra.fvp_memory import FvpMemory
+from infra.memory import Memory
+from primary.adapter_in_memory_dependencies import inject_adapter_in_memory
+from primary.controller.read.final_version_perfected import CalendarPort
+from primary.controller.use_case_dependencies import inject_use_cases
+from primary.controller.write.todolist import DateTimeProviderPort
+from primary.web.pages import bottle_app, bottle_config
+from secondary.fvp.write.fvp_session_set_in_memory import FvpSessionSetInMemory
 from test.fixture import TodolistFaker
 from test.hexagon.todolist.fixture import TaskKeyGeneratorForTest, DateTimeProviderForTest
 from ._test_double.calendar_for_test import _CalendarForTest

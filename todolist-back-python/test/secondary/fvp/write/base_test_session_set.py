@@ -4,9 +4,9 @@ from collections import OrderedDict
 import pytest
 from faker import Faker
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from src.hexagon.shared.type import TaskKey, UserKey
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from hexagon.shared.type import TaskKey, UserKey
 from test.fixture import a_task_key
 from test.hexagon.fvp.read.test_which_task import FvpFaker
 

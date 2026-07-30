@@ -1,8 +1,8 @@
 from collections import OrderedDict
 
-from src.dependencies import Dependencies
-from src.hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
-from src.hexagon.shared.type import UserKey
+from dependencies import Dependencies
+from hexagon.fvp.aggregate import FvpSnapshot, FvpSessionSetPort
+from hexagon.shared.type import UserKey
 
 
 class ResetFvpSession:

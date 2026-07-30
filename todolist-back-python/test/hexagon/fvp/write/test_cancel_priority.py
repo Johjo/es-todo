@@ -1,8 +1,8 @@
 import pytest
 
-from src.hexagon.fvp.aggregate import FvpSnapshot
-from src.hexagon.fvp.write.cancel_priority import CancelPriority
-from src.hexagon.shared.type import UserKey
+from hexagon.fvp.aggregate import FvpSnapshot
+from hexagon.fvp.write.cancel_priority import CancelPriority
+from hexagon.shared.type import UserKey
 from test.fixture import a_task_key
 from test.hexagon.fvp.write.fixture import FvpSessionSetForTest
 

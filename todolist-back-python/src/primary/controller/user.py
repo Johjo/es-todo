@@ -1,6 +1,6 @@
-from src.dependencies import Dependencies
-from src.hexagon.shared.type import UserKey, TodolistName
-from src.hexagon.user.create_todolist import CreateTodolist
+from dependencies import Dependencies
+from hexagon.shared.type import UserKey, TodolistName
+from hexagon.user.create_todolist import CreateTodolist
 
 
 class UserController:
