@@ -1,10 +1,9 @@
 import os
-from pathlib import Path
 
 from dotenv import load_dotenv
 
-from src.primary.demo_dependencies import inject_all_dependencies
-from src.primary.web.pages import bottle_config, bottle_app
+from primary.demo_dependencies import inject_all_dependencies
+from primary.web.pages import bottle_config, bottle_app
 
 
 def start() -> None:
